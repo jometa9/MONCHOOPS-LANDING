@@ -22,12 +22,12 @@ interface SidebarItem {
   href: string;
   icon: ReactNode;
   adminOnly?: boolean;
-  hideOnMobile?: boolean;
 }
 
 interface SidebarProps {
   user: User;
   items?: SidebarItem[];
+  variant?: "desktop" | "mobile";
 }
 
 const defaultItems: SidebarItem[] = [
@@ -65,10 +65,15 @@ const defaultItems: SidebarItem[] = [
   },
 ];
 
-export function Sidebar({ user, items = defaultItems }: SidebarProps) {
+export function Sidebar({
+  user,
+  items = defaultItems,
+  variant = "desktop",
+}: SidebarProps) {
   const pathname = usePathname();
   const isAdmin = user?.role === "admin" || user?.role === "superadmin";
-  const { isMobile, isSidebarOpen, setIsSidebarOpen } = useSidebar();
+  const { isSidebarOpen, setIsSidebarOpen } = useSidebar();
+  const isMobileVariant = variant === "mobile";
 
   const allItems = paymentsEnabled
     ? items
@@ -78,20 +83,18 @@ export function Sidebar({ user, items = defaultItems }: SidebarProps) {
     if (item.adminOnly && !isAdmin) {
       return false;
     }
-    if (item.hideOnMobile && isMobile) {
-      return false;
-    }
     return true;
   });
 
   const handleLinkClick = () => {
-    if (isMobile) {
+    if (isMobileVariant) {
       setIsSidebarOpen(false);
     }
   };
 
   useEffect(() => {
-    if (isMobile && isSidebarOpen) {
+    if (!isMobileVariant) return;
+    if (isSidebarOpen) {
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
     } else {
@@ -102,30 +105,24 @@ export function Sidebar({ user, items = defaultItems }: SidebarProps) {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
     };
-  }, [isMobile, isSidebarOpen]);
+  }, [isMobileVariant, isSidebarOpen]);
 
-  return (
-    <>
-      {isMobile && isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
-
-      <nav
-        className={cn(
-          "px-1 gap-1 flex flex-col",
-          isMobile && [
-            "fixed top-0 left-0 h-full w-64 bg-white z-50 shadow-xl transform transition-transform duration-300 ease-in-out",
-            "px-3",
-            isSidebarOpen ? "translate-x-0" : "-translate-x-full",
-          ],
-          !isMobile && "relative"
+  if (isMobileVariant) {
+    return (
+      <>
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-40"
+            onClick={() => setIsSidebarOpen(false)}
+          />
         )}
-      >
-        {isMobile && (
-          <div className="flex items-center justify-between py-3 ">
+        <nav
+          className={cn(
+            "fixed top-0 left-0 h-full w-64 bg-white z-50 shadow-xl transform transition-transform duration-300 ease-in-out flex flex-col gap-1 px-3",
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          )}
+        >
+          <div className="flex items-center justify-between py-3">
             <div className="flex items-center gap-3">
               <span className="text-xl font-bold tracking-tight text-foreground">
                 MonchoOps
@@ -139,32 +136,57 @@ export function Sidebar({ user, items = defaultItems }: SidebarProps) {
               <X className="h-5 w-5" />
             </button>
           </div>
-        )}
 
-        {visibleItems.map((item) => {
-          const isActive =
-            pathname === item.href ||
-            (item.href !== "/dashboard" &&
-              pathname?.startsWith(item.href + "/"));
+          {visibleItems.map((item) => {
+            const isActive =
+              pathname === item.href ||
+              (item.href !== "/dashboard" &&
+                pathname?.startsWith(item.href + "/"));
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              prefetch={true}
-              onClick={handleLinkClick}
-              className={cn(
-                "flex items-center gap-2 px-2 py-1 text-sm rounded-lg transition-colors",
-                isActive ? "text-black" : "text-gray-400 hover:text-gray-800",
-                isMobile && "w-full px-0"
-              )}
-            >
-              <span className="[&>svg]:transition-colors">{item.icon}</span>
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
-    </>
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                prefetch={true}
+                onClick={handleLinkClick}
+                className={cn(
+                  "flex items-center gap-2 px-0 py-1 text-sm rounded-lg transition-colors w-full",
+                  isActive ? "text-black" : "text-gray-400 hover:text-gray-800"
+                )}
+              >
+                <span className="[&>svg]:transition-colors">{item.icon}</span>
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+      </>
+    );
+  }
+
+  return (
+    <nav className="relative px-1 gap-1 flex flex-col">
+      {visibleItems.map((item) => {
+        const isActive =
+          pathname === item.href ||
+          (item.href !== "/dashboard" &&
+            pathname?.startsWith(item.href + "/"));
+
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            prefetch={true}
+            className={cn(
+              "flex items-center gap-2 px-2 py-1 text-sm rounded-lg transition-colors",
+              isActive ? "text-black" : "text-gray-400 hover:text-gray-800"
+            )}
+          >
+            <span className="[&>svg]:transition-colors">{item.icon}</span>
+            {item.label}
+          </Link>
+        );
+      })}
+    </nav>
   );
 }

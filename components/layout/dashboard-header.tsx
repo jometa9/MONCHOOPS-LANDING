@@ -19,7 +19,7 @@ export function DashboardHeader({
   const searchParams = useSearchParams();
   const source = searchParams.get("source");
   const isWeb = source !== "app";
-  const { isSidebarOpen, toggleSidebar, isMobile } = useSidebar();
+  const { isSidebarOpen, toggleSidebar } = useSidebar();
 
   const handleLogout = async () => {
     await logoutAction();
@@ -32,10 +32,10 @@ export function DashboardHeader({
         <div className="flex flex-col">
           <div className="flex w-full items-center justify-between px-3 py-3">
             <div className="flex items-center gap-3">
-              {showSidebar && user && isMobile && (
+              {showSidebar && user && (
                 <button
                   onClick={toggleSidebar}
-                  className="text-gray-400 hover:text-gray-800 transition-colors"
+                  className="text-gray-400 hover:text-gray-800 transition-colors min-[600px]:hidden"
                   aria-label="Toggle menu"
                 >
                   {isSidebarOpen ? (
