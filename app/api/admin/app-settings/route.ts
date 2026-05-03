@@ -1,6 +1,5 @@
 import {
   getAppSettings,
-  getSubscriptionLimits,
   getUser,
   updateAppSettings,
 } from "@/lib/db/queries";
@@ -15,13 +14,11 @@ export async function GET() {
     }
 
     const settings = await getAppSettings();
-    const subscriptionLimits = getSubscriptionLimits(settings);
 
     return NextResponse.json({
       monchoopsVersion: settings.monchoopsVersion,
       monchoopsWindowsDownloadUrl: settings.monchoopsWindowsDownloadUrl || "",
       monchoopsMacDownloadUrl: settings.monchoopsMacDownloadUrl || "",
-      subscriptionLimits,
       resendApiKey: settings.resendApiKey || "",
       resendTestEmail: settings.resendTestEmail || "",
       emailFrom: settings.emailFrom || "",
@@ -52,7 +49,6 @@ export async function POST(req: NextRequest) {
       monchoopsVersion,
       monchoopsWindowsDownloadUrl,
       monchoopsMacDownloadUrl,
-      subscriptionLimits,
       resendApiKey,
       resendTestEmail,
       emailFrom,
@@ -63,33 +59,10 @@ export async function POST(req: NextRequest) {
       openaiModel,
     } = body;
 
-    let subscriptionLimitsJson: string | undefined;
-    if (subscriptionLimits) {
-      if (
-        typeof subscriptionLimits === "object" &&
-        subscriptionLimits.free &&
-        subscriptionLimits.unlimited
-      ) {
-        if (!subscriptionLimits.pro) {
-          subscriptionLimits.pro = { accountLimit: 8, fixedLotSize: null };
-        }
-        subscriptionLimitsJson = JSON.stringify(subscriptionLimits);
-      } else {
-        return NextResponse.json(
-          {
-            error:
-              "Subscription limits must have free and unlimited plans",
-          },
-          { status: 400 }
-        );
-      }
-    }
-
     const updateData: Parameters<typeof updateAppSettings>[1] = {
       monchoopsVersion: monchoopsVersion?.trim(),
       monchoopsWindowsDownloadUrl: monchoopsWindowsDownloadUrl?.trim(),
       monchoopsMacDownloadUrl: monchoopsMacDownloadUrl?.trim(),
-      localCopierSubscriptionLimits: subscriptionLimitsJson,
     };
 
     if (resendApiKey !== undefined) {
@@ -101,7 +74,6 @@ export async function POST(req: NextRequest) {
     if (emailFrom !== undefined) {
       updateData.emailFrom = emailFrom?.trim() || null;
     }
-
     if (resendInboundWebhookSecret !== undefined) {
       updateData.resendInboundWebhookSecret = resendInboundWebhookSecret?.trim() || null;
     }
@@ -124,14 +96,11 @@ export async function POST(req: NextRequest) {
 
     const updatedSettings = await updateAppSettings(user.id, updateData);
 
-    const updatedSubscriptionLimits = getSubscriptionLimits(updatedSettings);
-
     return NextResponse.json({
       success: true,
       monchoopsVersion: updatedSettings.monchoopsVersion,
       monchoopsWindowsDownloadUrl: updatedSettings.monchoopsWindowsDownloadUrl,
       monchoopsMacDownloadUrl: updatedSettings.monchoopsMacDownloadUrl,
-      subscriptionLimits: updatedSubscriptionLimits,
       resendApiKey: updatedSettings.resendApiKey || "",
       resendTestEmail: updatedSettings.resendTestEmail || "",
       emailFrom: updatedSettings.emailFrom || "",

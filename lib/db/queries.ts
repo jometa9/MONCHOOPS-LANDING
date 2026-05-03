@@ -395,42 +395,30 @@ export const getCurrentUserFromSession = cache(async () => {
 });
 
 export async function getUserDataForDashboard(userId: string) {
-  const [userData, entitlements, settings] = await Promise.all([
-    getUserById(userId),
-    getUserEntitlements(userId),
-    getAppSettings(),
-  ]);
+  const { limitsForTier } = await import("@/lib/subscriptions/plan-limits");
+  const { countActiveInstagramAccounts, countDmsThisMonth } = await import(
+    "./usage-queries"
+  );
+
+  const [userData, entitlements, settings, accountUsage, dmUsage] =
+    await Promise.all([
+      getUserById(userId),
+      getUserEntitlements(userId),
+      getAppSettings(),
+      countActiveInstagramAccounts(userId),
+      countDmsThisMonth(userId),
+    ]);
 
   if (!userData) return null;
-
-  const subscriptionLimits = getSubscriptionLimits(settings);
-  
-  const getLimitsForTier = (tier: string) => {
-    if (tier === "unlimited" || userData.role === "admin") {
-      return {
-        accountLimit: subscriptionLimits.unlimited?.accountLimit ?? null,
-        fixedLotSize: subscriptionLimits.unlimited?.fixedLotSize ?? null,
-      };
-    }
-    if (tier === "pro") {
-      return {
-        accountLimit: subscriptionLimits.pro?.accountLimit ?? 8,
-        fixedLotSize: subscriptionLimits.pro?.fixedLotSize ?? null,
-      };
-    }
-    return {
-      accountLimit: subscriptionLimits.free?.accountLimit ?? 1,
-      fixedLotSize: subscriptionLimits.free?.fixedLotSize ?? 0.01,
-    };
-  };
 
   const sub = entitlements.monchoops;
   const isExpired =
     sub &&
     ["canceled", "expired"].includes(sub.status) &&
     (!sub.expiresAt || sub.expiresAt <= new Date());
-  const rawTier = userData.role === "admin" ? "unlimited" : getSubscriptionTier(sub);
-  const monchoopsTier = rawTier;
+  const monchoopsTier =
+    userData.role === "admin" ? "unlimited" : getSubscriptionTier(sub);
+  const planLimits = limitsForTier(monchoopsTier, userData.role === "admin");
 
   return {
     userId: userData.id,
@@ -446,7 +434,11 @@ export async function getUserDataForDashboard(userId: string) {
             originalTier: sub?.tier || "free",
             status: sub?.status || "none",
             expiresAt: sub?.expiresAt?.toISOString() || null,
-            limits: getLimitsForTier(monchoopsTier),
+            limits: planLimits,
+            usage: {
+              accounts: accountUsage,
+              dmsThisMonth: dmUsage,
+            },
             billingPeriod: ((): "monthly" | "annual" | null => {
               const p = sub?.billingPeriod;
               return p === "monthly" || p === "annual" ? p : null;
@@ -476,18 +468,12 @@ export async function getAppSettings() {
     .limit(1);
 
   if (settings.length === 0) {
-    const defaultLimits = JSON.stringify({
-      free: { accountLimit: 1, fixedLotSize: 0.01 },
-      pro: { accountLimit: 8, fixedLotSize: null },
-      unlimited: { accountLimit: null, fixedLotSize: null },
-    });
     const defaultSettings = await db
       .insert(appSettings)
       .values({
         monchoopsVersion: "1.0.0",
         monchoopsWindowsDownloadUrl: "",
         monchoopsMacDownloadUrl: "",
-        localCopierSubscriptionLimits: defaultLimits,
         updatedAt: new Date(),
       })
       .returning();
@@ -496,28 +482,6 @@ export async function getAppSettings() {
   }
 
   return settings[0];
-}
-
-export function getSubscriptionLimits(
-  settings: typeof appSettings.$inferSelect
-) {
-  if (!settings.localCopierSubscriptionLimits) {
-    return {
-      free: { accountLimit: 1, fixedLotSize: 0.01 },
-      pro: { accountLimit: 8, fixedLotSize: null },
-      unlimited: { accountLimit: null, fixedLotSize: null },
-    };
-  }
-
-  try {
-    return JSON.parse(settings.localCopierSubscriptionLimits);
-  } catch {
-    return {
-      free: { accountLimit: 1, fixedLotSize: 0.01 },
-      pro: { accountLimit: 8, fixedLotSize: null },
-      unlimited: { accountLimit: null, fixedLotSize: null },
-    };
-  }
 }
 
 export async function getDownloadInfo(
@@ -543,7 +507,6 @@ export async function updateAppSettings(
     monchoopsVersion: string;
     monchoopsWindowsDownloadUrl: string;
     monchoopsMacDownloadUrl: string;
-    localCopierSubscriptionLimits: string;
     resendApiKey: string | null;
     resendTestEmail: string | null;
     emailFrom: string | null;
@@ -562,20 +525,12 @@ export async function updateAppSettings(
 
   try {
     if (settings.length === 0) {
-      const defaultLimits =
-        data.localCopierSubscriptionLimits ||
-        JSON.stringify({
-          free: { accountLimit: 1, fixedLotSize: 0.01 },
-          pro: { accountLimit: 8, fixedLotSize: null },
-          unlimited: { accountLimit: null, fixedLotSize: null },
-        });
       const result = await db
         .insert(appSettings)
         .values({
           monchoopsVersion: data.monchoopsVersion || "1.0.0",
           monchoopsWindowsDownloadUrl: data.monchoopsWindowsDownloadUrl || "",
           monchoopsMacDownloadUrl: data.monchoopsMacDownloadUrl || "",
-          localCopierSubscriptionLimits: defaultLimits,
           resendApiKey: data.resendApiKey ?? null,
           resendTestEmail: data.resendTestEmail ?? null,
           emailFrom: data.emailFrom ?? null,
@@ -603,10 +558,6 @@ export async function updateAppSettings(
       }
       if (data.monchoopsMacDownloadUrl !== undefined) {
         updateData.monchoopsMacDownloadUrl = data.monchoopsMacDownloadUrl;
-      }
-      if (data.localCopierSubscriptionLimits !== undefined) {
-        updateData.localCopierSubscriptionLimits =
-          data.localCopierSubscriptionLimits;
       }
       if (data.resendApiKey !== undefined) {
         updateData.resendApiKey = data.resendApiKey ?? null;

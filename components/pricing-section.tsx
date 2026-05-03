@@ -256,10 +256,10 @@ export function PricingSection({
     }
   };
 
-  const proMonthlyPrice = 19;
-  const proAnnualPrice = 182;
-  const unlimitedMonthlyPrice = 50;
-  const unlimitedAnnualPrice = 480;
+  const proMonthlyPrice = 29;
+  const proAnnualPrice = 278;
+  const unlimitedMonthlyPrice = 79;
+  const unlimitedAnnualPrice = 758;
 
   const handleCheckout = async (plan: string, priceId: string | null) => {
     if (!priceId) {

@@ -126,7 +126,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
             {
               "@type": "Offer",
               name: "Pro",
-              price: "19",
+              price: "29",
               priceCurrency: "USD",
               availability: "https://schema.org/InStock",
               description:
@@ -135,7 +135,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
             {
               "@type": "Offer",
               name: "Unlimited",
-              price: "50",
+              price: "79",
               priceCurrency: "USD",
               availability: "https://schema.org/InStock",
               description:
@@ -168,7 +168,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
             {
               "@type": "Offer",
               name: "Unlimited",
-              price: "50",
+              price: "79",
               priceCurrency: "USD",
               availability: "https://schema.org/InStock",
               description:

@@ -50,6 +50,20 @@
       "when": 1769477292160,
       "tag": "0006_omniscient_thunderbolts",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1772582400000,
+      "tag": "0007_instagram_accounts_and_dm_events",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1772582500000,
+      "tag": "0008_drop_local_copier_subscription_limits",
+      "breakpoints": true
     }
   ]
 }

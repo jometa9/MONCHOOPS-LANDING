@@ -2,16 +2,20 @@ import { getAppUrl } from "@/lib/app-url";
 import { db } from "@/lib/db/drizzle";
 import {
   getAppSettings,
-  getSubscriptionLimits,
   getUserByApiKey,
   getUserEntitlements,
   isActiveSubscription,
   getSubscriptionTier,
 } from "@/lib/db/queries";
+import {
+  countActiveInstagramAccounts,
+  countDmsThisMonth,
+} from "@/lib/db/usage-queries";
 import { userProductSubscription } from "@/lib/db/schema";
 import { sendSubscriptionChangeEmail } from "@/lib/email/services";
 import { paymentsEnabled } from "@/lib/payments/feature-flag";
 import { handleSubscriptionChange, stripe } from "@/lib/payments/stripe";
+import { limitsForTier } from "@/lib/subscriptions/plan-limits";
 import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -37,7 +41,11 @@ export async function GET(request: NextRequest) {
 
     if (!paymentsEnabled) {
       const appSettings = await getAppSettings();
-      const subscriptionLimits = getSubscriptionLimits(appSettings);
+      const limits = limitsForTier("unlimited", true);
+      const [accountUsage, dmUsage] = await Promise.all([
+        countActiveInstagramAccounts(user.id),
+        countDmsThisMonth(user.id),
+      ]);
       return NextResponse.json({
         email: user.email,
         name: user.name || user.email.split("@")[0],
@@ -45,8 +53,10 @@ export async function GET(request: NextRequest) {
         version: appSettings.monchoopsVersion,
         windowsDownloadUrl: appSettings.monchoopsWindowsDownloadUrl || null,
         macDownloadUrl: appSettings.monchoopsMacDownloadUrl || null,
-        accountLimit: subscriptionLimits.unlimited?.accountLimit ?? null,
-        fixedLotSize: subscriptionLimits.unlimited?.fixedLotSize ?? null,
+        accountLimit: limits.accountLimit,
+        dmMonthlyLimit: limits.dmMonthlyLimit,
+        accountUsage,
+        dmUsage,
       });
     }
 
@@ -225,30 +235,17 @@ export async function GET(request: NextRequest) {
 
 
     const appSettings = await getAppSettings();
-    const subscriptionLimits = getSubscriptionLimits(appSettings);
 
-    const getLimitsForTier = (tier: string) => {
-      if (tier === "unlimited" || user.role === "admin") {
-        return {
-          accountLimit: subscriptionLimits.unlimited?.accountLimit ?? null,
-          fixedLotSize: subscriptionLimits.unlimited?.fixedLotSize ?? null,
-        };
-      }
-      if (tier === "pro") {
-        return {
-          accountLimit: subscriptionLimits.pro?.accountLimit ?? 8,
-          fixedLotSize: subscriptionLimits.pro?.fixedLotSize ?? null,
-        };
-      }
-      return {
-        accountLimit: subscriptionLimits.free?.accountLimit ?? 1,
-        fixedLotSize: subscriptionLimits.free?.fixedLotSize ?? 0.01,
-      };
-    };
+    const monchoopsTier =
+      user.role === "admin"
+        ? "unlimited"
+        : getSubscriptionTier(entitlements.monchoops);
+    const monchoopsLimits = limitsForTier(monchoopsTier, user.role === "admin");
 
-    const rawTier = user.role === "admin" ? "unlimited" : getSubscriptionTier(entitlements.monchoops);
-    const monchoopsTier = rawTier;
-    const monchoopsLimits = getLimitsForTier(monchoopsTier);
+    const [accountUsage, dmUsage] = await Promise.all([
+      countActiveInstagramAccounts(user.id),
+      countDmsThisMonth(user.id),
+    ]);
 
     const response = {
       email: user.email,
@@ -258,7 +255,9 @@ export async function GET(request: NextRequest) {
       windowsDownloadUrl: appSettings.monchoopsWindowsDownloadUrl || null,
       macDownloadUrl: appSettings.monchoopsMacDownloadUrl || null,
       accountLimit: monchoopsLimits.accountLimit,
-      fixedLotSize: monchoopsLimits.fixedLotSize,
+      dmMonthlyLimit: monchoopsLimits.dmMonthlyLimit,
+      accountUsage,
+      dmUsage,
     };
 
     return NextResponse.json(response);

@@ -53,9 +53,6 @@ export default function AdminAppVersion() {
     setButtonStatus(null);
 
     try {
-      const getResponse = await fetch("/api/admin/app-settings");
-      const currentData = await getResponse.json();
-
       const response = await fetch("/api/admin/app-settings", {
         method: "POST",
         headers: {
@@ -65,7 +62,6 @@ export default function AdminAppVersion() {
           monchoopsVersion: settings.monchoops.version.trim(),
           monchoopsWindowsDownloadUrl: settings.monchoops.windowsDownloadUrl.trim(),
           monchoopsMacDownloadUrl: settings.monchoops.macDownloadUrl.trim(),
-          subscriptionLimits: currentData.subscriptionLimits,
         }),
       });
 

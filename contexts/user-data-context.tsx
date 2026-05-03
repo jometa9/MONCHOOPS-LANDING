@@ -12,7 +12,11 @@ interface ProductSubscription {
   expiresAt: string | null;
   limits?: {
     accountLimit: number | null;
-    fixedLotSize: number | null;
+    dmMonthlyLimit: number | null;
+  };
+  usage?: {
+    accounts: number;
+    dmsThisMonth: number;
   };
   billingPeriod?: "monthly" | "annual" | null;
   accountLimit?: number | null;

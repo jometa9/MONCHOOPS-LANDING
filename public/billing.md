@@ -9,21 +9,21 @@ This policy explains how MONCHOOPS LLC bills and charges for our software and se
 ### MonchoOps
 
 **Free Plan:** $0
-- 3 accounts max
-- Fixed lot 0.01
+- 1 Instagram account
+- 100 DMs / month
 - No payment required
 
 **Pro Plan:**
-- Monthly: $19/month
-- Annual: $182/year (20% discount)
-- Up to 10 accounts
-- Full configuration
+- Monthly: $29/month
+- Annual: $278/year (20% discount)
+- Up to 5 Instagram accounts
+- 5,000 DMs / month
 
 **Unlimited Plan:**
-- Monthly: $50/month
-- Annual: $480/year (20% discount)
-- Unlimited accounts
-- Full configuration
+- Monthly: $79/month
+- Annual: $758/year (20% discount)
+- Unlimited Instagram accounts
+- Unlimited DMs
 
 ---
 

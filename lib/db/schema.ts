@@ -1,11 +1,14 @@
 import { relations, sql } from "drizzle-orm";
 import {
+  bigserial,
+  index,
   integer,
   jsonb,
   pgTable,
   serial,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -51,7 +54,6 @@ export const appSettings = pgTable("appSettings", {
     .default("1.0.0"),
   monchoopsWindowsDownloadUrl: text("monchoopsWindowsDownloadUrl"),
   monchoopsMacDownloadUrl: text("monchoopsMacDownloadUrl"),
-  localCopierSubscriptionLimits: text("localCopierSubscriptionLimits"),
   resendApiKey: text("resendApiKey"),
   resendTestEmail: text("resendTestEmail"),
   emailFrom: text("emailFrom"),
@@ -116,9 +118,67 @@ export const cronLock = pgTable("cronLock", {
 });
 
 
+export const instagramAccount = pgTable(
+  "instagramAccount",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("userId")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    username: varchar("username", { length: 60 }).notNull(),
+    deviceId: varchar("deviceId", { length: 100 }),
+    addedAt: timestamp("addedAt").notNull().defaultNow(),
+    removedAt: timestamp("removedAt"),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+  },
+  (t) => ({
+    userActiveUsernameUnique: uniqueIndex("instagramAccount_user_username_unique").on(
+      t.userId,
+      t.username
+    ),
+    userIdx: index("instagramAccount_userId_idx").on(t.userId),
+  })
+);
+
+export const dmEvent = pgTable(
+  "dmEvent",
+  {
+    id: bigserial("id", { mode: "number" }).primaryKey(),
+    userId: uuid("userId")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    fromUsername: varchar("fromUsername", { length: 60 }).notNull(),
+    targetUsername: varchar("targetUsername", { length: 60 }).notNull(),
+    deviceId: varchar("deviceId", { length: 100 }),
+    sentAt: timestamp("sentAt").notNull().defaultNow(),
+  },
+  (t) => ({
+    userSentAtIdx: index("dmEvent_user_sentAt_idx").on(t.userId, t.sentAt),
+  })
+);
+
 export const userRelations = relations(user, ({ many }) => ({
   accounts: many(accounts),
   productSubscriptions: many(userProductSubscription),
+  instagramAccounts: many(instagramAccount),
+  dmEvents: many(dmEvent),
+}));
+
+export const instagramAccountRelations = relations(
+  instagramAccount,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [instagramAccount.userId],
+      references: [user.id],
+    }),
+  })
+);
+
+export const dmEventRelations = relations(dmEvent, ({ one }) => ({
+  user: one(user, {
+    fields: [dmEvent.userId],
+    references: [user.id],
+  }),
 }));
 
 export const userProductSubscriptionRelations = relations(
@@ -143,6 +203,10 @@ export type InboundEmail = typeof inboundEmail.$inferSelect;
 export type NewInboundEmail = typeof inboundEmail.$inferInsert;
 export type CronLock = typeof cronLock.$inferSelect;
 export type NewCronLock = typeof cronLock.$inferInsert;
+export type InstagramAccount = typeof instagramAccount.$inferSelect;
+export type NewInstagramAccount = typeof instagramAccount.$inferInsert;
+export type DmEvent = typeof dmEvent.$inferSelect;
+export type NewDmEvent = typeof dmEvent.$inferInsert;
 
 export type ProductKey = "monchoops";
 export type SubscriptionTier = "free" | "pro" | "unlimited";

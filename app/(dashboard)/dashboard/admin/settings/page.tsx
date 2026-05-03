@@ -1,5 +1,4 @@
 import AdminAppVersion from "@/components/admin-app-version";
-import AdminSubscriptionLimits from "@/components/admin-subscription-limits";
 import AdminDeleteUser from "@/components/admin-delete-user";
 import AdminSettings from "@/components/admin-settings";
 import AdminInboxSettings from "@/components/admin-inbox-settings";
@@ -10,7 +9,6 @@ import {
   Download,
   Gift,
   Mail,
-  Sliders,
   Trash2,
 } from "lucide-react";
 import { redirect } from "next/navigation";
@@ -64,18 +62,6 @@ export default async function AdminSettingsPage() {
                 <p className="text-lg">App Versions & Downloads</p>
               </div>
               <AdminAppVersion />
-            </div>
-          </section>
-
-          <section>
-            <div className="group rounded-lg bg-gray-100 p-3 transition-all duration-200 w-full">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-3 bg-white rounded-lg border border-gray-200">
-                  <Sliders className="h-5 w-5 text-gray-700" />
-                </div>
-                <p className="text-lg">Subscription Limits</p>
-              </div>
-              <AdminSubscriptionLimits />
             </div>
           </section>
 
