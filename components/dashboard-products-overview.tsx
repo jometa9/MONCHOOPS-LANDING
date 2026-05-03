@@ -20,7 +20,6 @@ import {
   Download,
   Mail,
   PartyPopper,
-  Sparkles,
   Youtube,
 } from "lucide-react";
 import Link from "next/link";
@@ -422,25 +421,7 @@ export function DashboardProductsOverview() {
       </div>
 
       <div className="rounded-lg bg-gray-100 p-3">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-          <Link
-            href="/dashboard/assistant"
-            prefetch={true}
-            className="group rounded-lg bg-white p-3 px-4 border border-gray-200 hover:bg-gray-50 cursor-pointer block transition-all"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex gap-1 flex-col">
-                <div className="flex items-center justify-center gap-2">
-                  <Sparkles className="w-5 h-5 text-gray-700" />
-                  <p className="text-lg">AI Assistant</p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Ask Ugo anything</p>
-                </div>
-              </div>
-            </div>
-          </Link>
-
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           <Link
             href="/dashboard/documentation"
             prefetch={true}

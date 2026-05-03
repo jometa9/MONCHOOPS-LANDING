@@ -513,8 +513,6 @@ export async function updateAppSettings(
     resendInboundWebhookSecret: string | null;
     discordWebhookUrl: string | null;
     discordDailyReportWebhookUrl: string | null;
-    openaiApiKey: string | null;
-    openaiModel: string | null;
   }>
 ) {
   const settings = await db
@@ -536,8 +534,6 @@ export async function updateAppSettings(
           emailFrom: data.emailFrom ?? null,
           resendInboundWebhookSecret: data.resendInboundWebhookSecret ?? null,
           discordDailyReportWebhookUrl: data.discordDailyReportWebhookUrl ?? null,
-          openaiApiKey: data.openaiApiKey ?? null,
-          openaiModel: data.openaiModel ?? null,
           updatedAt: new Date(),
           updatedBy: userId,
         })
@@ -578,13 +574,7 @@ export async function updateAppSettings(
         updateData.discordDailyReportWebhookUrl =
           data.discordDailyReportWebhookUrl ?? null;
       }
-      if (data.openaiApiKey !== undefined) {
-        updateData.openaiApiKey = data.openaiApiKey?.trim() || null;
-      }
-      if (data.openaiModel !== undefined) {
-        updateData.openaiModel = data.openaiModel?.trim() || null;
-      }
-      
+
       const result = await db
         .update(appSettings)
         .set(updateData)

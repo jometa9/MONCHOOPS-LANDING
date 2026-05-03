@@ -76,7 +76,6 @@
     "next-auth": "^5.0.0-beta.25",
     "node-fetch": "^3.3.2",
     "nodemailer": "^6.10.0",
-    "openai": "^6.9.1",
     "postcss": "^8.5.3",
     "postgres": "^3.4.5",
     "protobufjs": "^8.0.0",

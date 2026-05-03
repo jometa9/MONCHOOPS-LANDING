@@ -25,8 +25,6 @@ export async function GET() {
       resendInboundWebhookSecret: settings.resendInboundWebhookSecret || "",
       discordWebhookUrl: settings.discordWebhookUrl || "",
       discordDailyReportWebhookUrl: settings.discordDailyReportWebhookUrl || "",
-      openaiApiKey: settings.openaiApiKey || "",
-      openaiModel: settings.openaiModel || "",
     });
   } catch {
     return NextResponse.json(
@@ -55,8 +53,6 @@ export async function POST(req: NextRequest) {
       resendInboundWebhookSecret,
       discordWebhookUrl,
       discordDailyReportWebhookUrl,
-      openaiApiKey,
-      openaiModel,
     } = body;
 
     const updateData: Parameters<typeof updateAppSettings>[1] = {
@@ -84,13 +80,6 @@ export async function POST(req: NextRequest) {
       updateData.discordDailyReportWebhookUrl =
         discordDailyReportWebhookUrl?.trim() || null;
     }
-    if (openaiApiKey !== undefined) {
-      updateData.openaiApiKey = openaiApiKey?.trim() || null;
-    }
-    if (openaiModel !== undefined) {
-      updateData.openaiModel = openaiModel?.trim() || null;
-    }
-
     const { clearEmailConfigCache } = await import("@/lib/email/config");
     clearEmailConfigCache();
 
@@ -107,8 +96,6 @@ export async function POST(req: NextRequest) {
       resendInboundWebhookSecret: updatedSettings.resendInboundWebhookSecret || "",
       discordWebhookUrl: updatedSettings.discordWebhookUrl || "",
       discordDailyReportWebhookUrl: updatedSettings.discordDailyReportWebhookUrl || "",
-      openaiApiKey: updatedSettings.openaiApiKey || "",
-      openaiModel: updatedSettings.openaiModel || "",
     });
   } catch {
     return NextResponse.json(

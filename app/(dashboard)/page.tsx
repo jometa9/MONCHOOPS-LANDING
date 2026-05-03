@@ -1,6 +1,5 @@
 "use client";
 
-import { AIQuestionSection } from "@/components/landing/ai-question-section";
 import { CallToActionSection } from "@/components/landing/call-to-action-section";
 import { ComparisonTable } from "@/components/landing/comparison-table";
 import { FAQSection } from "@/components/landing/faq-section";
@@ -261,7 +260,7 @@ Pull leads from any profile, post, hashtag, or location. Send personalized DMs f
                 </span>
               ))}
             </div>
-            <div className="bg-white w-full max-w-[800px] mx-auto md:ml-auto md:mr-0 aspect-[980/600] rounded-lg relative transition-transform duration-0 overflow-hidden z-10 shadow-2xl shadow-indigo-500/30 ring-1 ring-white/10">
+            <div className="bg-white w-full mx-auto md:ml-auto md:mr-0 aspect-[980/600] rounded-lg relative transition-transform duration-0 overflow-hidden z-10 shadow-2xl shadow-indigo-500/30 ring-1 ring-white/10">
               <MonchoOpsWindowDemo />
             </div>
           </div>

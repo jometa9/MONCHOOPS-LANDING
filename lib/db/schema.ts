@@ -60,8 +60,6 @@ export const appSettings = pgTable("appSettings", {
   resendInboundWebhookSecret: text("resendInboundWebhookSecret"),
   discordWebhookUrl: text("discordWebhookUrl"),
   discordDailyReportWebhookUrl: text("discordDailyReportWebhookUrl"),
-  openaiApiKey: text("openaiApiKey"),
-  openaiModel: text("openaiModel"),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
   updatedBy: uuid("updatedBy").references(() => user.id),
 });

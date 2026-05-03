@@ -10,7 +10,6 @@ import {
   Home,
   Inbox,
   Settings,
-  Sparkles,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -35,11 +34,6 @@ const defaultItems: SidebarItem[] = [
     label: "Home",
     href: "/dashboard",
     icon: <Home className="h-4 w-4" />,
-  },
-  {
-    label: "Assistant",
-    href: "/dashboard/assistant",
-    icon: <Sparkles className="h-4 w-4" />,
   },
   {
     label: "Docs",

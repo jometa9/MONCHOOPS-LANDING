@@ -171,4 +171,4 @@ MonchoOps checks `monchoops.com/api/version` on startup. When a new version is a
 
 ## FAQ
 
-For specific questions about pricing, safety, proxies, scraping limits, and Instagram compliance, see the FAQ section on [monchoops.com](https://monchoops.com/#faq) or use the AI assistant at [monchoops.com/assistant](https://monchoops.com/assistant).
+For specific questions about pricing, safety, proxies, scraping limits, and Instagram compliance, see the FAQ section on [monchoops.com](https://monchoops.com/#faq).
