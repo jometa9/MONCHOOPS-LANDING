@@ -483,6 +483,7 @@ function SquareIconInput({
   placeholder,
   disabled,
   trailing,
+  dataDemoId,
 }: {
   id?: string;
   icon: typeof AtSign;
@@ -492,6 +493,7 @@ function SquareIconInput({
   placeholder?: string;
   disabled?: boolean;
   trailing?: React.ReactNode;
+  dataDemoId?: string;
 }) {
   return (
     <div className="flex h-10 items-stretch border border-border bg-background">
@@ -505,6 +507,7 @@ function SquareIconInput({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         disabled={disabled}
+        data-demo-id={dataDemoId}
         className="min-w-0 flex-1 bg-transparent px-3 text-sm outline-none placeholder:text-muted-foreground disabled:opacity-50"
       />
       {trailing}
@@ -687,7 +690,7 @@ function AddAccountDialog({
       className="max-w-2xl"
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={busy}>
+          <Button variant="ghost" onClick={onClose} disabled={busy} data-demo-id="add-account-cancel">
             Cancel
           </Button>
           <Button onClick={handleContinue} disabled={disabled}>
@@ -708,6 +711,7 @@ function AddAccountDialog({
                 type="button"
                 onClick={() => setMode(m.id)}
                 disabled={busy}
+                data-demo-id={`add-account-mode-${m.id}`}
                 className={cn(
                   'inline-flex h-9 flex-1 items-center justify-center gap-1.5 px-3 text-xs font-medium transition-colors',
                   idx !== ADD_MODES.length - 1 && 'border-r border-border',
@@ -741,6 +745,7 @@ function AddAccountDialog({
                 onChange={setUsername}
                 placeholder="your.username or your.email@example.com"
                 disabled={busy}
+                dataDemoId="add-account-username"
               />
             </div>
             <div className="space-y-1">
@@ -753,6 +758,7 @@ function AddAccountDialog({
                 onChange={setPassword}
                 placeholder="••••••••"
                 disabled={busy}
+                dataDemoId="add-account-password"
                 trailing={
                   <button
                     type="button"
@@ -1135,6 +1141,7 @@ export function InstagramAccounts() {
                 type="button"
                 onClick={openLoginMethod}
                 disabled={adding}
+                data-demo-id="add-account-button"
                 className="inline-flex h-9 items-center gap-1.5 border border-border bg-primary px-3 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-60"
               >
                 {adding ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
@@ -1163,6 +1170,7 @@ export function InstagramAccounts() {
             type="button"
             onClick={openLoginMethod}
             disabled={adding}
+            data-demo-id="add-account-button"
             className="inline-flex h-9 items-center gap-1.5 border-r border-border bg-primary px-3 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-60"
           >
             {adding ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}

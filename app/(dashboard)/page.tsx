@@ -136,8 +136,8 @@ export default function HomePage() {
       <LandingHeader />
       <main data-page="home" className="pt-30">
         <div className="max-w-7xl mx-auto px-3 pb-0">
-          <p className="text-sm uppercase st text-gray-500 mb-3">
-            Scrape leads in bulk. Send DMs at scale.
+          <p className="text-xs uppercase st text-gray-500 mb-3">
+            Find leads. Send DMs. Win replies.
           </p>
           <h1 className="md:text-5xl text-3xl font-semibold text-gray-900 tracking-tight max-w-4xl">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-black via-gray-700 to-indigo-600">
@@ -201,7 +201,7 @@ export default function HomePage() {
               className="pointer-events-none absolute inset-0"
               style={{
                 background:
-                  "radial-gradient(ellipse 65% 55% at 50% 50%, rgba(165,180,252,0.45) 0%, rgba(165,180,252,0) 70%)",
+                  "radial-gradient(ellipse 70% 60% at 75% 50%, rgba(165,180,252,0.55) 0%, rgba(165,180,252,0) 70%)",
               }}
             />
             <div
@@ -209,22 +209,70 @@ export default function HomePage() {
               className="pointer-events-none absolute inset-0"
               style={{
                 background:
-                  "radial-gradient(ellipse 45% 35% at 50% 100%, rgba(129,140,248,0.5) 0%, rgba(129,140,248,0) 70%)",
+                  "radial-gradient(ellipse 50% 40% at 80% 100%, rgba(129,140,248,0.6) 0%, rgba(129,140,248,0) 70%)",
               }}
             />
-            <div className="bg-white w-full max-w-[980px] mx-auto h-[620px] rounded-lg relative transition-transform duration-0 overflow-hidden z-10 shadow-2xl shadow-indigo-500/30 ring-1 ring-white/10">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(ellipse 55% 65% at 15% 40%, rgba(99,102,241,0.35) 0%, rgba(99,102,241,0) 70%)",
+              }}
+            />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 hidden md:block overflow-hidden"
+            >
+              <style>{`
+                @keyframes monchoFloat {
+                  0%   { transform: translate3d(0, 40px, 0) rotate(0deg) scale(0.6); opacity: 0; }
+                  15%  { opacity: 1; }
+                  85%  { opacity: 1; }
+                  100% { transform: translate3d(60px, -120px, 0) rotate(180deg) scale(1.05); opacity: 0; }
+                }
+                .moncho-sparkle {
+                  position: absolute;
+                  color: rgba(255,255,255,0.95);
+                  filter: drop-shadow(0 0 6px rgba(199,210,254,0.85)) drop-shadow(0 0 14px rgba(165,180,252,0.55));
+                  animation: monchoFloat linear infinite;
+                  will-change: transform, opacity;
+                }
+                .moncho-sparkle svg { display: block; width: 100%; height: 100%; }
+              `}</style>
+              {[
+                { left: '6%',  top: '70%', size: 18, dur: '9s',  delay: '0s' },
+                { left: '12%', top: '85%', size: 12, dur: '11s', delay: '1.5s' },
+                { left: '18%', top: '60%', size: 22, dur: '13s', delay: '3s' },
+                { left: '4%',  top: '50%', size: 14, dur: '10s', delay: '4.5s' },
+                { left: '22%', top: '90%', size: 10, dur: '8s',  delay: '2s' },
+                { left: '10%', top: '40%', size: 13, dur: '12s', delay: '6s' },
+                { left: '26%', top: '75%', size: 16, dur: '14s', delay: '0.5s' },
+              ].map((s, i) => (
+                <span
+                  key={i}
+                  className="moncho-sparkle"
+                  style={{ left: s.left, top: s.top, width: s.size, height: s.size, animationDuration: s.dur, animationDelay: s.delay }}
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                    <path d="M12 0 L13.8 9.2 L24 12 L13.8 14.8 L12 24 L10.2 14.8 L0 12 L10.2 9.2 Z" />
+                  </svg>
+                </span>
+              ))}
+            </div>
+            <div className="bg-white w-full max-w-[900px] mx-auto md:ml-auto md:mr-0 aspect-[980/600] rounded-lg relative transition-transform duration-0 overflow-hidden z-10 shadow-2xl shadow-indigo-500/30 ring-1 ring-white/10">
               <MonchoOpsWindowDemo />
             </div>
           </div>
         </section>
 
-        <div className="py-24" id="features">
+        <div className="py-24 px-6" id="features">
           <h2 className="text-3xl text-center text-gray-900 mb-1">
-            One app replaces your scraper, your DM sender, and your CRM
+            One app to scrape leads and send mass DMs on Instagram
           </h2>
           <p className="text-md text-center text-gray-600 max-w-2xl mx-auto px-6">
-            Stop paying for three SaaS tools, copy-pasting CSVs between
-            them, and praying none of them gets your accounts banned.
+            Stop paying for two SaaS tools and copy-pasting CSVs between
+            them. One desktop app does the whole flow.
           </p>
         </div>
 

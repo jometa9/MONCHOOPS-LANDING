@@ -53,7 +53,7 @@ export const metadata: Metadata = {
       url: "https://www.linkedin.com/in/joaquinmetayer/",
     },
   ],
-  creator: "MONCHOOPS LLC",
+  creator: "IPTRADE COPIER LLC",
   publisher: "MonchoOps",
   formatDetection: {
     email: false,

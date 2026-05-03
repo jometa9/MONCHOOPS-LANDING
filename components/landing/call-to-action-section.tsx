@@ -37,8 +37,7 @@ export function CallToActionSection({
         Stop renting your outreach.
       </h2>
       <p className="text-gray-500 text-base text-center max-w-md">
-        Download once. Run on your machine. Own every account, every lead,
-        every DM you send. Free plan included, no credit card.
+        Free plan included, no credit card required.
       </p>
 
       <Button

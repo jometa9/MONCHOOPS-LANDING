@@ -10,7 +10,7 @@ import { JobsProvider } from "@/components/landing/window-demo-app/context/JobsC
 import { ThemeProvider } from "@/components/landing/window-demo-app/context/ThemeContext";
 import { PreferencesProvider } from "@/components/landing/window-demo-app/context/PreferencesContext";
 import { AppShell } from "@/components/landing/window-demo-app/components/layout/AppShell";
-import { DemoAutoplay } from "@/components/landing/window-demo-app/components/DemoAutoplay";
+import { DemoAutoplay, type Step } from "@/components/landing/window-demo-app/components/DemoAutoplay";
 import { Home } from "@/components/landing/window-demo-app/screens/Home";
 import { InstagramAccounts } from "@/components/landing/window-demo-app/screens/InstagramAccounts";
 import { MassDMs } from "@/components/landing/window-demo-app/screens/MassDMs";
@@ -25,15 +25,21 @@ import { CategoryLeadsDetail } from "@/components/landing/window-demo-app/screen
 import { MessageVariants } from "@/components/landing/window-demo-app/screens/MessageVariants";
 import { Settings } from "@/components/landing/window-demo-app/screens/Settings";
 
-export default function App() {
+interface AppProps {
+  script?: Step[];
+  startDelay?: number;
+  initialPath?: string;
+}
+
+export default function App({ script, startDelay, initialPath }: AppProps) {
   return (
     <ThemeProvider>
       <PreferencesProvider>
         <SessionProvider>
           <AccountsProvider>
             <JobsProvider>
-              <MemoryRouter>
-                <DemoAutoplay />
+              <MemoryRouter initialEntries={initialPath ? [initialPath] : ["/"]}>
+                <DemoAutoplay script={script} startDelay={startDelay} />
                 <Routes>
                   <Route element={<AppShell />}>
                     <Route index element={<Home />} />

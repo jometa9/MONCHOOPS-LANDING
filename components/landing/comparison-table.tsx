@@ -6,10 +6,10 @@ import { Check, X } from "lucide-react";
 type CellValue = "yes" | "no" | "varies" | string;
 
 const COMPETITORS = [
+  { id: "autoreacher", name: "AutoReacher" },
+  { id: "instadm", name: "InstaDM" },
   { id: "manychat", name: "Manychat" },
   { id: "phantombuster", name: "Phantombuster" },
-  { id: "instantData", name: "InstantData" },
-  { id: "diy", name: "DIY scripts" },
 ] as const;
 
 type CompetitorId = (typeof COMPETITORS)[number]["id"];
@@ -22,123 +22,123 @@ interface ComparisonRow {
 
 const comparisonData: ComparisonRow[] = [
   {
-    feature: "Where it runs",
-    monchoops: "Your machine",
-    competitors: {
-      manychat: "Cloud",
-      phantombuster: "Cloud",
-      instantData: "Cloud",
-      diy: "Your machine",
-    },
-  },
-  {
     feature: "Multi-account",
     monchoops: "yes",
     competitors: {
+      autoreacher: "yes",
+      instadm: "yes",
       manychat: "Per workspace",
       phantombuster: "yes",
-      instantData: "yes",
-      diy: "varies",
     },
   },
   {
     feature: "Proxy per account",
     monchoops: "yes",
     competitors: {
+      autoreacher: "yes",
+      instadm: "yes",
       manychat: "no",
       phantombuster: "varies",
-      instantData: "no",
-      diy: "yes",
     },
   },
   {
     feature: "Isolated browser per account",
     monchoops: "yes",
     competitors: {
+      autoreacher: "no",
+      instadm: "no",
       manychat: "no",
       phantombuster: "no",
-      instantData: "no",
-      diy: "varies",
     },
   },
   {
     feature: "Pre-DM interactions",
     monchoops: "yes",
     competitors: {
+      autoreacher: "no",
+      instadm: "no",
       manychat: "no",
       phantombuster: "no",
-      instantData: "no",
-      diy: "no",
     },
   },
   {
     feature: "Lead scraping (4 modes)",
     monchoops: "yes",
     competitors: {
+      autoreacher: "yes",
+      instadm: "varies",
       manychat: "no",
       phantombuster: "yes",
-      instantData: "yes",
-      diy: "varies",
     },
   },
   {
     feature: "Cold DM with variants",
     monchoops: "yes",
     competitors: {
+      autoreacher: "yes",
+      instadm: "Templates",
       manychat: "Templates",
       phantombuster: "Templates",
-      instantData: "Templates",
-      diy: "varies",
     },
   },
   {
     feature: "Auto-skip already-DMed",
     monchoops: "yes",
     competitors: {
+      autoreacher: "varies",
+      instadm: "no",
       manychat: "no",
       phantombuster: "no",
-      instantData: "no",
-      diy: "no",
     },
   },
   {
     feature: "Per-recipient DM log",
     monchoops: "yes",
     competitors: {
+      autoreacher: "yes",
+      instadm: "Limited",
       manychat: "Limited",
       phantombuster: "no",
-      instantData: "no",
-      diy: "no",
     },
   },
   {
     feature: "Data stored locally only",
     monchoops: "yes",
     competitors: {
+      autoreacher: "no",
+      instadm: "no",
       manychat: "no",
       phantombuster: "no",
-      instantData: "no",
-      diy: "yes",
+    },
+  },
+  {
+    feature: "Where it runs",
+    monchoops: "Your machine",
+    competitors: {
+      autoreacher: "Cloud",
+      instadm: "Cloud",
+      manychat: "Cloud",
+      phantombuster: "Cloud",
     },
   },
   {
     feature: "Pricing model",
     monchoops: "Flat rate",
     competitors: {
+      autoreacher: "Per account",
+      instadm: "Subscription",
       manychat: "Per contact",
       phantombuster: "Per slot/hour",
-      instantData: "Per export",
-      diy: "Free",
     },
   },
   {
     feature: "Upfront engineering",
     monchoops: "None",
     competitors: {
+      autoreacher: "None",
+      instadm: "None",
       manychat: "None",
       phantombuster: "Some",
-      instantData: "None",
-      diy: "Significant",
     },
   },
 ];
@@ -198,12 +198,13 @@ export function ComparisonTable() {
         <p className="text-xl text-gray-600 mb-1">How we compare</p>
         <h2 className="flex flex-col items-start gap-1 text-3xl text-gray-900 md:flex-row md:flex-wrap md:gap-x-2 md:gap-y-0 md:text-5xl">
           <span>MonchoOps vs.</span>
-          <span>cloud Instagram tools</span>
+          <span>other Instagram tools</span>
         </h2>
         <p className="mt-3 text-sm text-gray-500 max-w-2xl">
-          Cloud DM tools share IPs and store your sessions on their servers
-          — Instagram pattern-matches that. MonchoOps runs on your machine,
-          with your proxy, with your data encrypted on your disk.
+          Most Instagram tools cap you at one account, hide your DM history,
+          and charge per contact or per slot. MonchoOps gives you multi-account,
+          a per-recipient log, auto-skip on already-DM&apos;d prospects, and a
+          flat rate.
         </p>
       </div>
 
@@ -212,7 +213,7 @@ export function ComparisonTable() {
           <div className="min-w-0 px-4 py-4 text-sm font-medium text-gray-500 border-b border-gray-200 bg-gray-50 flex items-center justify-center text-center">
             Feature
           </div>
-          <div className="px-3 py-4 flex items-center justify-center text-center bg-gray-900 border-x border-b border-gray-900">
+          <div className="px-3 py-4 flex items-center justify-center text-center bg-indigo-950 border-x border-b border-indigo-950">
             <span className="font-bold text-lg text-white mx-1">MonchoOps</span>
           </div>
           {COMPETITORS.map((c, idx) => (
@@ -239,8 +240,8 @@ export function ComparisonTable() {
                 ? "bg-white"
                 : "bg-gray-50/50";
             const competitorBg = featureBg;
-            const monchoopsBgBorder = "bg-gray-900 border-x border-gray-900";
-            const bottomRuleDark = isLastRow ? "" : "border-b border-gray-900";
+            const monchoopsBgBorder = "bg-indigo-950 border-x border-indigo-950";
+            const bottomRuleDark = isLastRow ? "" : "border-b border-white/20";
             const rowProps = {
               "data-comparison-row": i,
               onMouseEnter: () => setHoveredRow(i),

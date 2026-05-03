@@ -1,6 +1,6 @@
 # Terms of Use
 
-These Terms of Use govern your use of MonchoOps software and services operated by MONCHOOPS LLC.
+These Terms of Use govern your use of MonchoOps software and services operated by IPTRADE COPIER LLC.
 
 By using MonchoOps, you agree to these terms. If you don't agree, don't use our software.
 
@@ -83,7 +83,7 @@ MonchoOps is provided "as is" without warranties of any kind. We do not guarante
 
 ## Limitation of liability
 
-To the maximum extent permitted by law, MONCHOOPS LLC's total liability is limited to the amount you paid for the software in the 12 months preceding the claim.
+To the maximum extent permitted by law, IPTRADE COPIER LLC's total liability is limited to the amount you paid for the software in the 12 months preceding the claim.
 
 We are not liable for indirect, incidental, special, or consequential damages, including lost accounts, lost leads, or lost revenue.
 

@@ -1014,14 +1014,6 @@ export function PricingSection({
                 </li>
                 <li className="flex items-start">
                   <Check className={checkDark} strokeWidth={2.5} />
-                  <p className={featureTextDark}>Unified inbox across accounts</p>
-                </li>
-                <li className="flex items-start">
-                  <Check className={checkDark} strokeWidth={2.5} />
-                  <p className={featureTextDark}>AI replies (BYO API key)</p>
-                </li>
-                <li className="flex items-start">
-                  <Check className={checkDark} strokeWidth={2.5} />
                   <p className={featureTextDark}>Priority support</p>
                 </li>
               </ul>

@@ -496,7 +496,7 @@ function ManualPanel({
           {busy ? ' · saving…' : ''}
         </span>
       </div>
-      <div className="max-h-[42vh] space-y-2 overflow-auto p-3">
+      <div className="max-h-[42cqh] space-y-2 overflow-auto p-3">
         {rows.map((row, i) => (
           <div key={i} className="flex items-center gap-2">
             <Input
@@ -607,7 +607,7 @@ function FilePanel({
         onDragLeave={() => setDragOver(false)}
         onDrop={onDrop}
         className={cn(
-          'flex min-h-[50vh] cursor-pointer flex-col items-center justify-center gap-2 border-2 border-dashed border-border p-6 text-center transition-colors hover:bg-accent',
+          'flex min-h-[40cqh] cursor-pointer flex-col items-center justify-center gap-2 border-2 border-dashed border-border p-6 text-center transition-colors hover:bg-accent',
           dragOver && 'border-primary bg-primary/5',
           loading && 'cursor-wait opacity-60'
         )}
@@ -738,7 +738,7 @@ function JobsPanel({
           />
         </div>
       </div>
-      <div className="flex h-[50vh] flex-col overflow-auto">
+      <div className="flex h-[50cqh] flex-col overflow-auto">
         {rows === null ? (
           <div className="flex items-center justify-center p-6">
             <Spinner className="h-5 w-5 text-muted-foreground" />
@@ -920,7 +920,7 @@ function CategoryPanel({
           />
         </div>
       </div>
-      <div className="flex h-[50vh] flex-col overflow-auto">
+      <div className="flex h-[50cqh] flex-col overflow-auto">
         {rows === null ? (
           <div className="flex items-center justify-center p-6">
             <Spinner className="h-5 w-5 text-muted-foreground" />
@@ -1104,7 +1104,7 @@ function WriteVariantsPanel({
           <code className="rounded bg-background px-1 py-0.5 text-[10px]">{'{{username}}'}</code>
         </span>
       </div>
-      <div className="max-h-[45vh] space-y-2 overflow-auto p-3">
+      <div className="max-h-[45cqh] space-y-2 overflow-auto p-3">
         {variants.map((value, i) => (
           <div key={i} className="flex items-start gap-2">
             <Textarea
@@ -1184,7 +1184,7 @@ function SavedVariantsPanel({ onLoad }: { onLoad: (variants: string[]) => void }
           />
         </div>
       </div>
-      <div className="flex h-[45vh] flex-col overflow-auto">
+      <div className="flex h-[45cqh] flex-col overflow-auto">
         {rows === null ? (
           <div className="flex items-center justify-center p-6">
             <Spinner className="h-5 w-5 text-muted-foreground" />

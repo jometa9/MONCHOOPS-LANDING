@@ -1,6 +1,6 @@
 # Refund Policy
 
-This policy explains when MONCHOOPS LLC provides refunds.
+This policy explains when IPTRADE COPIER LLC provides refunds.
 
 ---
 

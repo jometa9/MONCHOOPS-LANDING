@@ -1,6 +1,6 @@
 # Cookies Policy
 
-This policy explains how MONCHOOPS LLC uses cookies and similar technologies.
+This policy explains how IPTRADE COPIER LLC uses cookies and similar technologies.
 
 ---
 

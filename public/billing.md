@@ -1,6 +1,6 @@
 # Billing Policy
 
-This policy explains how MONCHOOPS LLC bills and charges for our software and services.
+This policy explains how IPTRADE COPIER LLC bills and charges for our software and services.
 
 ---
 

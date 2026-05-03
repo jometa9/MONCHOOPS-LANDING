@@ -75,7 +75,7 @@ export function AccountStep({ accounts, value, onChange }: Props) {
           />
         </div>
       </div>
-      <div className="flex h-[50vh] flex-col overflow-auto">
+      <div className="flex h-[50cqh] flex-col overflow-auto">
         {filtered.length === 0 ? (
           <EmptyState
             icon={<Search className="h-10 w-10" />}

@@ -1,6 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useEffect, useRef, useState } from "react";
+import type { Step } from "@/components/landing/window-demo-app/components/DemoAutoplay";
 
 const App = dynamic(
   () => import("@/components/landing/window-demo-app/App"),
@@ -14,18 +16,44 @@ const App = dynamic(
   }
 );
 
-export function MonchoOpsWindowDemo() {
+const BASE_WIDTH = 980;
+const BASE_HEIGHT = 600;
+
+interface MonchoOpsWindowDemoProps {
+  script?: Step[];
+  startDelay?: number;
+  initialPath?: string;
+}
+
+export function MonchoOpsWindowDemo({ script, startDelay, initialPath }: MonchoOpsWindowDemoProps) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const update = () => {
+      const { width } = el.getBoundingClientRect();
+      if (width <= 0) return;
+      setScale(width / BASE_WIDTH);
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   return (
     <div
+      ref={containerRef}
+      data-monchoops-demo-root
       className="monchoops-demo-root relative h-full w-full overflow-hidden rounded-lg border border-gray-200 bg-white text-[13px] antialiased"
-      // transform on the wrapper makes `position: fixed` descendants (like
-      // dialogs) contain themselves inside the demo frame instead of escaping
-      // to the viewport. side-effect: the parent's rounded-corner clip stops
-      // applying to us, so we re-declare the radius+border here.
-      style={{ transform: "translateZ(0)" }}
+      style={{
+        containerType: "size",
+        clipPath: "inset(0 round 0.5rem)",
+        isolation: "isolate",
+      }}
     >
-      {/* Mirror the B2DM index.css rules that the copied components rely on,
-          scoped to the demo so they don't leak into the rest of the landing. */}
       <style>{`
         .monchoops-demo-root .titlebar { height: 28px; }
         .monchoops-demo-root, .monchoops-demo-root * {
@@ -33,8 +61,30 @@ export function MonchoOpsWindowDemo() {
           -webkit-font-smoothing: antialiased;
         }
         .monchoops-demo-root *::-webkit-scrollbar { display: none; }
+        .monchoops-demo-stage,
+        .monchoops-demo-stage * {
+          pointer-events: none !important;
+          user-select: none !important;
+          -webkit-user-select: none !important;
+          touch-action: none !important;
+          overscroll-behavior: contain !important;
+        }
       `}</style>
-      <App />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div
+          className="monchoops-demo-stage"
+          aria-hidden
+          style={{
+            width: BASE_WIDTH,
+            height: BASE_HEIGHT,
+            transform: `scale(${scale})`,
+            transformOrigin: "center center",
+            flex: "none",
+          }}
+        >
+          <App script={script} startDelay={startDelay} initialPath={initialPath} />
+        </div>
+      </div>
     </div>
   );
 }

@@ -16,7 +16,7 @@ export function Footer() {
         <span className="text-xl font-bold text-black">MonchoOps</span>
       </Link>
       <p className="text-sm text-gray-400 pt-1">
-        Instagram outreach, on your machine.
+        Find leads. Send DMs. Win replies.
       </p>
 
       <div className="flex flex-wrap gap-x-2 gap-y-1 text-sm pt-2">
@@ -56,7 +56,17 @@ export function Footer() {
         </Link>
       </div>
       <p className="text-sm text-gray-400 pt-2">
-        &copy; {new Date().getFullYear()} MONCHOOPS LLC. All rights reserved.
+        &copy; {new Date().getFullYear()} IPTRADE COPIER LLC. All rights
+        reserved. Created by{" "}
+        <Link
+          href="https://api2labs.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-gray-600"
+        >
+          API2LABS
+        </Link>
+        .
       </p>
       <p className="text-sm text-gray-400 pt-2">
         Support Email:{" "}

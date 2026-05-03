@@ -3,6 +3,16 @@
 import { FAQItem, faqsData } from "@/lib/faqs-data";
 import { useState } from "react";
 
+const LANDING_FAQ_IDS = [
+  "what-is-monchoops",
+  "is-it-safe",
+  "how-many-accounts",
+  "do-i-need-proxies",
+  "no-duplicate-dms",
+  "cloud-vs-local",
+  "refunds",
+];
+
 export function FAQSection() {
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
 
@@ -13,9 +23,13 @@ export function FAQSection() {
     }));
   };
 
+  const landingFaqs = LANDING_FAQ_IDS
+    .map((id) => faqsData.find((f) => f.id === id))
+    .filter((f): f is FAQItem => Boolean(f));
+
   return (
     <div className="max-w-3xl">
-      {faqsData.map((item: FAQItem) => (
+      {landingFaqs.map((item: FAQItem) => (
         <div key={item.id} className="rounded-lg overflow-hidden py-2">
           <button
             onClick={() => toggleItem(item.id)}

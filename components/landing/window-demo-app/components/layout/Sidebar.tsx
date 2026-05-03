@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NavLink } from '@/components/landing/window-demo-app/vendor/react-router-dom';
 import { Database, FolderTree, History, Home, Instagram, ListTodo, LogOut, MessageSquareText, Send, Settings, Users } from 'lucide-react';
 import { cn } from '@/components/landing/window-demo-app/lib/cn';
@@ -61,11 +61,30 @@ export function Sidebar() {
   const scrapeJobs = running.filter((j) => SCRAPE_KINDS.includes(j.kind));
   const hasRunning = running.length > 0;
   const isScraping = scrapeJobs.length > 0;
-  const scrapedCount = scrapeJobs.reduce(
+  const realScrapedCount = scrapeJobs.reduce(
     (sum, j) => sum + (progressByJob[j.id]?.done ?? j.progressDone ?? 0),
     0
   );
   const statusLabel = isScraping ? 'Scraping' : 'Running';
+
+  const [displayedScraped, setDisplayedScraped] = useState(0);
+  const capRef = useRef(realScrapedCount);
+  capRef.current = realScrapedCount;
+
+  useEffect(() => {
+    if (!isScraping) {
+      setDisplayedScraped(0);
+      return;
+    }
+    setDisplayedScraped(0);
+    const id = setInterval(() => {
+      setDisplayedScraped((prev) => {
+        const next = prev + 1;
+        return capRef.current > 0 ? Math.min(next, capRef.current) : next;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [isScraping]);
 
   return (
     <aside className="flex h-full w-56 flex-col border-r border-border bg-muted/30">
@@ -91,13 +110,13 @@ export function Sidebar() {
             <Spinner className="h-4 w-4 text-muted-foreground" />
             <span>{statusLabel}</span>
             {isScraping ? (
-              scrapedCount > 0 ? (
+              displayedScraped > 0 ? (
                 <Badge variant="success" className="ml-auto tabular-nums">
-                  {scrapedCount}
+                  {displayedScraped}
                 </Badge>
               ) : (
                 <span className="ml-auto bg-muted px-1.5 py-0.5 text-[11px] tabular-nums text-muted-foreground">
-                  {scrapedCount}
+                  {displayedScraped}
                 </span>
               )
             ) : null}

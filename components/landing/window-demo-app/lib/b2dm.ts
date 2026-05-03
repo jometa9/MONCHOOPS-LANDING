@@ -686,16 +686,24 @@ const jobDoneEmitter = new Emitter<{ jobId: string; status: string }>();
 const accountDrainedEmitter = new Emitter<{ accountId: string; status: string }>();
 const loginFinishedEmitter = new Emitter<{ jobId: string; status: string }>();
 
-// Tick: every 2s advance running jobs, occasionally finish one and start the next.
+// Tick: every 100ms advance running jobs, occasionally finish one and start the
+// next. Step sizes are tuned so a freshly-started job fills its progress bar in
+// roughly 3-4 seconds — slow enough to read, fast enough that landing visitors
+// don't sit watching a bar crawl across the screen.
 let tickStarted = false;
+let tickStartedAt = 0;
 function startTick() {
   if (tickStarted || typeof window === "undefined") return;
   tickStarted = true;
+  tickStartedAt = Date.now();
   setInterval(() => {
     let changed = false;
     for (const j of jobs) {
       if (j.status !== "running" || j.progressTotal == null) continue;
-      const step = j.kind === "mass_dm" ? 1 + Math.floor(Math.random() * 2) : 4 + Math.floor(Math.random() * 8);
+      const step =
+        j.kind === "mass_dm"
+          ? 5 + Math.floor(Math.random() * 3)
+          : 13 + Math.floor(Math.random() * 5);
       const nextDone = Math.min(j.progressTotal, j.progressDone + step);
       if (nextDone !== j.progressDone) {
         j.progressDone = nextDone;
@@ -708,17 +716,27 @@ function startTick() {
         changed = true;
       }
       if (nextDone >= j.progressTotal) {
-        // wrap around so the demo loops forever
-        j.progressDone = Math.floor(j.progressTotal * 0.1);
-        jobProgressEmitter.emit({
-          jobId: j.id,
-          done: j.progressDone,
-          total: j.progressTotal,
-        });
+        // Jobs started from the scripted demo flows (scrape/DM step demos)
+        // should actually finish — the autoplay loop reads "completed" as
+        // the cue to nav away and restart the funnel. Older demo seed jobs
+        // (Home / Queue widgets) wrap so the dashboard never goes idle.
+        if (j.startedAt > tickStartedAt) {
+          j.status = "completed" satisfies JobStatus;
+          j.endedAt = Date.now();
+          jobsEmitter.emit();
+          jobDoneEmitter.emit({ jobId: j.id, status: "completed" });
+        } else {
+          j.progressDone = Math.floor(j.progressTotal * 0.1);
+          jobProgressEmitter.emit({
+            jobId: j.id,
+            done: j.progressDone,
+            total: j.progressTotal,
+          });
+        }
       }
     }
     if (changed) jobsEmitter.emit();
-  }, 1500);
+  }, 100);
 }
 
 const stats = {

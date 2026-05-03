@@ -269,7 +269,7 @@ function EditGroupDialog({
               </code>
             </span>
           </div>
-          <div className="max-h-[40vh] space-y-2 overflow-auto p-3">
+          <div className="max-h-[40cqh] space-y-2 overflow-auto p-3">
             {variants.map((value, i) => (
               <div key={i} className="flex items-start gap-2">
                 <Textarea

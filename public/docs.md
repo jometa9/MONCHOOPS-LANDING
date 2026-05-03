@@ -22,7 +22,7 @@
 
 MonchoOps is a desktop application for Instagram outreach. Everything runs on your computer: account sessions, scrapers, warmup workers, and DM senders. There is no shared cloud bot. Your data lives in an encrypted SQLite database on your machine.
 
-Built by MONCHOOPS LLC for founders, agencies and creators who run cold outreach on Instagram and don't want to share their accounts, sessions or leads with a third party.
+Built by IPTRADE COPIER LLC for founders, agencies and creators who run cold outreach on Instagram and don't want to share their accounts, sessions or leads with a third party.
 
 ---
 

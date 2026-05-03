@@ -139,7 +139,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
               priceCurrency: "USD",
               availability: "https://schema.org/InStock",
               description:
-                "Unlimited Instagram accounts and DMs, unified inbox, AI replies",
+                "Unlimited Instagram accounts, scrapes, and DMs",
             },
           ],
           screenshot: `${baseUrl}/assets/preview-home.png`,
@@ -172,7 +172,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
               priceCurrency: "USD",
               availability: "https://schema.org/InStock",
               description:
-                "Unlimited Instagram accounts and DMs, unified inbox, AI replies",
+                "Unlimited Instagram accounts, scrapes, and DMs",
             },
           ],
         };

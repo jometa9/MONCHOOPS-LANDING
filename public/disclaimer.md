@@ -6,7 +6,7 @@
 
 ## No relationship with Instagram or Meta
 
-MonchoOps is an independent desktop application created by MONCHOOPS LLC. We are **not affiliated with, endorsed by, or sponsored by Instagram, Meta Platforms, Inc., or any of their subsidiaries**. Instagram, Meta and related marks are trademarks of Meta Platforms, Inc. and are used here for descriptive purposes only.
+MonchoOps is an independent desktop application created by IPTRADE COPIER LLC. We are **not affiliated with, endorsed by, or sponsored by Instagram, Meta Platforms, Inc., or any of their subsidiaries**. Instagram, Meta and related marks are trademarks of Meta Platforms, Inc. and are used here for descriptive purposes only.
 
 ---
 
@@ -17,7 +17,7 @@ Instagram's Terms of Use prohibit certain forms of automation, scraping and unso
 - Automation always carries some risk of restriction, shadow-banning or permanent suspension of your Instagram accounts.
 - MonchoOps's safety features (proxy-per-account, warmup, throttled sends, isolated browsers, message variants) reduce — but do not eliminate — that risk.
 - We have **no visibility** into Instagram's internal detection systems and cannot predict which behaviors will be flagged.
-- MONCHOOPS LLC does not guarantee any specific outcome (deliverability, open rate, reply rate, conversion rate) and is not responsible for actions Instagram takes against your accounts or your contacts.
+- IPTRADE COPIER LLC does not guarantee any specific outcome (deliverability, open rate, reply rate, conversion rate) and is not responsible for actions Instagram takes against your accounts or your contacts.
 
 ---
 

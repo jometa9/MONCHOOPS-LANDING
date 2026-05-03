@@ -57,7 +57,7 @@ export const seoConfig = {
 
   contact: {
     email: "support@monchoops.com",
-    address: "MONCHOOPS LLC",
+    address: "IPTRADE COPIER LLC",
   },
 
   pages: {

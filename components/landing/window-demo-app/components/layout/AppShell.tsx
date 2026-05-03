@@ -11,7 +11,7 @@ export function AppShell() {
         <main className="relative isolate flex-1 overflow-auto">
           <div
             aria-hidden
-            className="pointer-events-none absolute bottom-0 left-0 -z-10 h-[50vh] bg-foreground/[0.03]"
+            className="pointer-events-none absolute bottom-0 left-0 -z-10 h-[50cqh] bg-foreground/[0.03]"
             style={{
               aspectRatio: '1280 / 1116',
               WebkitMaskImage: 'url(/home-bg.svg)',
