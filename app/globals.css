@@ -26,20 +26,6 @@ html {
   }
 }
 
-@keyframes midnight-fade {
-  0%,
-  100% {
-    opacity: 0.35;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-.animate-midnight-fade {
-  animation: midnight-fade 1.5s ease-in-out infinite;
-}
-
 .chat-container-mobile {
   position: fixed;
   top: 5rem;

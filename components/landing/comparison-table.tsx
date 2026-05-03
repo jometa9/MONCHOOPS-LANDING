@@ -193,7 +193,7 @@ export function ComparisonTable() {
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
 
   return (
-    <section className="pt-14 max-w-7xl mx-auto px-3">
+    <section className="pt-24 max-w-7xl mx-auto px-3">
       <div className="mb-10 text-left">
         <p className="text-xl text-gray-600 mb-1">How we compare</p>
         <h2 className="flex flex-col items-start gap-1 text-3xl text-gray-900 md:flex-row md:flex-wrap md:gap-x-2 md:gap-y-0 md:text-5xl">
@@ -210,16 +210,16 @@ export function ComparisonTable() {
 
       <div className="w-full overflow-x-auto rounded-lg border border-gray-200 bg-white">
         <div className={`grid w-full gap-0 ${GRID_COLS}`}>
-          <div className="min-w-0 px-4 py-4 text-sm font-medium text-gray-500 border-b border-gray-200 bg-gray-50 flex items-center justify-center text-center">
+          <div className="min-w-0 px-3 py-4 text-sm font-medium text-gray-500 border-b border-gray-200 bg-gray-50 flex items-center justify-center text-center">
             Feature
           </div>
-          <div className="px-3 py-4 flex items-center justify-center text-center bg-indigo-950 border-x border-b border-indigo-950">
-            <span className="font-bold text-lg text-white mx-1">MonchoOps</span>
+          <div className="px-3 py-4 flex items-center justify-center text-center bg-indigo-950 border-x border-indigo-950 border-b border-white/20">
+            <span className="text-sm font-medium text-white mx-1">MonchoOps</span>
           </div>
           {COMPETITORS.map((c, idx) => (
             <div
               key={c.id}
-              className={`px-2 py-4 flex items-center justify-center border-b border-gray-200 bg-gray-50 ${
+              className={`px-6 py-4 flex items-center justify-center border-b border-gray-200 bg-gray-50 ${
                 idx < COMPETITORS.length - 1 ? "border-r border-gray-200" : ""
               }`}
             >

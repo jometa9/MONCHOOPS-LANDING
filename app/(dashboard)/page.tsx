@@ -16,7 +16,16 @@ import { StepsSection } from "@/components/steps-section";
 import { StructuredData } from "@/components/structured-data";
 import { Button } from "@/components/ui/button";
 import { handleDownload } from "@/lib/download-handler";
-import { ArrowRight } from "lucide-react";
+import {
+  ArrowRight,
+  AtSign,
+  Bell,
+  Heart,
+  MessageCircle,
+  Send,
+  Sparkles,
+  UserPlus,
+} from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 
 export default function HomePage() {
@@ -135,25 +144,19 @@ export default function HomePage() {
       <StructuredData type="faq" />
       <LandingHeader />
       <main data-page="home" className="pt-30">
-        <div className="max-w-7xl mx-auto px-3 pb-0">
-          <p className="text-xs uppercase st text-gray-500 mb-3">
-            Find leads. Send DMs. Win replies.
-          </p>
-          <h1 className="md:text-5xl text-3xl font-semibold text-gray-900 tracking-tight max-w-4xl">
+        <div className="max-w-7xl mx-auto px-3 pb-0 relative">
+  
+          <h1 className="md:text-5xl text-3xl font-semibold text-gray-900 tracking-tight max-w-4xl relative">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-black via-gray-700 to-indigo-600">
-              Thousands of leads scraped.
+              Scrape any lead on Instagram.
               <br />
-              All of them DM&apos;d.
-              <br />
-              Zero accounts burned.
+              Cold DM them at scale.
+
+
             </span>
           </h1>
           <p className="mt-4 text-gray-600 text-xl max-w-2xl">
-            Scrape leads from any profile, post, hashtag, or location. Send
-            personalized DMs across all your accounts in parallel — each one
-            in its own browser, with its own proxy, on your machine. The
-            same prospect never gets DM&apos;d twice.
-          </p>
+Pull leads from any profile, post, hashtag, or location. Send personalized DMs from every account you own, in parallel.          </p>
         </div>
         <div className="max-w-7xl mx-auto px-3 pb-0 flex items-center gap-3 flex-wrap">
           <Button
@@ -254,13 +257,11 @@ export default function HomePage() {
                   className="moncho-sparkle"
                   style={{ left: s.left, top: s.top, width: s.size, height: s.size, animationDuration: s.dur, animationDelay: s.delay }}
                 >
-                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                    <path d="M12 0 L13.8 9.2 L24 12 L13.8 14.8 L12 24 L10.2 14.8 L0 12 L10.2 9.2 Z" />
-                  </svg>
+                  <Sparkles className="w-full h-full" strokeWidth={1.5} />
                 </span>
               ))}
             </div>
-            <div className="bg-white w-full max-w-[900px] mx-auto md:ml-auto md:mr-0 aspect-[980/600] rounded-lg relative transition-transform duration-0 overflow-hidden z-10 shadow-2xl shadow-indigo-500/30 ring-1 ring-white/10">
+            <div className="bg-white w-full max-w-[800px] mx-auto md:ml-auto md:mr-0 aspect-[980/600] rounded-lg relative transition-transform duration-0 overflow-hidden z-10 shadow-2xl shadow-indigo-500/30 ring-1 ring-white/10">
               <MonchoOpsWindowDemo />
             </div>
           </div>
@@ -268,7 +269,7 @@ export default function HomePage() {
 
         <div className="py-24 px-6" id="features">
           <h2 className="text-3xl text-center text-gray-900 mb-1">
-            One app to scrape leads and send mass DMs on Instagram
+            One app to scrape leads and send cold DMs on Instagram
           </h2>
           <p className="text-md text-center text-gray-600 max-w-2xl mx-auto px-6">
             Stop paying for two SaaS tools and copy-pasting CSVs between
@@ -284,6 +285,8 @@ export default function HomePage() {
 
         <ProductsSection />
 
+        <ComparisonTable />
+
         <Suspense
           fallback={
             <div className="py-24 text-center text-gray-600">
@@ -294,11 +297,7 @@ export default function HomePage() {
           <PricingSection variant="landing" />
         </Suspense>
 
-        <ComparisonTable />
-
-        <AIQuestionSection />
-
-        <div className="max-w-7xl mx-auto px-3 grid grid-cols-1 md:grid-cols-6 md:gap-3">
+        <div className="max-w-7xl pt-24 mx-auto px-3 grid grid-cols-1 md:grid-cols-6 md:gap-3">
           <div className="md:col-span-4 pb-6">
             <p className="text-xl text-gray-600 mb-1">Common questions</p>
             <p className="md:text-3xl text-2xl mb-3 text-gray-900">

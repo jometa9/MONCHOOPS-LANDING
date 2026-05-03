@@ -2,6 +2,7 @@
 
 import { MacOSIcon } from "@/components/icons/macos-icon";
 import { WindowsIcon } from "@/components/icons/windows-icon";
+import { MonchoOpsWindowDemo } from "@/components/landing/monchoops-window-demo";
 import { ArrowDownToLine, Check } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -26,6 +27,7 @@ interface AllDownloads {
 
 export function ProductsSection() {
   const [downloads, setDownloads] = useState<AllDownloads | null>(null);
+  const [menuBarClock, setMenuBarClock] = useState("");
 
   useEffect(() => {
     const loadDownloads = async () => {
@@ -33,6 +35,22 @@ export function ProductsSection() {
       setDownloads(data);
     };
     loadDownloads();
+  }, []);
+
+  useEffect(() => {
+    const update = () => {
+      const now = new Date();
+      const day = now.toLocaleDateString("en-US", { weekday: "short" });
+      const time = now.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      });
+      setMenuBarClock(`${day} ${time}`);
+    };
+    update();
+    const id = setInterval(update, 30_000);
+    return () => clearInterval(id);
   }, []);
 
   const hasDownloadUrl = (productKey: ProductKey, os: DownloadOS): boolean => {
@@ -146,59 +164,65 @@ export function ProductsSection() {
               </div>
             </div>
 
-            <div className="order-1 md:order-1 relative h-full min-h-[260px] md:min-h-0 overflow-hidden rounded-lg border border-gray-200 shadow-lg bg-gradient-to-br from-indigo-50 via-white to-indigo-100 flex items-center justify-center">
-              <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-indigo-400/40 blur-3xl pointer-events-none" />
-              <div className="absolute -bottom-32 -right-20 h-96 w-96 rounded-full bg-indigo-500/30 blur-3xl pointer-events-none" />
-              <div className="absolute top-1/2 left-1/3 h-56 w-56 rounded-full bg-violet-300/30 blur-3xl pointer-events-none" />
-              <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                {[
-                  { top: "4%", left: "18%", size: "h-20 w-20", color: "stroke-indigo-300", opacity: "opacity-25", rotate: "-18deg" },
-                  { top: "22%", left: "-4%", size: "h-36 w-36", color: "stroke-indigo-500", opacity: "opacity-15", rotate: "12deg" },
-                  { top: "-6%", right: "12%", size: "h-28 w-28", color: "stroke-indigo-400", opacity: "opacity-20", rotate: "24deg" },
-                  { top: "44%", right: "-6%", size: "h-44 w-44", color: "stroke-indigo-600", opacity: "opacity-12", rotate: "-8deg" },
-                  { bottom: "18%", left: "32%", size: "h-16 w-16", color: "stroke-indigo-400", opacity: "opacity-30", rotate: "32deg" },
-                  { bottom: "-4%", left: "8%", size: "h-32 w-32", color: "stroke-indigo-300", opacity: "opacity-18", rotate: "-22deg" },
-                  { bottom: "8%", right: "22%", size: "h-24 w-24", color: "stroke-indigo-500", opacity: "opacity-22", rotate: "16deg" },
-                  { top: "60%", left: "44%", size: "h-14 w-14", color: "stroke-indigo-600", opacity: "opacity-20", rotate: "-30deg" },
-                ].map((b, i) => (
-                  <svg
-                    key={i}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className={`${b.size} ${b.color} ${b.opacity} absolute`}
-                    style={{
-                      top: b.top,
-                      left: b.left,
-                      right: b.right,
-                      bottom: b.bottom,
-                      transform: `rotate(${b.rotate})`,
-                    }}
-                  >
-                    <rect width="7" height="7" x="14" y="3" rx="2" />
-                    <path d="M10 21V8a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H3" />
-                  </svg>
-                ))}
+            <div
+              className="order-1 md:order-1 relative h-full min-h-[260px] md:min-h-0 overflow-hidden rounded-lg border border-gray-200 shadow-lg flex items-center justify-center px-8 py-14 md:px-12 md:py-20"
+              style={{
+                background:
+                  "radial-gradient(ellipse 90% 70% at 25% 15%, rgba(251,207,232,0.55) 0%, transparent 70%), radial-gradient(ellipse 100% 80% at 90% 35%, rgba(196,181,253,0.55) 0%, transparent 75%), radial-gradient(ellipse 110% 90% at 50% 110%, rgba(99,102,241,0.45) 0%, transparent 75%), linear-gradient(160deg, #4f46e5 0%, #6d28d9 50%, #312e81 100%)",
+              }}
+            >
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px)",
+                  backgroundSize: "44px 44px",
+                  maskImage:
+                    "radial-gradient(ellipse 80% 80% at 50% 50%, black 10%, transparent 90%)",
+                  WebkitMaskImage:
+                    "radial-gradient(ellipse 80% 80% at 50% 50%, black 10%, transparent 90%)",
+                }}
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-black/30 backdrop-blur-md border-b border-white/5 z-20 flex items-center justify-between px-4"
+              >
+                <div className="flex items-center gap-3 text-[10px] font-medium text-white/85">
+                  <span className="text-white">●</span>
+                  <span className="font-semibold">MonchoOps</span>
+                  <span className="text-white/70">File</span>
+                  <span className="text-white/70">Edit</span>
+                  <span className="text-white/70">View</span>
+                  <span className="text-white/70">Window</span>
+                  <span className="text-white/70">Help</span>
+                </div>
+                <div className="hidden sm:flex items-center gap-2 text-[10px] text-white/70">
+                  <span>100%</span>
+                  <span>·</span>
+                  <span suppressHydrationWarning>{menuBarClock}</span>
+                </div>
               </div>
-              <div className="relative z-10 px-6 py-24 max-w-md text-center">
-                <Image
-                  src="/assets/instagram.png"
-                  alt="Instagram"
-                  width={256}
-                  height={256}
-                  className="mx-auto h-20 w-20"
-                />
-                <p className="mt-4 text-2xl font-semibold text-gray-900">
-                  Built for Instagram outreach
-                </p>
-                <p className="mt-2 text-sm text-gray-600">
-                  Scrape leads, run multiple accounts and send mass DMs from your desktop
-                </p>
-                <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-3 py-1 text-[11px] text-gray-700">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                  Auto-updates included
+              <div className="relative z-10 w-full max-w-[78%] aspect-[980/600] rounded-lg overflow-hidden shadow-2xl shadow-black/50 ring-1 ring-white/10">
+                <MonchoOpsWindowDemo />
+              </div>
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 bottom-2 z-20 flex justify-center"
+              >
+                <div className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/15 backdrop-blur-md p-1.5 shadow-lg">
+                  <Image
+                    src="/monchoops-icon.png"
+                    alt=""
+                    width={32}
+                    height={32}
+                    className="h-6 w-6 rounded-md"
+                  />
+                  <span className="h-6 w-6 rounded-md bg-white/40" />
+                  <span className="h-6 w-6 rounded-md bg-white/30" />
+                  <span className="h-6 w-6 rounded-md bg-white/30" />
+                  <span className="h-6 w-px bg-white/30 mx-1" />
+                  <span className="h-6 w-6 rounded-md bg-white/20" />
                 </div>
               </div>
             </div>
