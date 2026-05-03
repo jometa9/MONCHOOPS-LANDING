@@ -12,7 +12,19 @@ const metadataBaseUrl = getAppUrl();
 export const metadata: Metadata = {
   applicationName: "MonchoOps",
   icons: {
-    icon: [{ url: "/favicon.ico", type: "image/x-icon" }],
+    icon: [
+      {
+        url: "/moncho.svg",
+        type: "image/svg+xml",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/moncho-white.svg",
+        type: "image/svg+xml",
+        media: "(prefers-color-scheme: dark)",
+      },
+      { url: "/favicon.ico", type: "image/x-icon" },
+    ],
   },
   title: "MonchoOps — Instagram cold DM automation, on your machine",
   description:

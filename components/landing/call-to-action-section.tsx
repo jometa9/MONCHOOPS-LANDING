@@ -34,16 +34,17 @@ export function CallToActionSection({
         <span className="block md:inline">on software industry</span>
       </p>
       <h2 className="md:text-7xl text-4xl text-gray-900 text-center mb-2 ">
-        Start sending DMs today.
+        Stop renting your outreach.
       </h2>
       <p className="text-gray-500 text-base text-center max-w-md">
-        Free plan, no card required. Download once, run on your own machine.
+        Download once. Run on your machine. Own every account, every lead,
+        every DM you send. Free plan included, no credit card.
       </p>
 
       <Button
         type="button"
         onClick={onDownloadClick}
-        className="mt-4 inline-flex items-center gap-3 rounded-full bg-black p-3  text-white transition-all duration-200 hover:bg-gray-600 text-lg"
+        className="mt-4 inline-flex items-center gap-3 rounded-full bg-indigo-600 p-3  text-white transition-all duration-200 hover:bg-indigo-700 text-lg"
       >
         Get MonchoOps free
       </Button>

@@ -68,7 +68,7 @@ export function StepsSection() {
         >
           <div className="grid grid-cols-1 xl:grid-cols-[40%_1fr] gap-8 items-center">
             <div className="order-1 xl:order-1 min-w-0 xl:pr-6 pb-6 xl:pb-0">
-              <p className="text-sm uppercase tracking-widest text-gray-500 mb-2">
+              <p className="text-sm uppercase st text-gray-500 mb-2">
                 Step 1
               </p>
               <h3 className="text-3xl md:text-4xl text-gray-900">
@@ -148,7 +148,7 @@ export function StepsSection() {
                 </div>
                 <div className="grid grid-cols-2 gap-2 mb-3">
                   <div className="rounded-md border border-gray-200 px-3 py-2 text-xs">
-                    <p className="text-[10px] uppercase tracking-wider text-gray-400">
+                    <p className="text-[10px] uppercase r text-gray-400">
                       Username
                     </p>
                     <p className="font-mono text-gray-900">
@@ -156,14 +156,14 @@ export function StepsSection() {
                     </p>
                   </div>
                   <div className="rounded-md border border-gray-200 px-3 py-2 text-xs">
-                    <p className="text-[10px] uppercase tracking-wider text-gray-400">
+                    <p className="text-[10px] uppercase r text-gray-400">
                       Status
                     </p>
                     <p className="text-emerald-700 font-medium">Logged in</p>
                   </div>
                 </div>
                 <div className="rounded-md border border-gray-200 px-3 py-2 text-xs mb-2">
-                  <p className="text-[10px] uppercase tracking-wider text-gray-400">
+                  <p className="text-[10px] uppercase r text-gray-400">
                     Proxy
                   </p>
                   <p className="font-mono text-gray-900 truncate">
@@ -177,7 +177,7 @@ export function StepsSection() {
               </div>
             </div>
             <div className="order-1 xl:order-2 xl:pl-4">
-              <p className="text-sm uppercase tracking-widest text-gray-400 mb-2">
+              <p className="text-sm uppercase st text-gray-400 mb-2">
                 Step 2
               </p>
               <h3 className="text-3xl md:text-4xl text-white">
@@ -199,17 +199,19 @@ export function StepsSection() {
         >
           <div className="grid grid-cols-1 xl:grid-cols-[40%_1fr] gap-8 items-center">
             <div className="order-1 xl:order-1 xl:pr-6">
-              <p className="text-sm uppercase tracking-widest text-gray-500 mb-2">
+              <p className="text-sm uppercase st text-gray-500 mb-2">
                 Step 3
               </p>
               <h3 className="text-3xl md:text-4xl text-gray-900">
-                Warm up, scrape, send
+                Scrape, write variants, send
               </h3>
               <p className="text-gray-600 mt-4">
-                Run a multi-day warmup so each account looks alive. Scrape
-                qualified usernames from a competitor, hashtag, post or
-                location. Build a Cold DM campaign with up to 20 message
-                variants and let MonchoOps throttle the sends to look human.
+                Scrape qualified usernames from a competitor, hashtag, post
+                or location. Save up to 20 message variants per group.
+                Optionally have MonchoOps follow + like + watch a story on
+                each target right before the DM, throttle the rate with
+                jitter, and skip anyone you&apos;ve already DM&apos;d from
+                that account.
               </p>
             </div>
             <div className="order-2 xl:order-2">
@@ -226,19 +228,19 @@ export function StepsSection() {
                 <div className="grid grid-cols-3 gap-2 text-center text-xs">
                   <div className="rounded-md bg-emerald-50 p-2">
                     <p className="font-semibold text-emerald-700">182</p>
-                    <p className="text-[10px] text-emerald-700/70 uppercase tracking-wider">
+                    <p className="text-[10px] text-emerald-700/70 uppercase r">
                       Sent
                     </p>
                   </div>
                   <div className="rounded-md bg-red-50 p-2">
                     <p className="font-semibold text-red-700">2</p>
-                    <p className="text-[10px] text-red-700/70 uppercase tracking-wider">
+                    <p className="text-[10px] text-red-700/70 uppercase r">
                       Failed
                     </p>
                   </div>
                   <div className="rounded-md bg-gray-50 p-2">
                     <p className="font-semibold text-gray-700">136</p>
-                    <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+                    <p className="text-[10px] text-gray-500 uppercase r">
                       Pending
                     </p>
                   </div>

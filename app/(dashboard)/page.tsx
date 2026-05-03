@@ -136,32 +136,37 @@ export default function HomePage() {
       <LandingHeader />
       <main data-page="home" className="pt-30">
         <div className="max-w-7xl mx-auto px-3 pb-0">
-          <p className="text-sm uppercase tracking-widest text-gray-500 mb-3">
-            Instagram outreach, on your machine
+          <p className="text-sm uppercase st text-gray-500 mb-3">
+            Scrape leads in bulk. Send DMs at scale.
           </p>
           <h1 className="md:text-5xl text-3xl font-semibold text-gray-900 tracking-tight max-w-4xl">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r to-gray-400 from-black">
-              Cold DMs that don&apos;t cost you the account.
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-black via-gray-700 to-indigo-600">
+              Thousands of leads scraped.
+              <br />
+              All of them DM&apos;d.
+              <br />
+              Zero accounts burned.
             </span>
           </h1>
           <p className="mt-4 text-gray-600 text-xl max-w-2xl">
-            MonchoOps runs Instagram outreach from your computer. Multi-account,
-            proxy-per-account, isolated browsers, scrape, warmup, and cold DM —
-            all on hardware you own. No cloud bot, no shared session, no shared IP.
+            Scrape leads from any profile, post, hashtag, or location. Send
+            personalized DMs across all your accounts in parallel — each one
+            in its own browser, with its own proxy, on your machine. The
+            same prospect never gets DM&apos;d twice.
           </p>
         </div>
         <div className="max-w-7xl mx-auto px-3 pb-0 flex items-center gap-3 flex-wrap">
           <Button
             type="button"
             onClick={handleDownloadClick}
-            className="mt-4 inline-flex items-center gap-3 rounded-full bg-black px-3 py-4 text-md text-white transition-all duration-200 hover:bg-gray-600"
+            className="mt-4 inline-flex items-center gap-3 rounded-full bg-indigo-600 px-3 py-4 text-md text-white transition-all duration-200 hover:bg-indigo-700"
           >
             <span>Get started for free</span>
             <ArrowRight className="h-4 w-4" />
           </Button>
           <a
             href="#how-it-works"
-            className="mt-4 inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 transition-all duration-200 hover:bg-gray-100"
+            className="mt-4 hidden md:inline-flex items-center gap-3 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-md text-gray-900 transition-all duration-200 hover:bg-gray-100"
           >
             See how it works
           </a>
@@ -171,8 +176,43 @@ export default function HomePage() {
         </div>
 
         <section className="max-w-7xl mx-auto px-3 pt-8 user-select-none">
-          <div className="grid gap-8 items-center bg-gray-100 p-6 md:p-12 rounded-lg relative overflow-hidden border border-gray-200">
-            <div className="bg-white w-full max-w-[980px] mx-auto h-[620px] rounded-lg relative transition-transform duration-0 overflow-hidden border border-gray-200 z-10 shadow-2xl shadow-black/40">
+          <div
+            className="grid gap-8 items-center p-6 md:p-12 rounded-lg relative overflow-hidden "
+            style={{
+              background:
+                "linear-gradient(180deg, #3730a3 0%, #c7d2fe 100%)",
+            }}
+          >
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0"
+              style={{
+                backgroundImage:
+                  "linear-gradient(to right, rgba(199,210,254,0.18) 1px, transparent 1px), linear-gradient(to bottom, rgba(199,210,254,0.18) 1px, transparent 1px)",
+                backgroundSize: "36px 36px",
+                maskImage:
+                  "radial-gradient(ellipse 90% 80% at 50% 50%, black 30%, transparent 100%)",
+                WebkitMaskImage:
+                  "radial-gradient(ellipse 90% 80% at 50% 50%, black 30%, transparent 100%)",
+              }}
+            />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(ellipse 65% 55% at 50% 50%, rgba(165,180,252,0.45) 0%, rgba(165,180,252,0) 70%)",
+              }}
+            />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(ellipse 45% 35% at 50% 100%, rgba(129,140,248,0.5) 0%, rgba(129,140,248,0) 70%)",
+              }}
+            />
+            <div className="bg-white w-full max-w-[980px] mx-auto h-[620px] rounded-lg relative transition-transform duration-0 overflow-hidden z-10 shadow-2xl shadow-indigo-500/30 ring-1 ring-white/10">
               <MonchoOpsWindowDemo />
             </div>
           </div>
@@ -180,12 +220,11 @@ export default function HomePage() {
 
         <div className="py-24" id="features">
           <h2 className="text-3xl text-center text-gray-900 mb-1">
-            Built for accounts you can&apos;t afford to lose
+            One app replaces your scraper, your DM sender, and your CRM
           </h2>
           <p className="text-md text-center text-gray-600 max-w-2xl mx-auto px-6">
-            Every feature in MonchoOps exists for one reason: keep the account
-            alive while you scale outreach. Local browsers, proxy isolation,
-            warmup, throttled sends, and zero cloud sessions.
+            Stop paying for three SaaS tools, copy-pasting CSVs between
+            them, and praying none of them gets your accounts banned.
           </p>
         </div>
 

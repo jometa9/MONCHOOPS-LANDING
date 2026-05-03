@@ -1,0 +1,222 @@
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useParams } from '@/components/landing/window-demo-app/vendor/react-router-dom';
+import { ArrowLeft, ExternalLink, Search, Users } from 'lucide-react';
+import { EmptyState } from '@/components/landing/window-demo-app/components/common/EmptyState';
+import { Spinner } from '@/components/landing/window-demo-app/components/common/Spinner';
+import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
+import { formatDateTime } from '@/components/landing/window-demo-app/lib/format';
+import type { LeadCategoryPublic, LeadPublic } from '@/components/landing/window-demo-app/types/domain';
+
+export function CategoryLeadsDetail() {
+  const { categoryId = '' } = useParams<{ categoryId: string }>();
+  const navigate = useNavigate();
+  const [category, setCategory] = useState<LeadCategoryPublic | null>(null);
+  const [leads, setLeads] = useState<LeadPublic[] | null>(null);
+  const [query, setQuery] = useState('');
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      const [list, cats] = await Promise.all([
+        b2dm.categories.listLeads({ categoryId, limit: 1000 }),
+        b2dm.categories.list(),
+      ]);
+      if (cancelled) return;
+      setLeads(list);
+      setCategory(cats.find((c) => c.id === categoryId) ?? null);
+    }
+    void load();
+    return () => { cancelled = true; };
+  }, [categoryId]);
+
+  const filteredLeads = useMemo(() => {
+    if (!leads) return null;
+    const q = query.trim().toLowerCase();
+    if (!q) return leads;
+    return leads.filter((lead) => lead.username.toLowerCase().includes(q));
+  }, [leads, query]);
+
+  function goBack() {
+    navigate('/categories');
+  }
+
+  if (leads === null) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <Spinner className="h-6 w-6 text-muted-foreground" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex h-full flex-col bg-background">
+      <div className="flex items-stretch border-b border-border bg-background">
+        <button
+          type="button"
+          onClick={goBack}
+          className="inline-flex h-9 items-center gap-1.5 border-r border-border bg-transparent px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          aria-label="Back to categories"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          Back
+        </button>
+        <div className="relative min-w-0 flex-1">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search username…"
+            className="h-9 w-full bg-transparent pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground"
+          />
+        </div>
+        {category ? (
+          <div className="flex items-center gap-2 border-l border-border px-3 text-xs text-muted-foreground">
+            <span className="truncate">{category.name}</span>
+            <span className="tabular-nums">· {leads.length}</span>
+          </div>
+        ) : null}
+      </div>
+
+      {filteredLeads!.length === 0 ? (
+        <div className="flex min-h-0 flex-1 items-center justify-center border-t border-border">
+          <EmptyState
+            icon={leads.length === 0 ? <Users className="h-10 w-10" /> : <Search className="h-10 w-10" />}
+            title="No results"
+            description={
+              leads.length === 0
+                ? 'Run a scrape tagged with this category to populate it.'
+                : 'No leads match your search.'
+            }
+          />
+        </div>
+      ) : (
+        <div className="min-h-0 flex-1 overflow-auto">
+        <table className="w-full whitespace-nowrap text-sm">
+          <thead className="sticky top-0 z-10 border-t border-border bg-muted text-[11px] font-medium uppercase  text-muted-foreground">
+            <tr>
+              <th className="px-3 py-1.5 text-left">Username</th>
+              <th className="px-3 py-1.5 text-left">Source</th>
+              <th className="px-3 py-1.5 text-left">Added</th>
+              <th className="px-3 py-1.5 text-right">Profile</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredLeads!.map((lead) => {
+              const openProfile = () =>
+                void b2dm.openExternalLink(
+                  `https://www.instagram.com/${encodeURIComponent(lead.username)}/`
+                );
+              return (
+                <tr
+                  key={lead.id}
+                  onClick={openProfile}
+                  className="cursor-pointer border-t border-border transition-colors even:bg-muted/30 last:border-b hover:bg-accent/40"
+                >
+                  <td className="px-3 py-1.5 font-medium">@{lead.username}</td>
+                  <td className="px-3 py-1.5 text-xs text-muted-foreground">
+                    <LeadSourceCell
+                      sourceDetail={lead.sourceDetail}
+                      sourceKind={lead.sourceKind}
+                    />
+                  </td>
+                  <td className="px-3 py-1.5 text-xs text-muted-foreground">
+                    {formatDateTime(lead.scrapedAt)}
+                  </td>
+                  <td className="px-2 py-1.5">
+                    <div className="flex items-center justify-end">
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); openProfile(); }}
+                        className="inline-flex h-7 w-7 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
+                        aria-label={`Open @${lead.username} on Instagram`}
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        </div>
+      )}
+
+      {leads.length >= 1000 ? (
+        <div className="border-t border-border bg-muted/20 px-3 py-2 text-[11px] text-muted-foreground">
+          Showing first 1000 rows — export the CSV for the full list.
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+// Parses a `source_detail` string from the leads table and renders the
+// "where we found this lead" reference with any URL replaced by a clickable
+// word matching the source kind (post, reel, hashtag, location, profile).
+function LeadSourceCell({
+  sourceDetail,
+  sourceKind,
+}: {
+  sourceDetail: string | null;
+  sourceKind: string;
+}) {
+  const parts = (sourceDetail ?? '').split(' | ').map((s) => s.trim()).filter(Boolean);
+  if (parts.length === 0) return <span>{sourceKind}</span>;
+
+  const kind = parts[0] ?? sourceKind;
+  const [kindLabel, linkWord] = labelsFor(kind);
+
+  // Find the first URL or @handle / #tag reference in the remaining parts.
+  const ref = parts.slice(1).find(Boolean) ?? null;
+  const refUrl = refToUrl(ref);
+
+  return (
+    <span className="inline-flex items-center gap-1">
+      <span>{kindLabel}</span>
+      {refUrl ? (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            void b2dm.openExternalLink(refUrl);
+          }}
+          className="font-medium text-foreground underline decoration-dotted underline-offset-2 transition-colors hover:text-primary"
+        >
+          {linkWord}
+        </button>
+      ) : null}
+    </span>
+  );
+}
+
+function labelsFor(kind: string): [string, string] {
+  switch (kind) {
+    case 'post_comment': return ['commented on', 'post'];
+    case 'post_like': return ['liked', 'post'];
+    case 'reel_comment': return ['commented on', 'reel'];
+    case 'reel_like': return ['liked', 'reel'];
+    case 'followers': return ['follows', 'profile'];
+    default: return [kind.replace(/_/g, ' '), 'link'];
+  }
+}
+
+function refToUrl(ref: string | null): string | null {
+  if (!ref) return null;
+  const trimmed = ref.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  if (trimmed.startsWith('@')) {
+    return `https://www.instagram.com/${encodeURIComponent(trimmed.slice(1))}/`;
+  }
+  if (trimmed.startsWith('#')) {
+    return `https://www.instagram.com/explore/tags/${encodeURIComponent(trimmed.slice(1))}/`;
+  }
+  const hashtagTag = trimmed.match(/^hashtag:#?(.+)/);
+  if (hashtagTag) return `https://www.instagram.com/explore/tags/${encodeURIComponent(hashtagTag[1])}/`;
+  const locationTag = trimmed.match(/^location:(.+)/);
+  if (locationTag) {
+    const raw = locationTag[1];
+    return /^https?:\/\//i.test(raw) ? raw : `https://www.instagram.com/explore/locations/${raw}/`;
+  }
+  return null;
+}

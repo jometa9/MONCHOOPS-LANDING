@@ -62,7 +62,7 @@ const comparisonData: ComparisonRow[] = [
     },
   },
   {
-    feature: "Account warmup system",
+    feature: "Pre-DM interactions",
     monchoops: "yes",
     competitors: {
       manychat: "no",
@@ -89,6 +89,26 @@ const comparisonData: ComparisonRow[] = [
       phantombuster: "Templates",
       instantData: "Templates",
       diy: "varies",
+    },
+  },
+  {
+    feature: "Auto-skip already-DMed",
+    monchoops: "yes",
+    competitors: {
+      manychat: "no",
+      phantombuster: "no",
+      instantData: "no",
+      diy: "no",
+    },
+  },
+  {
+    feature: "Per-recipient DM log",
+    monchoops: "yes",
+    competitors: {
+      manychat: "Limited",
+      phantombuster: "no",
+      instantData: "no",
+      diy: "no",
     },
   },
   {
@@ -181,9 +201,9 @@ export function ComparisonTable() {
           <span>cloud Instagram tools</span>
         </h2>
         <p className="mt-3 text-sm text-gray-500 max-w-2xl">
-          Cloud DM tools share IPs and store your sessions on their servers.
-          MonchoOps runs on your machine, with your proxy, and keeps everything
-          encrypted on your disk.
+          Cloud DM tools share IPs and store your sessions on their servers
+          — Instagram pattern-matches that. MonchoOps runs on your machine,
+          with your proxy, with your data encrypted on your disk.
         </p>
       </div>
 

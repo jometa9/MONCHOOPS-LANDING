@@ -7,11 +7,11 @@ export function Footer() {
     <footer className="w-full p-3 max-w-7xl mx-auto py-16" role="contentinfo">
       <Link href="/" className="flex items-center gap-2 pt-2">
         <Image
-          src="/monchoops-icon.png"
+          src="/moncho.svg"
           alt="MonchoOps"
           width={28}
           height={28}
-          className="h-7 w-7 rounded-md"
+          className="h-7 w-7"
         />
         <span className="text-xl font-bold text-black">MonchoOps</span>
       </Link>

@@ -52,11 +52,13 @@ export function ProductsSection() {
   };
 
   const bullets = [
-    "Multi-account: each one in its own isolated Chromium profile",
+    "Multi-account workflow with isolated Chromium profile per account",
     "One HTTP or SOCKS5 proxy per account, persisted in the local DB",
     "4 scraping modes — username, post, hashtag, location",
-    "Account warmup with realistic delays and per-day activity tracking",
     "Cold DM with up to 20 message variants per group",
+    "Optional pre-DM interactions: follow + likes + story view before each send",
+    "Auto-skip prospects you've already DM'd, even months later",
+    "Live job queue with progress and one-click cancel",
   ];
 
   return (
@@ -64,7 +66,7 @@ export function ProductsSection() {
       <div className="px-3 max-w-7xl mx-auto">
         <p className="text-gray-600 text-xl mb-1">The desktop app</p>
         <h2 className="text-3xl text-gray-900 mb-6">
-          One installer. Everything you need for Instagram outreach.
+          One installer. Scrape, send, track. Done.
         </h2>
 
         <div className="bg-gray-100 rounded-lg p-5 md:p-6">
@@ -89,11 +91,11 @@ export function ProductsSection() {
                 </div>
 
                 <p className="text-sm text-gray-600 mb-4 max-w-2xl">
-                  A native desktop app that automates the parts of Instagram
+                  A native desktop app that handles the parts of Instagram
                   outreach that should never have been in the cloud:
-                  authentication, sessions, proxies, scraping and DM sending.
-                  Local SQLite, encrypted cookies, bundled Chromium. Works
-                  offline once installed.
+                  authentication, sessions, proxies, scraping and DM
+                  sending. Local SQLite, encrypted cookies, bundled
+                  Chromium. The cloud middleman is gone.
                 </p>
                 <ul className="space-y-1.5 text-xs text-gray-600 mb-4">
                   {bullets.map((text) => (

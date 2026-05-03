@@ -79,11 +79,11 @@ export function LandingHeader() {
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between p-3">
         <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight">
           <Image
-            src="/monchoops-icon.png"
+            src="/moncho.svg"
             alt="MonchoOps"
             width={28}
             height={28}
-            className="h-7 w-7 rounded-md"
+            className="h-7 w-7"
             priority
           />
           <span>MonchoOps</span>
@@ -97,7 +97,7 @@ export function LandingHeader() {
                   key={link.href}
                   href={link.href}
                   onClick={(event) => handleNavClick(event, link.href)}
-                  className="transition-colors text-gray-400 hover:text-gray-600 cursor-pointer"
+                  className="transition-colors text-gray-400 hover:text-indigo-600 cursor-pointer"
                 >
                   {link.label}
                 </a>
@@ -107,7 +107,7 @@ export function LandingHeader() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="transition-colors text-gray-400 hover:text-gray-600 cursor-pointer"
+                className="transition-colors text-gray-400 hover:text-indigo-600 cursor-pointer"
               >
                 {link.label}
               </Link>
@@ -127,7 +127,7 @@ export function LandingHeader() {
               href="/dashboard"
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full border border-transparent bg-gray-900 px-2 py-0.5 text-sm cursor-pointer text-white shadow-none hover:bg-gray-600 block"
+              className="rounded-full border border-transparent bg-indigo-600 px-2 py-0.5 text-sm cursor-pointer text-white shadow-none hover:bg-indigo-700 block"
             >
               Get started
             </a>
