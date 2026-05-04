@@ -16,8 +16,8 @@ export default async function PricingPage() {
     <div className="px-3 w-full pb-20">
         <h1 className="text-2xl">Pricing plans</h1>
         <p className=" text-gray-600 text-sm max-w-2xl pt-1">
-          Choose the plan that best fits your trading needs. Upgrade or
-          downgrade at any time.
+          Pick the plan that matches your Instagram volume — accounts,
+          monthly DMs and scrape jobs. Upgrade or downgrade at any time.
         </p>
 
       <PricingSection user={user} isCompact={true} />

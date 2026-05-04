@@ -15,13 +15,12 @@ export default function DashboardPage() {
         <div>
           <h1 className="text-2xl">Welcome back, {userName}</h1>
           <p className="text-gray-600 text-sm mt-1">
-            Your complete trading infrastructure, one click away
+            Your complete Instagram outreach infrastructure, one click away
           </p>
         </div>
 
         <DashboardProductsOverview />
 
-        <DashboardBrandFooter />
       </div>
     </div>
   );

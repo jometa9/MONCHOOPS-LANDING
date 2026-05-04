@@ -192,7 +192,7 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
     <div className="space-y-3 pb-20">
       <div>
         <h2 className="text-2xl font-semibold text-gray-900">{heading}</h2>
-        <p className="text-xl text-gray-400">The best way to copy trades</p>
+        <p className="text-xl text-gray-400">Instagram cold DM automation, on your machine</p>
       </div>
 
       <Button

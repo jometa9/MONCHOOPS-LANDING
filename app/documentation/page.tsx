@@ -84,7 +84,7 @@ export default function DocumentationPage() {
               </h1>
               <p className="mt-3 text-gray-600 text-2xl max-w-2xl">
                 Complete guides and documentation for MonchoOps software - everything you
-                need to get started and make the most of your trading experience.
+                need to get started and make the most of your Instagram outreach campaigns.
               </p>
               <p className="mt-2 text-gray-600 text-sm">
                 Updated to latest version on {lastUpdated}

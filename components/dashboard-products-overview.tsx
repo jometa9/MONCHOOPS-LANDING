@@ -137,6 +137,12 @@ export function DashboardProductsOverview() {
   }
 
   const subscription = entitlements?.monchoops;
+  const planLimits = subscription?.limits;
+  const planUsage = subscription?.usage;
+  const formatLimit = (used: number, limit: number | null | undefined) => {
+    if (isAdmin || limit == null) return `${used.toLocaleString()} / Unlimited`;
+    return `${used.toLocaleString()} / ${limit.toLocaleString()}`;
+  };
   const hasActiveSubscription = subscription?.active || isAdmin;
   const hasSubscription = subscription !== null;
   const hasExpirationDate = subscription?.expiresAt != null;
@@ -186,7 +192,7 @@ export function DashboardProductsOverview() {
               <p className="text-lg text-gray-700">MonchoOps</p>
             </div>
             <p className="text-xs text-muted-foreground mb-1">
-              Local copy — Windows (MT4, MT5, cTrader) & macOS (MT5 direct & cTrader)
+              Runs locally on your machine — Windows & macOS, isolated Chromium per account
             </p>
             <p className="text-xl font-semibold">{displayLabel}</p>
             {!isAdmin && (
@@ -222,6 +228,34 @@ export function DashboardProductsOverview() {
               <p className="text-xs text-muted-foreground">Admin access</p>
             )}
           </div>
+
+          {planUsage && (
+            <div className="rounded-lg bg-gray-50 border border-gray-200 p-3 mb-3">
+              <p className="text-xs text-muted-foreground mb-2">
+                Plan usage{" "}
+                {planLimits?.dmMonthlyLimit != null && !isAdmin
+                  ? "(resets monthly)"
+                  : ""}
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <p className="text-xs text-gray-500">Instagram accounts</p>
+                  <p className="text-sm font-medium text-gray-800">
+                    {formatLimit(planUsage.accounts, planLimits?.accountLimit)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">DMs this month</p>
+                  <p className="text-sm font-medium text-gray-800">
+                    {formatLimit(
+                      planUsage.dmsThisMonth,
+                      planLimits?.dmMonthlyLimit
+                    )}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {!paymentsEnabled ? (
             <button
@@ -349,7 +383,7 @@ export function DashboardProductsOverview() {
                       Version {downloads?.monchoops?.windows?.version || "—"}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      MT4, MT5 & cTrader
+                      Multi-account Instagram automation
                     </p>
                   </div>
                 </div>
@@ -378,7 +412,7 @@ export function DashboardProductsOverview() {
                       Version {downloads?.monchoops?.mac?.version || "—"}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      MT5 direct & cTrader
+                      Multi-account Instagram automation
                     </p>
                   </div>
                 </div>
