@@ -4,7 +4,7 @@ import { Switch } from '@/components/landing/window-demo-app/components/ui/switc
 import { useSession } from '@/components/landing/window-demo-app/context/SessionContext';
 import { useTheme } from '@/components/landing/window-demo-app/context/ThemeContext';
 import { usePreferences } from '@/components/landing/window-demo-app/context/PreferencesContext';
-import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
+import { monchoops } from '@/components/landing/window-demo-app/lib/monchoops';
 import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
 
 function SectionHeader({ title }: { title: string }) {
@@ -57,7 +57,7 @@ export function Settings() {
 
   useEffect(() => {
     let cancelled = false;
-    void b2dm.settings.getAppVersion().then((v) => {
+    void monchoops.settings.getAppVersion().then((v) => {
       if (!cancelled) setAppVersion(v);
     });
     return () => {
@@ -68,7 +68,7 @@ export function Settings() {
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
     try {
-      await b2dm.settings.refreshSession();
+      await monchoops.settings.refreshSession();
       await refresh();
     } finally {
       setIsRefreshing(false);
@@ -79,7 +79,7 @@ export function Settings() {
     if (!confirm(t('settings.confirmDeleteAccounts'))) return;
     setIsDeletingAccounts(true);
     try {
-      await b2dm.settings.deleteAllAccounts();
+      await monchoops.settings.deleteAllAccounts();
     } finally {
       setIsDeletingAccounts(false);
     }
@@ -89,7 +89,7 @@ export function Settings() {
     if (!confirm(t('settings.confirmDeleteScrapes'))) return;
     setIsDeletingScrapes(true);
     try {
-      await b2dm.settings.deleteAllScrapes();
+      await monchoops.settings.deleteAllScrapes();
     } finally {
       setIsDeletingScrapes(false);
     }
@@ -101,7 +101,7 @@ export function Settings() {
     }
     setIsWipingAll(true);
     try {
-      await b2dm.settings.wipeAllData();
+      await monchoops.settings.wipeAllData();
       // Client-side caches (theme, sounds toggle, export dir) live in
       // localStorage; blow them away too so the app really feels reset.
       try {

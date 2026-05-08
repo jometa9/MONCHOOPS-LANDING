@@ -9,7 +9,7 @@ import { Label } from '@/components/landing/window-demo-app/components/ui/label'
 import { CategoryChip } from '@/components/landing/window-demo-app/components/common/CategoryChip';
 import { EmptyState } from '@/components/landing/window-demo-app/components/common/EmptyState';
 import { Spinner } from '@/components/landing/window-demo-app/components/common/Spinner';
-import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
+import { monchoops } from '@/components/landing/window-demo-app/lib/monchoops';
 import { formatDateTime } from '@/components/landing/window-demo-app/lib/format';
 import type { LeadCategoryPublic } from '@/components/landing/window-demo-app/types/domain';
 import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
@@ -31,14 +31,14 @@ export function Categories() {
   }, [rows, query]);
 
   async function load() {
-    const list = await b2dm.categories.list();
+    const list = await monchoops.categories.list();
     setRows(list);
   }
 
   useEffect(() => {
     void load();
-    const offCats = b2dm.categories.onChange(() => void load());
-    const offDone = b2dm.jobs.onDone(() => void load());
+    const offCats = monchoops.categories.onChange(() => void load());
+    const offDone = monchoops.jobs.onDone(() => void load());
     return () => {
       offCats();
       offDone();
@@ -49,7 +49,7 @@ export function Categories() {
   async function exportCsv(id: string) {
     setBusy(id);
     try {
-      await b2dm.categories.exportCsv(id);
+      await monchoops.categories.exportCsv(id);
     } finally {
       setBusy(null);
     }
@@ -199,7 +199,7 @@ function CreateCategoryDialog({ onClose }: { onClose: () => void }) {
     setBusy(true);
     setError(null);
     try {
-      await b2dm.categories.create(trimmed);
+      await monchoops.categories.create(trimmed);
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : t('screens.categories.couldNotCreate'));
@@ -262,7 +262,7 @@ function ConfirmDeleteCategoryDialog({
     setBusy(true);
     setError(null);
     try {
-      await b2dm.categories.delete(category.id);
+      await monchoops.categories.delete(category.id);
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : t('screens.categories.couldNotDelete'));

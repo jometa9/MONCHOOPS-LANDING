@@ -61,6 +61,7 @@ export async function POST(req: NextRequest) {
       monchoopsVersion: monchoopsVersion?.trim(),
       monchoopsWindowsDownloadUrl: monchoopsWindowsDownloadUrl?.trim(),
       monchoopsMacDownloadUrl: monchoopsMacDownloadUrl?.trim(),
+      monchoopsExtensionUrl: monchoopsExtensionUrl?.trim(),
     };
 
     if (resendApiKey !== undefined) {
@@ -92,6 +93,7 @@ export async function POST(req: NextRequest) {
       monchoopsVersion: updatedSettings.monchoopsVersion,
       monchoopsWindowsDownloadUrl: updatedSettings.monchoopsWindowsDownloadUrl,
       monchoopsMacDownloadUrl: updatedSettings.monchoopsMacDownloadUrl,
+      monchoopsExtensionUrl: updatedSettings.monchoopsExtensionUrl || "",
       resendApiKey: updatedSettings.resendApiKey || "",
       resendTestEmail: updatedSettings.resendTestEmail || "",
       emailFrom: updatedSettings.emailFrom || "",

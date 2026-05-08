@@ -14,7 +14,7 @@ import { CategoryChip } from '@/components/landing/window-demo-app/components/co
 import { EmptyState, EmptyStateLinkButton } from '@/components/landing/window-demo-app/components/common/EmptyState';
 import { ScrapeSummaryOf } from '@/components/landing/window-demo-app/components/common/ScrapeSummary';
 import { Spinner } from '@/components/landing/window-demo-app/components/common/Spinner';
-import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
+import { monchoops } from '@/components/landing/window-demo-app/lib/monchoops';
 import { cn } from '@/components/landing/window-demo-app/lib/cn';
 import { formatDateTime } from '@/components/landing/window-demo-app/lib/format';
 import type { ScrapeKind, ScrapeResultPublic } from '@/components/landing/window-demo-app/types/domain';
@@ -58,13 +58,13 @@ export function Data() {
   }, [rows, query]);
 
   async function load() {
-    const list = await b2dm.scrapes.list();
+    const list = await monchoops.scrapes.list();
     setRows(list);
   }
 
   useEffect(() => {
     void load();
-    const off = b2dm.jobs.onDone(() => void load());
+    const off = monchoops.jobs.onDone(() => void load());
     const timer = setInterval(() => void load(), 5000);
     return () => {
       off();
@@ -75,7 +75,7 @@ export function Data() {
   async function download(jobId: string) {
     setDownloading(jobId);
     try {
-      await b2dm.scrapes.download(jobId);
+      await monchoops.scrapes.download(jobId);
     } finally {
       setDownloading(null);
     }
@@ -89,7 +89,7 @@ export function Data() {
     setRetrying(row.jobId);
     setRetryError(null);
     try {
-      await b2dm.jobs.startScrape({
+      await monchoops.jobs.startScrape({
         accountId: row.accountId,
         kind: row.kind,
         params: row.params as Record<string, unknown>,
@@ -188,7 +188,7 @@ export function Data() {
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                void b2dm.openExternalLink(
+                                void monchoops.openExternalLink(
                                   `https://www.instagram.com/${encodeURIComponent(row.accountUsername!)}/`
                                 );
                               }}
@@ -255,7 +255,7 @@ export function Data() {
                         </button>
                         <button
                           type="button"
-                          onClick={() => void b2dm.scrapes.revealInFolder(row.jobId)}
+                          onClick={() => void monchoops.scrapes.revealInFolder(row.jobId)}
                           disabled={!hasCsv}
                           className="inline-flex h-7 w-7 items-center justify-center text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40 disabled:hover:text-muted-foreground"
                           aria-label={t('screens.data.revealFile')}

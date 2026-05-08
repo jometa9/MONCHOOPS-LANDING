@@ -208,7 +208,7 @@ export interface SettingsApi {
   setFullWindow(full: boolean): Promise<void>;
 }
 
-export interface B2dmApi {
+export interface MonchoopsApi {
   getPlatform(): Promise<NodeJS.Platform>;
   getIsFullScreen(): Promise<boolean>;
   onFullScreenChange(cb: (isFullScreen: boolean) => void): Unsubscribe;
@@ -783,7 +783,7 @@ function noopUnsub(): Unsubscribe {
 
 // ── API implementation ─────────────────────────────────────────────────────
 
-const api: B2dmApi = {
+const api: MonchoopsApi = {
   getPlatform: () => Promise.resolve("darwin" as NodeJS.Platform),
   getIsFullScreen: () => Promise.resolve(false),
   onFullScreenChange: () => noopUnsub(),
@@ -1091,14 +1091,12 @@ void _AccountStatus;
 
 declare global {
   interface Window {
-    b2dm: B2dmApi;
+    monchoops: MonchoopsApi;
   }
 }
 
-export const b2dm: B2dmApi = api;
+export const monchoops: MonchoopsApi = api;
 
 if (typeof window !== "undefined") {
-  // Expose on window so any third-party code that reaches for `window.b2dm`
-  // (the original Electron preload contract) finds the same instance.
-  (window as Window & { b2dm: B2dmApi }).b2dm = api;
+  (window as Window & { monchoops: MonchoopsApi }).monchoops = api;
 }

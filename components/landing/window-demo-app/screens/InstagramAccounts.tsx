@@ -11,7 +11,7 @@ import { Switch } from '@/components/landing/window-demo-app/components/ui/switc
 import { EmptyState } from '@/components/landing/window-demo-app/components/common/EmptyState';
 import { Spinner } from '@/components/landing/window-demo-app/components/common/Spinner';
 import { useAccounts } from '@/components/landing/window-demo-app/context/AccountsContext';
-import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
+import { monchoops } from '@/components/landing/window-demo-app/lib/monchoops';
 import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
 import type { AccountPublic } from '@/components/landing/window-demo-app/types/domain';
 
@@ -157,7 +157,7 @@ function RetryLoginDialog({
     setBusy(true);
     setError(null);
     try {
-      await b2dm.accounts.retryLogin(account.id, useStored ? null : password);
+      await monchoops.accounts.retryLogin(account.id, useStored ? null : password);
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : t('screens.instagramAccounts.couldNotStartRetry'));
@@ -268,7 +268,7 @@ function ProxyDialog({
     setError(null);
     try {
       const normalized = normalizeProxyUrl(url);
-      await b2dm.accounts.updateProxy({
+      await monchoops.accounts.updateProxy({
         id: account.id,
         url: normalized || null,
         username: username.trim() || null,
@@ -389,7 +389,7 @@ function ConfirmDeleteDialog({
     setBusy(true);
     setError(null);
     try {
-      await b2dm.accounts.delete(account.id);
+      await monchoops.accounts.delete(account.id);
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : t('screens.instagramAccounts.couldNotDelete'));
@@ -436,7 +436,7 @@ function ConfirmRemoveProxyDialog({
     setBusy(true);
     setError(null);
     try {
-      await b2dm.accounts.updateProxy({
+      await monchoops.accounts.updateProxy({
         id: account.id,
         url: null,
         username: null,
@@ -1085,7 +1085,7 @@ export function InstagramAccounts() {
     setAddError(null);
     setShowLoginMethod(false);
     try {
-      await b2dm.accounts.startLogin(proxy ?? undefined);
+      await monchoops.accounts.startLogin(proxy ?? undefined);
     } catch (err) {
       setAddError(err instanceof Error ? err.message : t('screens.instagramAccounts.couldNotStartLogin'));
     } finally {
@@ -1102,7 +1102,7 @@ export function InstagramAccounts() {
     setAddError(null);
     setShowLoginMethod(false);
     try {
-      await b2dm.accounts.startAutoLogin(username, password, proxy ?? undefined);
+      await monchoops.accounts.startAutoLogin(username, password, proxy ?? undefined);
     } catch (err) {
       setAddError(err instanceof Error ? err.message : t('screens.instagramAccounts.couldNotStartLogin'));
     } finally {
@@ -1114,7 +1114,7 @@ export function InstagramAccounts() {
     setAdding(true);
     setAddError(null);
     try {
-      await b2dm.accounts.startBulkAutoLogin(rows);
+      await monchoops.accounts.startBulkAutoLogin(rows);
     } catch (err) {
       setAddError(err instanceof Error ? err.message : t('screens.instagramAccounts.couldNotStartBulk'));
       throw err;

@@ -8,7 +8,7 @@ import { Label } from '@/components/landing/window-demo-app/components/ui/label'
 import { Textarea } from '@/components/landing/window-demo-app/components/ui/textarea';
 import { EmptyState } from '@/components/landing/window-demo-app/components/common/EmptyState';
 import { Spinner } from '@/components/landing/window-demo-app/components/common/Spinner';
-import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
+import { monchoops } from '@/components/landing/window-demo-app/lib/monchoops';
 import { formatDateTime } from '@/components/landing/window-demo-app/lib/format';
 import type { MessageVariantGroupPublic } from '@/components/landing/window-demo-app/types/domain';
 import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
@@ -33,11 +33,11 @@ export function MessageVariants() {
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const list = await b2dm.messageVariants.list();
+      const list = await monchoops.messageVariants.list();
       if (!cancelled) setRows(list);
     }
     void load();
-    const off = b2dm.messageVariants.onChange(() => void load());
+    const off = monchoops.messageVariants.onChange(() => void load());
     return () => {
       cancelled = true;
       off();
@@ -206,13 +206,13 @@ function EditGroupDialog({
     setError(null);
     try {
       if (isEdit && group) {
-        await b2dm.messageVariants.update({
+        await monchoops.messageVariants.update({
           id: group.id,
           name: name.trim(),
           variants,
         });
       } else {
-        await b2dm.messageVariants.create({ name: name.trim(), variants });
+        await monchoops.messageVariants.create({ name: name.trim(), variants });
       }
       onClose();
     } catch (err) {
@@ -328,7 +328,7 @@ function ConfirmDeleteGroupDialog({
     setBusy(true);
     setError(null);
     try {
-      await b2dm.messageVariants.delete(group.id);
+      await monchoops.messageVariants.delete(group.id);
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : t('screens.messageVariants.couldNotDelete'));

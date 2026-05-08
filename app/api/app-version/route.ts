@@ -10,6 +10,7 @@ export async function GET() {
         mac: settings.monchoopsMacDownloadUrl ?? "",
         windows: settings.monchoopsWindowsDownloadUrl ?? "",
       },
+      extensionUrl: settings.monchoopsExtensionUrl ?? "",
     });
   } catch {
     return NextResponse.json(

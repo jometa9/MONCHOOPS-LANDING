@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
+import { monchoops } from '@/components/landing/window-demo-app/lib/monchoops';
 import { playCompletionSound } from '@/components/landing/window-demo-app/lib/sound';
 import { usePreferences } from '@/components/landing/window-demo-app/context/PreferencesContext';
 import type { JobPublic } from '@/components/landing/window-demo-app/types/domain';
@@ -31,7 +31,7 @@ export function JobsProvider({ children }: { children: ReactNode }) {
   soundsEnabledRef.current = prefs.soundsEnabled;
 
   const refresh = useCallback(async () => {
-    const list = await b2dm.jobs.listActive();
+    const list = await monchoops.jobs.listActive();
     if (!mountedRef.current) return;
     setActive(list);
   }, []);
@@ -39,16 +39,16 @@ export function JobsProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     mountedRef.current = true;
     void refresh();
-    const offChange = b2dm.jobs.onChange(() => {
+    const offChange = monchoops.jobs.onChange(() => {
       void refresh();
     });
-    const offProgress = b2dm.jobs.onProgress((evt) => {
+    const offProgress = monchoops.jobs.onProgress((evt) => {
       setProgressByJob((prev) => ({
         ...prev,
         [evt.jobId]: { done: evt.done, total: evt.total, lastItem: evt.item },
       }));
     });
-    const offDone = b2dm.jobs.onDone((evt) => {
+    const offDone = monchoops.jobs.onDone((evt) => {
       setProgressByJob((prev) => {
         const next = { ...prev };
         delete next[evt.jobId];
@@ -57,7 +57,7 @@ export function JobsProvider({ children }: { children: ReactNode }) {
     });
     // Sound plays exactly once per account — when the account's whole queue
     // drains, not on every individual job completion.
-    const offDrained = b2dm.jobs.onAccountDrained((evt) => {
+    const offDrained = monchoops.jobs.onAccountDrained((evt) => {
       if (evt.status === 'completed' && soundsEnabledRef.current) {
         playCompletionSound();
       }
@@ -65,7 +65,7 @@ export function JobsProvider({ children }: { children: ReactNode }) {
     // Login jobs (individual or bulk) don't have an accountId so they never
     // fire `onAccountDrained`. Play the completion cue directly when a login
     // job finishes.
-    const offLoginFinished = b2dm.jobs.onLoginFinished((evt) => {
+    const offLoginFinished = monchoops.jobs.onLoginFinished((evt) => {
       if (evt.status === 'completed' && soundsEnabledRef.current) {
         playCompletionSound();
       }

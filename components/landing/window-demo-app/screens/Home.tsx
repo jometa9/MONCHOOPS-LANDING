@@ -3,7 +3,7 @@ import { Link } from '@/components/landing/window-demo-app/vendor/react-router-d
 import { Send, Users } from 'lucide-react';
 import { useSession } from '@/components/landing/window-demo-app/context/SessionContext';
 import { useAccounts } from '@/components/landing/window-demo-app/context/AccountsContext';
-import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
+import { monchoops } from '@/components/landing/window-demo-app/lib/monchoops';
 import { UpdateBanner } from '@/components/landing/window-demo-app/components/common/UpdateBanner';
 import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
 
@@ -63,7 +63,7 @@ export function Home() {
     let cancelled = false;
     async function load() {
       try {
-        const next = await b2dm.stats.get();
+        const next = await monchoops.stats.get();
         if (!cancelled) setStats(next);
       } catch {}
     }

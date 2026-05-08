@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
+import { monchoops } from '@/components/landing/window-demo-app/lib/monchoops';
 
 interface Preferences {
   headless: boolean;
@@ -16,7 +16,7 @@ interface PreferencesContextValue {
   setScrapeExportDir: (v: string) => void;
 }
 
-const STORAGE_KEY = 'b2dm-prefs';
+const STORAGE_KEY = 'monchoops-prefs';
 
 // `headless` is authoritative in the backend meta table (workers read it at
 // job start). `soundsEnabled` and `scrapeExportDir` stay in localStorage /
@@ -49,7 +49,7 @@ export function PreferencesProvider({ children }: { children: React.ReactNode })
   const [prefs, setPrefs] = useState<Preferences>(loadPrefs);
 
   useEffect(() => {
-    void b2dm.settings.getHeadless().then((headless) => {
+    void monchoops.settings.getHeadless().then((headless) => {
       setPrefs((prev) => {
         if (prev.headless === headless) return prev;
         const next = { ...prev, headless };
@@ -57,7 +57,7 @@ export function PreferencesProvider({ children }: { children: React.ReactNode })
         return next;
       });
     });
-    void b2dm.settings.getFullWindow().then((fullWindow) => {
+    void monchoops.settings.getFullWindow().then((fullWindow) => {
       setPrefs((prev) => {
         if (prev.fullWindow === fullWindow) return prev;
         const next = { ...prev, fullWindow };
@@ -78,7 +78,7 @@ export function PreferencesProvider({ children }: { children: React.ReactNode })
   const setHeadless = useCallback(
     (v: boolean) => {
       update({ headless: v });
-      void b2dm.settings.setHeadless(v);
+      void monchoops.settings.setHeadless(v);
     },
     [update]
   );
@@ -86,7 +86,7 @@ export function PreferencesProvider({ children }: { children: React.ReactNode })
   const setFullWindow = useCallback(
     (v: boolean) => {
       update({ fullWindow: v });
-      void b2dm.settings.setFullWindow(v);
+      void monchoops.settings.setFullWindow(v);
     },
     [update]
   );

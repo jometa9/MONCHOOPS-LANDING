@@ -11,6 +11,7 @@ interface AppSettingsState {
     version: string;
     windowsDownloadUrl: string;
     macDownloadUrl: string;
+    extensionUrl: string;
   };
 }
 
@@ -21,6 +22,7 @@ export default function AdminAppVersion() {
       version: "",
       windowsDownloadUrl: "",
       macDownloadUrl: "",
+      extensionUrl: "",
     },
   });
   const [originalSettings, setOriginalSettings] = useState<AppSettingsState | null>(null);
@@ -38,6 +40,7 @@ export default function AdminAppVersion() {
               version: data.monchoopsVersion || "1.0.0",
               windowsDownloadUrl: data.monchoopsWindowsDownloadUrl || "",
               macDownloadUrl: data.monchoopsMacDownloadUrl || "",
+              extensionUrl: data.monchoopsExtensionUrl || "",
             },
           };
           setSettings(newSettings);
@@ -64,6 +67,7 @@ export default function AdminAppVersion() {
           monchoopsVersion: settings.monchoops.version.trim(),
           monchoopsWindowsDownloadUrl: settings.monchoops.windowsDownloadUrl.trim(),
           monchoopsMacDownloadUrl: settings.monchoops.macDownloadUrl.trim(),
+          monchoopsExtensionUrl: settings.monchoops.extensionUrl.trim(),
         }),
       });
 
@@ -87,7 +91,7 @@ export default function AdminAppVersion() {
   const hasChanges = originalSettings && JSON.stringify(settings) !== JSON.stringify(originalSettings);
 
   const updateSetting = (
-    field: "version" | "windowsDownloadUrl" | "macDownloadUrl",
+    field: "version" | "windowsDownloadUrl" | "macDownloadUrl" | "extensionUrl",
     value: string
   ) => {
     setSettings((prev) => ({
@@ -129,6 +133,16 @@ export default function AdminAppVersion() {
               placeholder="https://..."
               value={settings.monchoops.macDownloadUrl}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSetting("macDownloadUrl", e.target.value)}
+              className="shadow-none bg-white text-sm"
+            />
+          </div>
+          <div className="grid w-full items-center gap-1.5">
+            <Label htmlFor="monchoops-extension-url" className="text-xs">{t("monchoopsExtensionUrl")}</Label>
+            <Input
+              id="monchoops-extension-url"
+              placeholder="https://chromewebstore.google.com/..."
+              value={settings.monchoops.extensionUrl}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSetting("extensionUrl", e.target.value)}
               className="shadow-none bg-white text-sm"
             />
           </div>

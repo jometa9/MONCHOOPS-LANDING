@@ -1,4 +1,4 @@
-import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
+import { monchoops } from '@/components/landing/window-demo-app/lib/monchoops';
 import { cn } from '@/components/landing/window-demo-app/lib/cn';
 import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
 import type { JobKind, ScrapeResultPublic } from '@/components/landing/window-demo-app/types/domain';
@@ -78,7 +78,7 @@ export function ExternalLinkWord({ url, label }: { url: string; label: string })
       type="button"
       onClick={(e) => {
         e.stopPropagation();
-        void b2dm.openExternalLink(url);
+        void monchoops.openExternalLink(url);
       }}
       className="font-medium underline decoration-dotted underline-offset-2"
     >

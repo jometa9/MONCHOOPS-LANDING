@@ -18,6 +18,7 @@ import {
 interface AppVersionInfo {
   version: string;
   downloadUrls: { mac: string; windows: string };
+  extensionUrl: string;
 }
 
 const EXTENSION_BASE_WIDTH = 800;
@@ -260,7 +261,7 @@ export function ProductsSection() {
           </h2>
 
           <div className="bg-gray-100 rounded-lg p-5 md:p-6">
-            <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-6 md:gap-8 md:items-start">
+            <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-6 md:gap-8">
               <div className="flex flex-col justify-between order-1 md:order-1">
                 <div>
                   <div className="flex items-center gap-4 mb-3">
@@ -290,10 +291,18 @@ export function ProductsSection() {
                 </div>
                 <div className="mt-auto">
                   <a
-                    href="https://chromewebstore.google.com/"
+                    href={downloads?.extensionUrl || "#"}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-left transition-colors hover:bg-gray-50"
+                    aria-disabled={!downloads?.extensionUrl}
+                    onClick={(e) => {
+                      if (!downloads?.extensionUrl) e.preventDefault();
+                    }}
+                    className={`block w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-left transition-colors hover:bg-gray-50 ${
+                      downloads?.extensionUrl
+                        ? "cursor-pointer"
+                        : "cursor-default opacity-60"
+                    }`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from '@/components/landing/window-demo-app/ven
 import { ArrowLeft, ExternalLink, Search, Users } from 'lucide-react';
 import { EmptyState } from '@/components/landing/window-demo-app/components/common/EmptyState';
 import { Spinner } from '@/components/landing/window-demo-app/components/common/Spinner';
-import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
+import { monchoops } from '@/components/landing/window-demo-app/lib/monchoops';
 import { formatDateTime } from '@/components/landing/window-demo-app/lib/format';
 import type { LeadCategoryPublic, LeadPublic } from '@/components/landing/window-demo-app/types/domain';
 import { useTranslation, type TFunction } from '@/components/landing/window-demo-app/lib/i18n';
@@ -20,8 +20,8 @@ export function CategoryLeadsDetail() {
     let cancelled = false;
     async function load() {
       const [list, cats] = await Promise.all([
-        b2dm.categories.listLeads({ categoryId, limit: 1000 }),
-        b2dm.categories.list(),
+        monchoops.categories.listLeads({ categoryId, limit: 1000 }),
+        monchoops.categories.list(),
       ]);
       if (cancelled) return;
       setLeads(list);
@@ -105,7 +105,7 @@ export function CategoryLeadsDetail() {
           <tbody>
             {filteredLeads!.map((lead) => {
               const openProfile = () =>
-                void b2dm.openExternalLink(
+                void monchoops.openExternalLink(
                   `https://www.instagram.com/${encodeURIComponent(lead.username)}/`
                 );
               return (
@@ -182,7 +182,7 @@ function LeadSourceCell({
           type="button"
           onClick={(e) => {
             e.stopPropagation();
-            void b2dm.openExternalLink(refUrl);
+            void monchoops.openExternalLink(refUrl);
           }}
           className="font-medium text-foreground underline decoration-dotted underline-offset-2 transition-colors hover:text-primary"
         >

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ArrowDownCircle, Loader, RotateCw } from 'lucide-react';
-import { b2dm, type UpdateStatus } from '@/components/landing/window-demo-app/lib/b2dm';
+import { monchoops, type UpdateStatus } from '@/components/landing/window-demo-app/lib/monchoops';
 import { useTranslation, type TFunction } from '@/components/landing/window-demo-app/lib/i18n';
 
 // Preview mode: set to any UpdateStatus to see how the banner renders
@@ -19,10 +19,10 @@ export function UpdateBanner() {
   useEffect(() => {
     if (PREVIEW) return;
     let cancelled = false;
-    void b2dm.updater.getState().then((s) => {
+    void monchoops.updater.getState().then((s) => {
       if (!cancelled) setState(s);
     });
-    const off = b2dm.updater.onStateChange((s) => setState(s));
+    const off = monchoops.updater.onStateChange((s) => setState(s));
     return () => {
       cancelled = true;
       off();
@@ -32,7 +32,7 @@ export function UpdateBanner() {
   const handleInstall = async () => {
     setIsInstalling(true);
     try {
-      await b2dm.updater.installAndRestart();
+      await monchoops.updater.installAndRestart();
     } catch {
       setIsInstalling(false);
     }

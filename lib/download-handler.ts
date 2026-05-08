@@ -90,6 +90,7 @@ export const fetchAppVersion = async () => {
     return (await response.json()) as {
       version: string;
       downloadUrls: { mac: string; windows: string };
+      extensionUrl: string;
     };
   } catch {
     return null;

@@ -45,26 +45,6 @@ export function ComparisonTable() {
 
   const comparisonData: ComparisonRow[] = [
     {
-      featureKey: "multiAccount",
-      monchoops: "yes",
-      competitors: {
-        autoreacher: "yes",
-        instadm: "yes",
-        manychat: t("values.perWorkspace"),
-        phantombuster: "yes",
-      },
-    },
-    {
-      featureKey: "proxyPerAccount",
-      monchoops: "yes",
-      competitors: {
-        autoreacher: "yes",
-        instadm: "yes",
-        manychat: "no",
-        phantombuster: "varies",
-      },
-    },
-    {
       featureKey: "isolatedBrowser",
       monchoops: "yes",
       competitors: {
@@ -85,42 +65,12 @@ export function ComparisonTable() {
       },
     },
     {
-      featureKey: "scraping4modes",
-      monchoops: "yes",
-      competitors: {
-        autoreacher: "yes",
-        instadm: "varies",
-        manychat: "no",
-        phantombuster: "yes",
-      },
-    },
-    {
-      featureKey: "variants",
-      monchoops: "yes",
-      competitors: {
-        autoreacher: "yes",
-        instadm: t("values.templates"),
-        manychat: t("values.templates"),
-        phantombuster: t("values.templates"),
-      },
-    },
-    {
       featureKey: "autoSkip",
       monchoops: "yes",
       competitors: {
         autoreacher: "varies",
         instadm: "no",
         manychat: "no",
-        phantombuster: "no",
-      },
-    },
-    {
-      featureKey: "perRecipientLog",
-      monchoops: "yes",
-      competitors: {
-        autoreacher: "yes",
-        instadm: t("values.limited"),
-        manychat: t("values.limited"),
         phantombuster: "no",
       },
     },
@@ -132,6 +82,16 @@ export function ComparisonTable() {
         instadm: "no",
         manychat: "no",
         phantombuster: "no",
+      },
+    },
+    {
+      featureKey: "variants",
+      monchoops: "yes",
+      competitors: {
+        autoreacher: "yes",
+        instadm: t("values.templates"),
+        manychat: t("values.templates"),
+        phantombuster: t("values.templates"),
       },
     },
     {
@@ -152,6 +112,46 @@ export function ComparisonTable() {
         instadm: t("values.subscription"),
         manychat: t("values.perContact"),
         phantombuster: t("values.perSlotHour"),
+      },
+    },
+    {
+      featureKey: "perRecipientLog",
+      monchoops: "yes",
+      competitors: {
+        autoreacher: "yes",
+        instadm: t("values.limited"),
+        manychat: t("values.limited"),
+        phantombuster: "no",
+      },
+    },
+    {
+      featureKey: "proxyPerAccount",
+      monchoops: "yes",
+      competitors: {
+        autoreacher: "yes",
+        instadm: "yes",
+        manychat: "no",
+        phantombuster: "varies",
+      },
+    },
+    {
+      featureKey: "scraping4modes",
+      monchoops: "yes",
+      competitors: {
+        autoreacher: "yes",
+        instadm: "varies",
+        manychat: "no",
+        phantombuster: "yes",
+      },
+    },
+    {
+      featureKey: "multiAccount",
+      monchoops: "yes",
+      competitors: {
+        autoreacher: "yes",
+        instadm: "yes",
+        manychat: t("values.perWorkspace"),
+        phantombuster: "yes",
       },
     },
     {

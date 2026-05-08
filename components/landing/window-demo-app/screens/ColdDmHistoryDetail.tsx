@@ -3,7 +3,7 @@ import { useNavigate, useParams } from '@/components/landing/window-demo-app/ven
 import { ArrowLeft, ExternalLink, Instagram, MessageCircle, Search, Send } from 'lucide-react';
 import { EmptyState } from '@/components/landing/window-demo-app/components/common/EmptyState';
 import { Spinner } from '@/components/landing/window-demo-app/components/common/Spinner';
-import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
+import { monchoops } from '@/components/landing/window-demo-app/lib/monchoops';
 import { formatDateTime } from '@/components/landing/window-demo-app/lib/format';
 import type { MassDmResultPublic, MassDmSendPublic } from '@/components/landing/window-demo-app/types/domain';
 import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
@@ -20,8 +20,8 @@ export function ColdDmHistoryDetail() {
     let cancelled = false;
     async function load() {
       const [meta, list] = await Promise.all([
-        b2dm.massDms.get(jobId),
-        b2dm.massDms.listSends(jobId),
+        monchoops.massDms.get(jobId),
+        monchoops.massDms.listSends(jobId),
       ]);
       if (cancelled) return;
       setResult(meta);
@@ -118,11 +118,11 @@ export function ColdDmHistoryDetail() {
             <tbody>
               {filteredRows!.map((row, idx) => {
                 const openProfile = () =>
-                  void b2dm.openExternalLink(
+                  void monchoops.openExternalLink(
                     `https://www.instagram.com/${encodeURIComponent(row.username)}/`
                   );
                 const openChat = () =>
-                  void b2dm.openExternalLink(
+                  void monchoops.openExternalLink(
                     `https://ig.me/m/${encodeURIComponent(row.username)}`
                   );
                 const isFailed = row.status === 'failed';

@@ -37,7 +37,7 @@ import { EmptyState, EmptyStateLinkButton } from '@/components/landing/window-de
 import { JobStartedPanel } from '@/components/landing/window-demo-app/components/common/JobStartedPanel';
 import { ScrapeSummaryOf } from '@/components/landing/window-demo-app/components/common/ScrapeSummary';
 import { useAccounts } from '@/components/landing/window-demo-app/context/AccountsContext';
-import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
+import { monchoops } from '@/components/landing/window-demo-app/lib/monchoops';
 import { cn } from '@/components/landing/window-demo-app/lib/cn';
 import { formatDateTime } from '@/components/landing/window-demo-app/lib/format';
 import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
@@ -163,7 +163,7 @@ export function MassDMs() {
     setError(null);
     const enqueued = selectedAccount?.status === 'busy';
     try {
-      const jobId = await b2dm.jobs.startMassDm({
+      const jobId = await monchoops.jobs.startMassDm({
         accountId,
         usernamesCsvPath: source.path,
         messages: nonEmptyVariants,
@@ -195,8 +195,8 @@ export function MassDMs() {
     (async () => {
       try {
         const [sourceUsers, dmed] = await Promise.all([
-          b2dm.csv.listUsernames(source.path),
-          b2dm.massDms.listDmedUsernames(accountId),
+          monchoops.csv.listUsernames(source.path),
+          monchoops.massDms.listDmedUsernames(accountId),
         ]);
         if (cancelled) return;
         const dmedSet = new Set(dmed.map((u) => u.toLowerCase()));
@@ -473,7 +473,7 @@ function ManualPanel({
       setErr(null);
       void (async () => {
         try {
-          const res = await b2dm.csv.persistFromUsernames(dedup);
+          const res = await monchoops.csv.persistFromUsernames(dedup);
           if (cancelled) return;
           const label = dedup.length === 1 ? t('screens.massDms.manualOneLabel', { username: dedup[0] }) : t('screens.massDms.manualManyLabel', { count: dedup.length });
           onChange({
@@ -565,7 +565,7 @@ function FilePanel({
     setLoading(true);
     setErr(null);
     try {
-      const res = await b2dm.csv.persistFromPath(srcPath);
+      const res = await monchoops.csv.persistFromPath(srcPath);
       const label = fallbackName ?? srcPath.split(/[\\/]/).pop() ?? 'file';
       onChange({ kind: 'file', path: res.path, count: res.count, label });
     } catch (e) {
@@ -579,7 +579,7 @@ function FilePanel({
     setLoading(true);
     setErr(null);
     try {
-      const res = await b2dm.csv.pickAndPersist();
+      const res = await monchoops.csv.pickAndPersist();
       if (!res) return;
       const label = res.path.split(/[\\/]/).pop() ?? 'file';
       onChange({ kind: 'file', path: res.path, count: res.count, label });
@@ -679,11 +679,11 @@ function JobsPanel({
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      const list = await b2dm.scrapes.list();
+      const list = await monchoops.scrapes.list();
       if (!cancelled) setRows(list);
     })();
-    const off = b2dm.jobs.onDone(async () => {
-      const list = await b2dm.scrapes.list();
+    const off = monchoops.jobs.onDone(async () => {
+      const list = await monchoops.scrapes.list();
       if (!cancelled) setRows(list);
     });
     return () => {
@@ -715,7 +715,7 @@ function JobsPanel({
     setErr(null);
     try {
       const ids = Array.from(next);
-      const res = await b2dm.csv.persistFromScrapes(ids);
+      const res = await monchoops.csv.persistFromScrapes(ids);
       const labels = ids
         .map((id) => (rows ?? []).find((r) => r.jobId === id)?.summary)
         .filter((s): s is string => !!s);
@@ -804,7 +804,7 @@ function JobsPanel({
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                void b2dm.openExternalLink(
+                                void monchoops.openExternalLink(
                                   `https://www.instagram.com/${encodeURIComponent(row.accountUsername!)}/`
                                 );
                               }}
@@ -865,11 +865,11 @@ function CategoryPanel({
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const list = await b2dm.categories.list();
+      const list = await monchoops.categories.list();
       if (!cancelled) setRows(list);
     }
     void load();
-    const off = b2dm.categories.onChange(() => void load());
+    const off = monchoops.categories.onChange(() => void load());
     return () => {
       cancelled = true;
       off();
@@ -898,7 +898,7 @@ function CategoryPanel({
     setErr(null);
     try {
       const ids = Array.from(next);
-      const res = await b2dm.csv.persistFromCategories(ids);
+      const res = await monchoops.csv.persistFromCategories(ids);
       const labels = ids
         .map((id) => (rows ?? []).find((r) => r.id === id)?.name)
         .filter((s): s is string => !!s);
@@ -1165,11 +1165,11 @@ function SavedVariantsPanel({ onLoad }: { onLoad: (variants: string[]) => void }
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const list = await b2dm.messageVariants.list();
+      const list = await monchoops.messageVariants.list();
       if (!cancelled) setRows(list);
     }
     void load();
-    const off = b2dm.messageVariants.onChange(() => void load());
+    const off = monchoops.messageVariants.onChange(() => void load());
     return () => {
       cancelled = true;
       off();

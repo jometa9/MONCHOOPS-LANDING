@@ -9,6 +9,7 @@ import {
   handleDownload as doDownload,
   type DownloadOS,
 } from "@/lib/download-handler";
+import { ChromeIcon } from "@/components/icons/chrome-icon";
 import { ProductKey } from "@/lib/db/schema";
 import { paymentsEnabled } from "@/lib/payments/feature-flag";
 import { customerPortalAction } from "@/lib/payments/actions";
@@ -18,6 +19,7 @@ import {
   Book,
   BookOpen,
   Download,
+  ExternalLink,
   Mail,
   PartyPopper,
   Youtube,
@@ -33,6 +35,7 @@ const SUPPORT_EMAIL = "support@monchoops.com";
 interface AppVersionInfo {
   version: string;
   downloadUrls: { mac: string; windows: string };
+  extensionUrl: string;
 }
 
 export function DashboardProductsOverview() {
@@ -420,6 +423,31 @@ export function DashboardProductsOverview() {
               </div>
             </div>
           </div>
+          {downloads?.extensionUrl ? (
+            <a
+              href={downloads.extensionUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 block rounded-lg border border-gray-200 bg-gray-50 hover:bg-white transition-all px-4 py-3"
+            >
+              <div className="flex items-end justify-between gap-3">
+                <div className="flex gap-2 flex-col min-w-0">
+                  <div className="flex gap-2 items-center">
+                    <ChromeIcon className="h-5 w-5" />
+                    <p className="text-lg text-gray-700">
+                      {t("chromeExtensionTitle")}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">
+                      {t("chromeExtensionDesc")}
+                    </p>
+                  </div>
+                </div>
+                <ExternalLink className="h-5 w-5 text-gray-700 shrink-0" />
+              </div>
+            </a>
+          ) : null}
           <div className="mt-4 px-1 flex flex-col items-start sm:flex-row sm:items-center sm:justify-between gap-3">
             <Link
               href="/dashboard/documentation#installation-and-demo"

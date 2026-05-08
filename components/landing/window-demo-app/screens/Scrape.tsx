@@ -25,7 +25,7 @@ import {
 import { useAccounts } from '@/components/landing/window-demo-app/context/AccountsContext';
 import { JobStartedPanel } from '@/components/landing/window-demo-app/components/common/JobStartedPanel';
 import { cn } from '@/components/landing/window-demo-app/lib/cn';
-import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
+import { monchoops } from '@/components/landing/window-demo-app/lib/monchoops';
 import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
 import type { LeadCategoryPublic, ScrapeKind } from '@/components/landing/window-demo-app/types/domain';
 
@@ -138,7 +138,7 @@ export function Scrape() {
       } else if (mode === 'scrape_by_location') {
         params = { ...params, locationUrl, ...targetPayload };
       }
-      const jobId = await b2dm.jobs.startScrape({ accountId, kind: mode, params });
+      const jobId = await monchoops.jobs.startScrape({ accountId, kind: mode, params });
       setWasEnqueued(enqueued);
       setStartedJobId(jobId);
     } catch (err) {
@@ -584,11 +584,11 @@ function CategorySummary({ value }: { value: CategorySelection }) {
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      const list = await b2dm.categories.list();
+      const list = await monchoops.categories.list();
       if (!cancelled) setCategories(list);
     })();
-    const off = b2dm.categories.onChange(async () => {
-      const list = await b2dm.categories.list();
+    const off = monchoops.categories.onChange(async () => {
+      const list = await monchoops.categories.list();
       if (!cancelled) setCategories(list);
     });
     return () => {

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from '@/components/landing/window-demo-app/vendor/react-router-dom';
 import { Spinner } from '@/components/landing/window-demo-app/components/common/Spinner';
 import { useJobs } from '@/components/landing/window-demo-app/context/JobsContext';
-import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
+import { monchoops } from '@/components/landing/window-demo-app/lib/monchoops';
 import { cn } from '@/components/landing/window-demo-app/lib/cn';
 import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
 import type { JobStatus } from '@/components/landing/window-demo-app/types/domain';
@@ -23,7 +23,7 @@ export function JobStartedPanel({ jobId, kind, wasEnqueued, onReset }: JobStarte
   const completed = finalStatus != null;
 
   useEffect(() => {
-    const off = b2dm.jobs.onDone((evt) => {
+    const off = monchoops.jobs.onDone((evt) => {
       if (evt.jobId !== jobId) return;
       setFinalStatus(evt.status as JobStatus);
     });
