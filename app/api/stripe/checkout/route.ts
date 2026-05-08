@@ -6,7 +6,6 @@ import {
   getProductSubscriptionByStripeId,
 } from "@/lib/db/queries";
 import { ProductKey } from "@/lib/db/schema";
-import { sendSubscriptionChangeEmail } from "@/lib/email";
 import {
   extractClientInfo,
   extractFacebookCookies,
@@ -281,18 +280,6 @@ export async function GET(req: NextRequest) {
       }
 
       try {
-        await sendSubscriptionChangeEmail({
-          email: user.email,
-          name: user.name || user.email.split("@")[0],
-          planName: `${productName} (${productKey.toUpperCase()})`,
-          status: isPlanChange ? "plan_changed" : status,
-          expiryDate: expiryDateString,
-        });
-      } catch (emailError) {
-        console.error("Error sending subscription change email:", emailError);
-      }
-
-      try {
         const { fbc, fbp } = extractFacebookCookies(req);
         const { clientIpAddress, clientUserAgent } = extractClientInfo(req);
         await trackPurchase({
@@ -404,18 +391,6 @@ export async function POST(req: NextRequest) {
       planName: simulatedProductName,
       expiresAt: expiryDate,
     });
-
-    try {
-      await sendSubscriptionChangeEmail({
-        email: user.email,
-        name: user.name || user.email.split("@")[0],
-        planName: `${simulatedProductName} (${productKey.toUpperCase()})`,
-        status: "active",
-        expiryDate: expiryDate.toISOString().split("T")[0],
-      });
-    } catch (emailError) {
-      console.error("Error sending subscription change email:", emailError);
-    }
 
     return NextResponse.json({
       success: true,

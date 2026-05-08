@@ -1,9 +1,10 @@
 "use client";
 
+import { ChromeIcon } from "@/components/icons/chrome-icon";
 import { MacOSIcon } from "@/components/icons/macos-icon";
 import { WindowsIcon } from "@/components/icons/windows-icon";
 import { MonchoOpsWindowDemo } from "@/components/landing/monchoops-window-demo";
-import { ArrowDownToLine, Check } from "lucide-react";
+import { ArrowDownToLine, Check, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -73,6 +74,13 @@ export function ProductsSection() {
     t("bullet4"),
     t("bullet5"),
     t("bullet6"),
+  ];
+
+  const extensionBullets = [
+    t("extension.bullet1"),
+    t("extension.bullet2"),
+    t("extension.bullet3"),
+    t("extension.bullet4"),
   ];
 
   return (
@@ -193,11 +201,14 @@ export function ProductsSection() {
                 </div>
                 <div className="hidden sm:flex items-center gap-2 text-[10px] text-white/70">
                   <span>100%</span>
-                  <span>·</span>
+                  <span>-</span>
                   <span suppressHydrationWarning>{menuBarClock}</span>
                 </div>
               </div>
-              <div className="relative z-10 w-full max-w-[78%] aspect-[980/600] rounded-lg overflow-hidden shadow-2xl shadow-black/50 ring-1 ring-white/10">
+              <div
+                className="relative z-10 w-full max-w-[78%] aspect-[980/600] overflow-hidden shadow-2xl shadow-black/50 ring-1 ring-white/10"
+                style={{ borderRadius: "8px" }}
+              >
                 <MonchoOpsWindowDemo />
               </div>
               <div
@@ -206,7 +217,7 @@ export function ProductsSection() {
               >
                 <div className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/15 backdrop-blur-md p-1.5 shadow-lg">
                   <Image
-                    src="/monchoops-icon.png"
+                    src="/assets/monchoops_square.png"
                     alt=""
                     width={32}
                     height={32}

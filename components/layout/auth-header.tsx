@@ -1,5 +1,3 @@
-import { LanguageSwitcher } from "@/components/language-switcher";
-
 export function AuthHeader() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 ">
@@ -7,7 +5,6 @@ export function AuthHeader() {
         <span className="text-xl font-bold tracking-tight text-gray-900">
           MonchoOps
         </span>
-        <LanguageSwitcher />
       </div>
     </header>
   );

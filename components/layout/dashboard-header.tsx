@@ -1,7 +1,6 @@
 "use client";
 
 import { logoutAction } from "@/app/(login)/actions";
-import { LanguageSwitcher } from "@/components/language-switcher";
 import { useSidebar } from "@/contexts/sidebar-context";
 import { User } from "@/lib/db/schema";
 import { LogOut, Menu, X } from "lucide-react";
@@ -53,7 +52,6 @@ export function DashboardHeader({
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <LanguageSwitcher />
               {isWeb && user && (
                 <span className="hidden md:block text-sm text-gray-400">
                   {user.name || user.email?.split("@")[0]}

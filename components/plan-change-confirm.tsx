@@ -50,7 +50,7 @@ export function PlanChangeConfirm(props: PlanChangeConfirmProps) {
       const period = isCurrent ? currentPeriod : newPeriod;
       return (
         <>
-          {accounts} {accounts === 1 ? "account" : "accounts"} · ${price}/{period === "annual" ? "yr" : "mo"}
+          {accounts} {accounts === 1 ? "account" : "accounts"} - ${price}/{period === "annual" ? "yr" : "mo"}
         </>
       );
     } else {
@@ -59,7 +59,7 @@ export function PlanChangeConfirm(props: PlanChangeConfirmProps) {
       const period = isCurrent ? currentPeriod : newPeriod;
       return (
         <>
-          {tier} · ${price}/{period === "annual" ? "yr" : "mo"}
+          {tier} - ${price}/{period === "annual" ? "yr" : "mo"}
         </>
       );
     }

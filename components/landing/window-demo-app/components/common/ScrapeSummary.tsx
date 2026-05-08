@@ -1,5 +1,6 @@
 import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
 import { cn } from '@/components/landing/window-demo-app/lib/cn';
+import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
 import type { JobKind, ScrapeResultPublic } from '@/components/landing/window-demo-app/types/domain';
 
 interface Props {

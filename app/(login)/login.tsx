@@ -1,31 +1,17 @@
 "use client";
 import { useMetaPixel } from "@/components/meta-pixel";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ActionState } from "@/lib/auth/middleware";
 import { Loader2 } from "lucide-react";
 import { signIn as nextAuthSignIn, useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useActionState } from "react";
-import { signIn, signUp } from "./actions";
+import React from "react";
 
-export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
+export function Login() {
   const t = useTranslations("auth");
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
-  const priceId = searchParams.get("priceId");
-  const inviteId = searchParams.get("inviteId");
   const source = searchParams.get("source");
-  const [state, formAction, pending] = useActionState<ActionState, FormData>(
-    (mode === "signin" ? signIn : signUp) as (
-      state: ActionState,
-      payload: FormData
-    ) => Promise<ActionState>,
-    { error: "" }
-  );
   const { data: session, status } = useSession();
   const router = useRouter();
   const { trackCompleteRegistration } = useMetaPixel();
@@ -43,14 +29,6 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
   const isFromApp = source === "app";
   const isAppRedirect = redirect && redirect.startsWith("monchoops://");
   const appName = "MonchoOps";
-
-  const switchParams = new URLSearchParams();
-  if (redirect) switchParams.set("redirect", redirect);
-  if (priceId) switchParams.set("priceId", priceId);
-  if (inviteId) switchParams.set("inviteId", inviteId);
-  if (source) switchParams.set("source", source);
-  const alternateAuthHref = `${mode === "signin" ? "/sign-up" : "/sign-in"}${switchParams.toString() ? `?${switchParams.toString()}` : ""
-    }`;
 
   const heading = isFromApp
     ? t("accessAccount", { appName })
@@ -103,7 +81,7 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
 
   React.useEffect(() => {
     if (status === "authenticated") {
-      if (mode === "signup" && !hasTrackedRegistration && session?.user) {
+      if (!hasTrackedRegistration && session?.user) {
         const eventId = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
         trackCompleteRegistration(
           {
@@ -119,7 +97,6 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
   }, [
     status,
     router,
-    mode,
     hasTrackedRegistration,
     session,
     trackCompleteRegistration,
@@ -199,12 +176,12 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
         type="button"
         className="w-full justify-center gap-3 rounded-lg bg-gray-900 py-3 text-white text-md hover:bg-gray-600 disabled:opacity-60"
         onClick={handleGoogleSignIn}
-        disabled={isGoogleLoading || pending}
+        disabled={isGoogleLoading}
       >
         {isGoogleLoading ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            {mode === "signin" ? t("connecting") : t("creatingAccount")}
+            {t("connecting")}
           </>
         ) : (
           <>
@@ -237,127 +214,6 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
           </>
         )}
       </Button>
-
-      <form className="space-y-3" action={formAction}>
-        <input type="hidden" name="redirect" value={redirect || ""} />
-        <input type="hidden" name="priceId" value={priceId || ""} />
-        <input type="hidden" name="inviteId" value={inviteId || ""} />
-
-        <div className="space-y-1">
-          <div>
-            <Label htmlFor="email" className="text-sm text-gray-700">
-              {t("email")}
-            </Label>
-          </div>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            defaultValue={state.email}
-            required
-            maxLength={50}
-            placeholder={t("emailPlaceholder")}
-            disabled={pending || isGoogleLoading}
-          />
-        </div>
-
-        <div className="space-y-1">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="password" className="text-sm text-gray-700">
-              {t("password")}
-            </Label>
-            {mode === "signin" && (
-              <Link
-                href="/forgot-password"
-                className={`text-xs font-semibold text-gray-900 hover:underline ${pending || isGoogleLoading
-                    ? "pointer-events-none opacity-50"
-                    : ""
-                  }`}
-              >
-                {t("forgotPassword")}
-              </Link>
-            )}
-          </div>
-          <Input
-            id="password"
-            name="password"
-            type="password"
-            className={mode === "signin" ? "mb-4" : ""}
-            autoComplete={
-              mode === "signin" ? "current-password" : "new-password"
-            }
-            defaultValue={state.password}
-            required
-            minLength={8}
-            maxLength={100}
-            placeholder={t("passwordPlaceholder")}
-            disabled={pending || isGoogleLoading}
-          />
-          {mode === "signup" && (
-            <p className="text-xs text-gray-600">
-              {t("passwordHelp")}
-            </p>
-          )}
-        </div>
-
-        {state?.error && (
-          <div className="text-sm text-gray-600">
-            {typeof state.error === "string" && state.error.includes("<a") ? (
-              <p dangerouslySetInnerHTML={{ __html: state.error }}></p>
-            ) : (
-              <p>{state.error}</p>
-            )}
-          </div>
-        )}
-
-        <Button
-          type="submit"
-          className="w-full justify-center rounded-lg bg-gray-900 py-3 text-md text-white hover:bg-gray-600"
-          disabled={pending || isGoogleLoading}
-        >
-          {pending ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {mode === "signin" ? t("signingIn") : t("creatingAccount")}
-            </>
-          ) : mode === "signin" ? (
-            t("signIn")
-          ) : (
-            t("createAccount")
-          )}
-        </Button>
-      </form>
-
-      <div className="text-sm text-gray-600">
-        {mode === "signin" ? (
-          <>
-            {t("noAccount")}{" "}
-            <Link
-              href={alternateAuthHref}
-              className={`font-semibold text-gray-900 hover:underline ${pending || isGoogleLoading
-                  ? "pointer-events-none opacity-50"
-                  : ""
-                }`}
-            >
-              {t("signUp")}
-            </Link>
-          </>
-        ) : (
-          <>
-            {t("haveAccount")}{" "}
-            <Link
-              href={alternateAuthHref}
-              className={`font-semibold text-gray-900 hover:underline ${pending || isGoogleLoading
-                  ? "pointer-events-none opacity-50"
-                  : ""
-                }`}
-            >
-              {t("signIn")}
-            </Link>
-          </>
-        )}
-      </div>
 
       {isFromApp && (
         <p

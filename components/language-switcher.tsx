@@ -43,7 +43,7 @@ export function LanguageSwitcher({
 
   return (
     <div
-      className={`inline-flex items-center gap-1 rounded-full border border-gray-200 bg-white p-0.5 text-xs ${className}`}
+      className={`hidden md:inline-flex items-center rounded-full border border-gray-300 bg-white text-sm overflow-hidden ${className}`}
     >
       <button
         type="button"
@@ -52,7 +52,7 @@ export function LanguageSwitcher({
         className={`px-2 py-0.5 rounded-full transition-colors cursor-pointer ${
           currentLocale === "en"
             ? "bg-gray-900 text-white"
-            : "text-gray-500 hover:text-gray-800"
+            : "text-gray-900 hover:bg-gray-100"
         }`}
       >
         EN
@@ -64,7 +64,7 @@ export function LanguageSwitcher({
         className={`px-2 py-0.5 rounded-full transition-colors cursor-pointer ${
           currentLocale === "es"
             ? "bg-gray-900 text-white"
-            : "text-gray-500 hover:text-gray-800"
+            : "text-gray-900 hover:bg-gray-100"
         }`}
       >
         ES

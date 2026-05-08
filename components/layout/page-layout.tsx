@@ -4,6 +4,7 @@ import { UserDataProvider, UserData } from "@/contexts/user-data-context";
 import { User } from "@/lib/db/schema";
 import { Suspense } from "react";
 import { DashboardHeader } from "./dashboard-header";
+import { MonchoWatermark } from "./moncho-watermark";
 import { Sidebar } from "./sidebar";
 
 interface PageLayoutProps {
@@ -23,7 +24,8 @@ export function PageLayout({
 }: PageLayoutProps) {
   return (
     <UserDataProvider user={user} initialData={initialUserData}>
-      <div className="flex min-h-screen flex-col">
+      <div className="relative isolate flex min-h-screen flex-col overflow-hidden">
+        <MonchoWatermark />
         {showHeader && (
           <Suspense fallback={null}>
             <DashboardHeader user={user} showSidebar={showSidebar} />

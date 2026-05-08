@@ -1,5 +1,6 @@
 import { cn } from '@/components/landing/window-demo-app/lib/cn';
 import { Instagram } from 'lucide-react';
+import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
 import type { AccountPublic } from '@/components/landing/window-demo-app/types/domain';
 
 interface Props {
@@ -10,10 +11,11 @@ interface Props {
 }
 
 export function AccountPicker({ accounts, value, onChange, disabled }: Props) {
+  const { t } = useTranslation();
   if (accounts.length === 0) {
     return (
       <p className="text-sm text-muted-foreground">
-        You need to link an Instagram account first.
+        {t('components.accountPicker.noAccountsLinked')}
       </p>
     );
   }
@@ -48,7 +50,7 @@ export function AccountPicker({ accounts, value, onChange, disabled }: Props) {
             <div className="min-w-0 flex-1">
               <div className="truncate text-sm font-medium">@{acc.username}</div>
               <div className="text-[11px] text-muted-foreground">
-                {busy ? 'Busy' : acc.status === 'error' ? 'Error' : 'Idle'}
+                {busy ? t('components.accountPicker.statusBusy') : acc.status === 'error' ? t('components.accountPicker.statusError') : t('components.accountPicker.statusIdle')}
               </div>
             </div>
           </button>

@@ -26,42 +26,47 @@ import { useAccounts } from '@/components/landing/window-demo-app/context/Accoun
 import { JobStartedPanel } from '@/components/landing/window-demo-app/components/common/JobStartedPanel';
 import { cn } from '@/components/landing/window-demo-app/lib/cn';
 import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
+import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
 import type { LeadCategoryPublic, ScrapeKind } from '@/components/landing/window-demo-app/types/domain';
 
 type Mode = ScrapeKind;
 type Step = 1 | 2 | 3;
 
-const STEP_LABELS = ['Account', 'Scrape', 'Review'] as const;
-
-const MODES: { id: Mode; label: string; hint: string; icon: typeof AtSign }[] = [
+const MODE_DEFS: { id: Mode; labelKey: string; hintKey: string; icon: typeof AtSign }[] = [
   {
     id: 'scrape_by_username',
-    label: 'By username',
-    hint: "Followers + commenters + likers of the profile's posts & reels",
+    labelKey: 'screens.scrape.modeUsernameLabel',
+    hintKey: 'screens.scrape.modeUsernameHint',
     icon: AtSign,
   },
   {
     id: 'scrape_by_post',
-    label: 'By post / reel',
-    hint: 'Commenters + likers of a single permalink',
+    labelKey: 'screens.scrape.modePostLabel',
+    hintKey: 'screens.scrape.modePostHint',
     icon: FileImage,
   },
   {
     id: 'scrape_by_hashtag',
-    label: 'By hashtag',
-    hint: 'Commenters + likers of posts tagged with the hashtag',
+    labelKey: 'screens.scrape.modeHashtagLabel',
+    hintKey: 'screens.scrape.modeHashtagHint',
     icon: Hash,
   },
   {
     id: 'scrape_by_location',
-    label: 'By location',
-    hint: 'Commenters + likers of posts tagged at the location',
+    labelKey: 'screens.scrape.modeLocationLabel',
+    hintKey: 'screens.scrape.modeLocationHint',
     icon: MapPin,
   },
 ];
 
 export function Scrape() {
+  const { t } = useTranslation();
   const { accounts: allAccounts, usableAccounts: accounts } = useAccounts();
+  const STEP_LABELS = [
+    t('screens.scrape.stepAccount'),
+    t('screens.scrape.stepScrape'),
+    t('screens.scrape.stepReview'),
+  ] as const;
 
   const [step, setStep] = useState<Step>(1);
   const [accountId, setAccountId] = useState<string | null>(null);
@@ -137,7 +142,7 @@ export function Scrape() {
       setWasEnqueued(enqueued);
       setStartedJobId(jobId);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not start scrape');
+      setError(err instanceof Error ? err.message : t('screens.scrape.couldNotStart'));
     } finally {
       setSubmitting(false);
     }
@@ -162,11 +167,11 @@ export function Scrape() {
     return (
       <EmptyState
         icon={<Users className="h-10 w-10" />}
-        title="Add an Instagram account first"
-        description="Scrapes run from a signed-in account."
+        title={t('screens.scrape.noAccountTitle')}
+        description={t('screens.scrape.noAccountDescription')}
         action={
           <EmptyStateLinkButton to="/accounts" icon={<ArrowLeft className="h-3.5 w-3.5" />}>
-            Add accounts
+            {t('screens.scrape.addAccounts')}
           </EmptyStateLinkButton>
         }
       />
@@ -186,9 +191,9 @@ export function Scrape() {
 
   return (
     <div className="mx-auto flex min-h-full w-full max-w-3xl flex-col justify-center px-4 py-4">
-      <h1 className="text-2xl font-semibold tracking-tight">Scrape leads</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{t('screens.scrape.title')}</h1>
       <p className="mt-1 text-sm text-muted-foreground">
-        Three quick steps: pick the account, configure the scrape, review and start.
+        {t('screens.scrape.subtitle')}
       </p>
       <Stepper
         labels={STEP_LABELS}
@@ -240,7 +245,7 @@ export function Scrape() {
           className="inline-flex h-9 items-center gap-1.5 px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-muted-foreground"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
-          Back
+          {t('common.back')}
         </button>
         <div className="flex-1" />
         {step < 3 ? (
@@ -251,7 +256,7 @@ export function Scrape() {
             disabled={!canContinue[step]}
             className="inline-flex h-9 items-center gap-1.5 bg-primary px-3 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-60"
           >
-            Continue
+            {t('common.continue')}
             <ArrowRight className="h-3.5 w-3.5" />
           </button>
         ) : (
@@ -265,11 +270,11 @@ export function Scrape() {
             {submitting ? <Spinner /> : <Play className="h-3.5 w-3.5" />}
             {submitting
               ? selectedAccount?.status === 'busy'
-                ? 'Enqueuing…'
-                : 'Starting…'
+                ? t('screens.scrape.enqueuing')
+                : t('common.starting')
               : selectedAccount?.status === 'busy'
-              ? 'Add to queue'
-              : 'Start scrape'}
+              ? t('screens.scrape.addToQueue')
+              : t('screens.scrape.startScrape')}
           </button>
         )}
       </div>
@@ -312,15 +317,16 @@ function ScrapeConfigStep({
   onCategoryChange: (c: CategorySelection) => void;
   submitting: boolean;
 }) {
-  const activeHint = MODES.find((m) => m.id === mode)?.hint;
+  const { t } = useTranslation();
+  const activeHintKey = MODE_DEFS.find((m) => m.id === mode)?.hintKey;
   return (
     <div className="flex flex-col gap-3">
       <div className="border border-border bg-background">
         <div className="border-b border-border bg-muted px-3 py-1.5 text-[11px] font-medium uppercase  text-muted-foreground">
-          Method
+          {t('screens.scrape.method')}
         </div>
         <div className="flex items-stretch border-b border-border">
-          {MODES.map((m, idx) => {
+          {MODE_DEFS.map((m, idx) => {
             const Icon = m.icon;
             const active = m.id === mode;
             return (
@@ -330,21 +336,21 @@ function ScrapeConfigStep({
                 onClick={() => onModeChange(m.id)}
                 className={cn(
                   'inline-flex h-9 flex-1 items-center justify-center gap-1.5 px-2 text-xs font-medium transition-colors',
-                  idx !== MODES.length - 1 && 'border-r border-border',
+                  idx !== MODE_DEFS.length - 1 && 'border-r border-border',
                   active
                     ? 'bg-accent text-accent-foreground'
                     : 'bg-background text-muted-foreground hover:bg-accent/50 hover:text-foreground'
                 )}
               >
                 <Icon className="h-3.5 w-3.5" />
-                {m.label}
+                {t(m.labelKey)}
               </button>
             );
           })}
         </div>
-        {activeHint ? (
+        {activeHintKey ? (
           <div className="border-b border-border px-3 py-1.5 text-[11px] text-muted-foreground">
-            {activeHint}
+            {t(activeHintKey)}
           </div>
         ) : null}
 
@@ -357,7 +363,7 @@ function ScrapeConfigStep({
                 className="rounded-none"
                 value={config.username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="Target username (e.g. @nike)"
+                placeholder={t('screens.scrape.usernamePlaceholder')}
               />
               <Input
                 id="sc-target"
@@ -366,7 +372,7 @@ function ScrapeConfigStep({
                 className="rounded-none"
                 value={config.targetInput}
                 onChange={(e) => setTargetInput(e.target.value)}
-                placeholder="Target leads (blank = 10 000)"
+                placeholder={t('screens.scrape.targetLeadsPlaceholder')}
               />
             </>
           ) : null}
@@ -377,7 +383,7 @@ function ScrapeConfigStep({
               className="rounded-none"
               value={config.postUrl}
               onChange={(e) => setPostUrl(e.target.value)}
-              placeholder="Post or reel URL (https://www.instagram.com/p/… or /reel/…)"
+              placeholder={t('screens.scrape.postUrlPlaceholder')}
             />
           ) : null}
 
@@ -388,7 +394,7 @@ function ScrapeConfigStep({
                 className="rounded-none"
                 value={config.hashtag}
                 onChange={(e) => setHashtag(e.target.value)}
-                placeholder="Hashtag (no #, e.g. travel)"
+                placeholder={t('screens.scrape.hashtagPlaceholder')}
               />
               <Input
                 id="sc-tag-target"
@@ -397,7 +403,7 @@ function ScrapeConfigStep({
                 className="rounded-none"
                 value={config.targetInput}
                 onChange={(e) => setTargetInput(e.target.value)}
-                placeholder="Target leads (blank = 10 000)"
+                placeholder={t('screens.scrape.targetLeadsPlaceholder')}
               />
             </>
           ) : null}
@@ -409,7 +415,7 @@ function ScrapeConfigStep({
                 className="rounded-none"
                 value={config.locationUrl}
                 onChange={(e) => setLocationUrl(e.target.value)}
-                placeholder="Location URL or ID"
+                placeholder={t('screens.scrape.locationPlaceholder')}
               />
               <Input
                 id="sc-loc-target"
@@ -418,7 +424,7 @@ function ScrapeConfigStep({
                 className="rounded-none"
                 value={config.targetInput}
                 onChange={(e) => setTargetInput(e.target.value)}
-                placeholder="Target leads (blank = 10 000)"
+                placeholder={t('screens.scrape.targetLeadsPlaceholder')}
               />
             </>
           ) : null}
@@ -427,7 +433,7 @@ function ScrapeConfigStep({
 
       <div className="border border-border bg-background">
         <div className="border-b border-border bg-muted px-3 py-1.5 text-[11px] font-medium uppercase  text-muted-foreground">
-          Category
+          {t('screens.scrape.category')}
         </div>
         <div className="space-y-2 p-3">
           <CategoryPicker
@@ -436,7 +442,7 @@ function ScrapeConfigStep({
             disabled={submitting}
           />
           <p className="text-[11px] text-muted-foreground">
-            Optional. Tagged scrapes get pooled into a deduplicated lead category.
+            {t('screens.scrape.categoryHint')}
           </p>
         </div>
       </div>
@@ -465,12 +471,13 @@ function ReviewStep({
   onEditAccount: () => void;
   onEditScrape: () => void;
 }) {
-  const modeDef = MODES.find((m) => m.id === mode)!;
+  const { t } = useTranslation();
+  const modeDef = MODE_DEFS.find((m) => m.id === mode)!;
   const ModeIcon = modeDef.icon;
 
   return (
     <div className="flex flex-col gap-2">
-      <SummaryCard title="Account" onEdit={onEditAccount}>
+      <SummaryCard title={t('screens.scrape.summaryAccount')} onEdit={onEditAccount}>
         {account ? (
           <div className="flex items-center gap-2.5">
             {account.profilePicUrl ? (
@@ -492,26 +499,25 @@ function ReviewStep({
         )}
       </SummaryCard>
 
-      <SummaryCard title="Method" onEdit={onEditScrape}>
+      <SummaryCard title={t('screens.scrape.summaryMethod')} onEdit={onEditScrape}>
         <div className="flex items-center gap-2 text-sm">
           <ModeIcon className="h-4 w-4 text-muted-foreground" />
-          <span className="font-medium">{modeDef.label}</span>
+          <span className="font-medium">{t(modeDef.labelKey)}</span>
         </div>
-        <p className="mt-1 text-[11px] text-muted-foreground">{modeDef.hint}</p>
+        <p className="mt-1 text-[11px] text-muted-foreground">{t(modeDef.hintKey)}</p>
       </SummaryCard>
 
-      <SummaryCard title="Target" onEdit={onEditScrape}>
+      <SummaryCard title={t('screens.scrape.summaryTarget')} onEdit={onEditScrape}>
         <TargetSummary mode={mode} config={config} />
       </SummaryCard>
 
-      <SummaryCard title="Category" onEdit={onEditScrape}>
+      <SummaryCard title={t('screens.scrape.summaryCategory')} onEdit={onEditScrape}>
         <CategorySummary value={category} />
       </SummaryCard>
 
       {willEnqueue ? (
         <p className="text-[11px] text-muted-foreground">
-          This account is busy. The scrape will be added to its queue and start once the
-          current jobs finish.
+          {t('screens.scrape.willEnqueue')}
         </p>
       ) : null}
       {error ? <p className="text-xs text-destructive">{error}</p> : null}
@@ -520,16 +526,17 @@ function ReviewStep({
 }
 
 function TargetSummary({ mode, config }: { mode: Mode; config: ConfigState }) {
+  const { t } = useTranslation();
   if (mode === 'scrape_by_username') {
     const target = parseTargetInput(config.targetInput);
     return (
       <div className="text-sm">
         <div>
-          <span className="text-muted-foreground">Username:</span>{' '}
+          <span className="text-muted-foreground">{t('screens.scrape.targetUsername')}</span>{' '}
           <span className="font-medium">@{config.username.replace(/^@/, '')}</span>
         </div>
         <div className="text-[11px] text-muted-foreground">
-          Target leads: {target != null ? target : '10 000 (default)'}
+          {t('screens.scrape.targetLeadsLabel')} {target != null ? target : t('screens.scrape.defaultLeads')}
         </div>
       </div>
     );
@@ -537,7 +544,7 @@ function TargetSummary({ mode, config }: { mode: Mode; config: ConfigState }) {
   if (mode === 'scrape_by_post') {
     return (
       <div className="text-sm">
-        <span className="text-muted-foreground">URL:</span>{' '}
+        <span className="text-muted-foreground">{t('screens.scrape.targetUrl')}</span>{' '}
         <span className="break-all font-medium">{config.postUrl}</span>
       </div>
     );
@@ -547,11 +554,11 @@ function TargetSummary({ mode, config }: { mode: Mode; config: ConfigState }) {
     return (
       <div className="text-sm">
         <div>
-          <span className="text-muted-foreground">Hashtag:</span>{' '}
+          <span className="text-muted-foreground">{t('screens.scrape.targetHashtag')}</span>{' '}
           <span className="font-medium">#{config.hashtag.replace(/^#/, '')}</span>
         </div>
         <div className="text-[11px] text-muted-foreground">
-          Target leads: {target != null ? target : '10 000 (default)'}
+          {t('screens.scrape.targetLeadsLabel')} {target != null ? target : t('screens.scrape.defaultLeads')}
         </div>
       </div>
     );
@@ -560,17 +567,18 @@ function TargetSummary({ mode, config }: { mode: Mode; config: ConfigState }) {
   return (
     <div className="text-sm">
       <div>
-        <span className="text-muted-foreground">Location:</span>{' '}
+        <span className="text-muted-foreground">{t('screens.scrape.targetLocation')}</span>{' '}
         <span className="break-all font-medium">{config.locationUrl}</span>
       </div>
       <div className="text-[11px] text-muted-foreground">
-        Target leads: {target != null ? target : '10 000 (default)'}
+        {t('screens.scrape.targetLeadsLabel')} {target != null ? target : t('screens.scrape.defaultLeads')}
       </div>
     </div>
   );
 }
 
 function CategorySummary({ value }: { value: CategorySelection }) {
+  const { t } = useTranslation();
   const [categories, setCategories] = useState<LeadCategoryPublic[] | null>(null);
 
   useEffect(() => {
@@ -590,7 +598,7 @@ function CategorySummary({ value }: { value: CategorySelection }) {
   }, []);
 
   if (value.mode === 'none') {
-    return <span className="text-sm text-muted-foreground">No category</span>;
+    return <span className="text-sm text-muted-foreground">{t('screens.scrape.noCategory')}</span>;
   }
   const cat = categories?.find((c) => c.id === value.categoryId);
   return <CategoryChip name={cat?.name ?? '…'} />;

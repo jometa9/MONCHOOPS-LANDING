@@ -6,8 +6,10 @@ import { Spinner } from '@/components/landing/window-demo-app/components/common/
 import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
 import { formatDateTime } from '@/components/landing/window-demo-app/lib/format';
 import type { MassDmResultPublic, MassDmSendPublic } from '@/components/landing/window-demo-app/types/domain';
+import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
 
 export function ColdDmHistoryDetail() {
+  const { t } = useTranslation();
   const { jobId = '' } = useParams<{ jobId: string }>();
   const navigate = useNavigate();
   const [result, setResult] = useState<MassDmResultPublic | null>(null);
@@ -61,17 +63,17 @@ export function ColdDmHistoryDetail() {
           type="button"
           onClick={goBack}
           className="inline-flex h-9 items-center gap-1.5 border-r border-border bg-transparent px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-          aria-label="Back to DM history"
+          aria-label={t('screens.coldDmHistoryDetail.backAria')}
         >
           <ArrowLeft className="h-3.5 w-3.5" />
-          Back
+          {t('screens.coldDmHistoryDetail.back')}
         </button>
         <div className="relative min-w-0 flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search username or message…"
+            placeholder={t('screens.coldDmHistoryDetail.searchPlaceholder')}
             className="h-9 w-full bg-transparent pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground"
           />
         </div>
@@ -83,10 +85,10 @@ export function ColdDmHistoryDetail() {
               </span>
             ) : null}
             <span className="tabular-nums">
-              · {result.sentCount} sent
-              {result.failedCount > 0 ? ` · ${result.failedCount} failed` : ''}
+              - {result.sentCount} {t('screens.coldDmHistoryDetail.sentSuffix')}
+              {result.failedCount > 0 ? ` - ${result.failedCount} ${t('screens.coldDmHistoryDetail.failedSuffix')}` : ''}
             </span>
-            <span className="tabular-nums">· {formatDateTime(result.completedAt)}</span>
+            <span className="tabular-nums">- {formatDateTime(result.completedAt)}</span>
           </div>
         ) : null}
       </div>
@@ -95,11 +97,11 @@ export function ColdDmHistoryDetail() {
         <div className="flex min-h-0 flex-1 items-center justify-center border-t border-border">
           <EmptyState
             icon={rows.length === 0 ? <Send className="h-10 w-10" /> : <Search className="h-10 w-10" />}
-            title="No results"
+            title={t('screens.coldDmHistoryDetail.noLogTitle')}
             description={
               rows.length === 0
-                ? 'This run has no per-recipient log. It may predate the detail view.'
-                : 'No recipients match your search.'
+                ? t('screens.coldDmHistoryDetail.noLogDescription')
+                : t('screens.coldDmHistoryDetail.noMatchDescription')
             }
           />
         </div>
@@ -108,9 +110,9 @@ export function ColdDmHistoryDetail() {
           <table className="w-full text-sm">
             <thead className="sticky top-0 z-10 border-t border-border bg-muted text-[11px] font-medium uppercase  text-muted-foreground">
               <tr>
-                <th className="px-3 py-1.5 text-left">Message</th>
-                <th className="px-3 py-1.5 text-left whitespace-nowrap">Username</th>
-                <th className="px-3 py-1.5 text-right whitespace-nowrap">Actions</th>
+                <th className="px-3 py-1.5 text-left">{t('screens.coldDmHistoryDetail.tableMessage')}</th>
+                <th className="px-3 py-1.5 text-left whitespace-nowrap">{t('screens.coldDmHistoryDetail.tableUsername')}</th>
+                <th className="px-3 py-1.5 text-right whitespace-nowrap">{t('common.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -142,7 +144,7 @@ export function ColdDmHistoryDetail() {
                         </span>
                       ) : (
                         <span className="text-xs italic text-muted-foreground">
-                          {isFailed ? (row.error ?? 'Not sent') : 'No message captured'}
+                          {isFailed ? (row.error ?? t('screens.coldDmHistoryDetail.notSent')) : t('screens.coldDmHistoryDetail.noMessage')}
                         </span>
                       )}
                     </td>
@@ -155,7 +157,7 @@ export function ColdDmHistoryDetail() {
                           type="button"
                           onClick={openProfile}
                           className="inline-flex h-7 w-7 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
-                          aria-label={`Open @${row.username} on Instagram`}
+                          aria-label={t('screens.coldDmHistoryDetail.openProfile', { username: row.username })}
                         >
                           <ExternalLink className="h-3.5 w-3.5" />
                         </button>
@@ -163,7 +165,7 @@ export function ColdDmHistoryDetail() {
                           type="button"
                           onClick={openChat}
                           className="inline-flex h-7 w-7 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
-                          aria-label={`Open DM thread with @${row.username}`}
+                          aria-label={t('screens.coldDmHistoryDetail.openChat', { username: row.username })}
                         >
                           <MessageCircle className="h-3.5 w-3.5" />
                         </button>

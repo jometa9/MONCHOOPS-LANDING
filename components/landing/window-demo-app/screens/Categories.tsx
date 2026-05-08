@@ -12,8 +12,10 @@ import { Spinner } from '@/components/landing/window-demo-app/components/common/
 import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
 import { formatDateTime } from '@/components/landing/window-demo-app/lib/format';
 import type { LeadCategoryPublic } from '@/components/landing/window-demo-app/types/domain';
+import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
 
 export function Categories() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [rows, setRows] = useState<LeadCategoryPublic[] | null>(null);
   const [creating, setCreating] = useState(false);
@@ -66,8 +68,8 @@ export function Categories() {
       {rows.length === 0 ? (
         <EmptyState
           icon={<FolderTree className="h-10 w-10" />}
-          title="No categories yet"
-          description="Group scrapes under a shared category to pool leads and dedupe across runs."
+          title={t('screens.categories.noCategoriesTitle')}
+          description={t('screens.categories.noCategoriesDescription')}
           action={
             <button
               type="button"
@@ -75,7 +77,7 @@ export function Categories() {
               className="inline-flex h-9 items-center gap-1.5 border border-border bg-primary px-3 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
               <Plus className="h-3.5 w-3.5" />
-              New category
+              {t('screens.categories.newCategory')}
             </button>
           }
         />
@@ -87,7 +89,7 @@ export function Categories() {
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by name…"
+                placeholder={t('screens.categories.searchPlaceholder')}
                 className="h-9 w-full bg-transparent pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground"
               />
             </div>
@@ -97,7 +99,7 @@ export function Categories() {
               className="inline-flex h-9 items-center gap-1.5 bg-primary px-3 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
               <Plus className="h-3.5 w-3.5" />
-              New category
+              {t('screens.categories.newCategory')}
             </button>
           </div>
 
@@ -105,8 +107,8 @@ export function Categories() {
             <div className="flex min-h-0 flex-1 items-center justify-center border-t border-border">
               <EmptyState
                 icon={<Search className="h-10 w-10" />}
-                title="No results"
-                description="No categories match your search."
+                title={t('common.noResults')}
+                description={t('screens.categories.noMatchDescription')}
               />
             </div>
           ) : (
@@ -114,11 +116,11 @@ export function Categories() {
           <table className="w-full whitespace-nowrap text-sm">
             <thead className="sticky top-0 z-10 border-t border-border bg-muted text-[11px] font-medium uppercase  text-muted-foreground">
               <tr>
-                <th className="px-3 py-1.5 text-left">Name</th>
-                <th className="px-3 py-1.5 text-right">Leads</th>
-                <th className="px-3 py-1.5 text-right">Scrapes</th>
-                <th className="px-3 py-1.5 text-left">Last activity</th>
-                <th className="px-3 py-1.5 text-right">Actions</th>
+                <th className="px-3 py-1.5 text-left">{t('screens.categories.tableName')}</th>
+                <th className="px-3 py-1.5 text-right">{t('screens.categories.tableLeads')}</th>
+                <th className="px-3 py-1.5 text-right">{t('screens.categories.tableScrapes')}</th>
+                <th className="px-3 py-1.5 text-left">{t('screens.categories.tableLastActivity')}</th>
+                <th className="px-3 py-1.5 text-right">{t('common.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -140,7 +142,7 @@ export function Categories() {
                         type="button"
                         onClick={() => navigate(`/categories/${row.id}`)}
                         className="inline-flex h-7 w-7 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
-                        aria-label="View leads"
+                        aria-label={t('screens.categories.viewLeads')}
                       >
                         <Eye className="h-3.5 w-3.5" />
                       </button>
@@ -149,7 +151,7 @@ export function Categories() {
                         onClick={() => void exportCsv(row.id)}
                         disabled={busy === row.id || row.leadCount === 0}
                         className="inline-flex h-7 w-7 items-center justify-center text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40"
-                        aria-label="Download CSV"
+                        aria-label={t('screens.categories.downloadCsv')}
                       >
                         {busy === row.id ? <Spinner /> : <Download className="h-3.5 w-3.5" />}
                       </button>
@@ -157,7 +159,7 @@ export function Categories() {
                         type="button"
                         onClick={() => setDeleteTarget(row)}
                         className="inline-flex h-7 w-7 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
-                        aria-label="Delete category"
+                        aria-label={t('screens.categories.deleteCategory')}
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
@@ -186,6 +188,7 @@ export function Categories() {
 }
 
 function CreateCategoryDialog({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   const [name, setName] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -199,7 +202,7 @@ function CreateCategoryDialog({ onClose }: { onClose: () => void }) {
       await b2dm.categories.create(trimmed);
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not create category');
+      setError(err instanceof Error ? err.message : t('screens.categories.couldNotCreate'));
     } finally {
       setBusy(false);
     }
@@ -209,29 +212,29 @@ function CreateCategoryDialog({ onClose }: { onClose: () => void }) {
     <Dialog
       open
       onClose={onClose}
-      title="New category"
-      description="Pool scraped leads under a shared name. Scrapes tagged with this category feed into the same deduplicated list."
+      title={t('screens.categories.createDialogTitle')}
+      description={t('screens.categories.createDialogDescription')}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button onClick={submit} disabled={busy || !name.trim()}>
             {busy ? <Spinner /> : null}
-            {busy ? 'Creating…' : 'Create category'}
+            {busy ? t('screens.categories.creating') : t('screens.categories.createButton')}
           </Button>
         </>
       }
     >
       <div className="space-y-3">
         <div className="space-y-1">
-          <Label htmlFor="cat-name">Name</Label>
+          <Label htmlFor="cat-name">{t('screens.categories.nameLabel')}</Label>
           <Input
             id="cat-name"
             autoFocus
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Fitness coaches"
+            placeholder={t('screens.categories.namePlaceholder')}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && name.trim() && !busy) void submit();
             }}
@@ -251,6 +254,7 @@ function ConfirmDeleteCategoryDialog({
   category: LeadCategoryPublic;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -261,7 +265,7 @@ function ConfirmDeleteCategoryDialog({
       await b2dm.categories.delete(category.id);
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not delete category');
+      setError(err instanceof Error ? err.message : t('screens.categories.couldNotDelete'));
     } finally {
       setBusy(false);
     }
@@ -271,16 +275,16 @@ function ConfirmDeleteCategoryDialog({
     <Dialog
       open
       onClose={onClose}
-      title={`Delete ${category.name}?`}
-      description="This removes the category and every lead pooled inside it. Linked scrapes stay intact."
+      title={t('screens.categories.deleteDialogTitle', { name: category.name })}
+      description={t('screens.categories.deleteDialogDescription')}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button onClick={confirm} disabled={busy}>
             {busy ? <Spinner /> : null}
-            {busy ? 'Deleting…' : 'Delete category'}
+            {busy ? t('screens.categories.deleting') : t('screens.categories.deleteButton')}
           </Button>
         </>
       }

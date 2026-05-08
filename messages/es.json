@@ -59,7 +59,7 @@
     "heroDescription": "Sacá leads de cualquier perfil, post, hashtag o ubicación. Enviá DMs personalizados desde todas tus cuentas, en paralelo.",
     "getStartedFree": "Empezá gratis",
     "seeHowItWorks": "Ver cómo funciona",
-    "freePlanNote": "Plan gratis incluido · Windows y macOS · Sin tarjeta",
+    "freePlanNote": "Plan gratis incluido - Windows y macOS - Sin tarjeta",
     "featuresIntroTitle": "Una sola app para scrapear leads y mandar cold DMs en Instagram",
     "featuresIntroSub": "Dejá de pagar dos SaaS y de copiar CSVs entre ellos. Una app de escritorio hace todo el flujo.",
     "commonQuestions": "Preguntas frecuentes",
@@ -93,7 +93,22 @@
     "bullet3": "Enviá DMs masivos con hasta 20 variantes para que cada mensaje se sienta único",
     "bullet4": "Calentá cada lead con un follow, una vista a la story y likes antes del DM",
     "bullet5": "Nunca le mandes DM dos veces al mismo prospecto — los duplicados se saltean automáticamente",
-    "bullet6": "Monitoreá cada campaña en vivo con progreso, conteo enviado y cancelación en un click"
+    "bullet6": "Monitoreá cada campaña en vivo con progreso, conteo enviado y cancelación en un click",
+    "extension": {
+      "eyebrow": "…o usalo desde el navegador",
+      "headingP1": "¿Querés algo más liviano?",
+      "headingP2": "MonchoOps también corre",
+      "headingP3": "como extensión de Chrome.",
+      "platforms": "Extensión de Chrome",
+      "description": "Si no querés instalar la app de escritorio, mandá los DMs directo desde Chrome. La extensión corre dentro de tu sesión real del navegador — más seguro para tu cuenta y sin instalar nada aparte. Nota: la extensión solo envía mensajes, el scraping por ahora es exclusivo de la app de escritorio.",
+      "badge": "Solo envío",
+      "bullet1": "Envía DMs desde tu sesión real de Chrome — parece tu actividad normal, no un bot",
+      "bullet2": "Sin instalador ni permisos de admin — la sumás desde la Chrome Web Store y la fijás",
+      "bullet3": "Trae tus leads guardados y tus variantes de mensaje desde tu cuenta MonchoOps",
+      "bullet4": "El scraping todavía no está en la extensión — usá la app de escritorio para armar las listas",
+      "addToChrome": "Agregar a Chrome",
+      "addToChromeSub": " — gratis, desde la Chrome Web Store"
+    }
   },
   "steps": {
     "eyebrow": "Cómo funciona",

@@ -3,7 +3,6 @@
 import { getAppUrl } from "@/lib/app-url";
 import { db } from "@/lib/db/drizzle";
 import { user } from "@/lib/db/schema";
-import { sendWelcomeEmail } from "@/lib/email/services";
 import { trackCompleteRegistration } from "@/lib/meta";
 import { generateApiKey } from "@/lib/utils";
 import { eq } from "drizzle-orm";
@@ -12,9 +11,7 @@ import { headers } from "next/headers";
 interface CreateNewUserParams {
   email: string;
   name?: string | null;
-  passwordHash?: string | null;
-  source: "signup_form" | "oauth_google";
-  formData?: FormData;
+  source: "oauth_google";
   profile?: {
     given_name?: string;
     family_name?: string;
@@ -25,14 +22,13 @@ interface CreateNewUserResult {
   success: boolean;
   user?: typeof user.$inferSelect;
   error?: string;
-  welcomeEmailSent: boolean;
   stripeCustomerCreated: boolean;
 }
 
 export async function createNewUserWithOnboarding(
   params: CreateNewUserParams
 ): Promise<CreateNewUserResult> {
-  const { email, name, passwordHash, source, formData, profile } = params;
+  const { email, name, source, profile } = params;
 
   const existingUser = await db
     .select()
@@ -44,7 +40,6 @@ export async function createNewUserWithOnboarding(
     return {
       success: false,
       error: "Email already in use.",
-      welcomeEmailSent: false,
       stripeCustomerCreated: false,
     };
   }
@@ -58,7 +53,7 @@ export async function createNewUserWithOnboarding(
       email,
       name: name || undefined,
       metadata: {
-        source: source === "oauth_google" ? "oauth_signin_flow" : "signup_flow",
+        source: "oauth_signin_flow",
       },
     });
     stripeCustomerId = customer.id;
@@ -77,7 +72,6 @@ export async function createNewUserWithOnboarding(
     .values({
       email,
       name: name || null,
-      passwordHash: passwordHash || null,
       apiKey,
       role: "owner",
       stripeCustomerId,
@@ -89,31 +83,12 @@ export async function createNewUserWithOnboarding(
     return {
       success: false,
       error: "Failed to create user. Please try again.",
-      welcomeEmailSent: false,
       stripeCustomerCreated,
     };
   }
 
-  let welcomeEmailSent = false;
-  try {
-    const loginUrl = getAppUrl();
-    await sendWelcomeEmail({
-      email: createdUser.email,
-      name: createdUser.name || createdUser.email.split("@")[0],
-      loginUrl,
-    });
-    welcomeEmailSent = true;
-  } catch (emailError: unknown) {
-    const error = emailError as { message?: string };
-    console.error("[Onboarding] Error sending welcome email:", {
-      email,
-      error: error.message,
-    });
-  }
-
   try {
     const headersList = await headers();
-    const eventId = formData?.get("eventId") as string | null;
     const userAgent = headersList.get("user-agent") || undefined;
     const forwardedFor = headersList.get("x-forwarded-for");
     const clientIp = forwardedFor
@@ -146,9 +121,7 @@ export async function createNewUserWithOnboarding(
       firstName,
       lastName,
       status: "completed",
-      eventSourceUrl:
-        getAppUrl() + (source === "oauth_google" ? "/sign-in" : "/sign-up"),
-      eventId: eventId || undefined,
+      eventSourceUrl: getAppUrl() + "/sign-in",
       clientIpAddress: clientIp,
       clientUserAgent: userAgent,
       fbc,
@@ -161,7 +134,6 @@ export async function createNewUserWithOnboarding(
   return {
     success: true,
     user: createdUser,
-    welcomeEmailSent,
     stripeCustomerCreated,
   };
 }

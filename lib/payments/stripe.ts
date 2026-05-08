@@ -7,7 +7,6 @@ import {
 } from "@/lib/db/queries";
 import { User, ProductKey } from "@/lib/db/schema";
 import { getAppUrl } from "@/lib/app-url";
-import { sendSubscriptionChangeEmail } from "@/lib/email";
 import Stripe from "stripe";
 
 let stripeInstance: Stripe | null = null;
@@ -513,6 +512,7 @@ export async function handleSubscriptionChange(
   eventType?: string,
   options?: { skipEmail?: boolean }
 ) {
+  void options;
   const customerId = subscription.customer as string;
   const subscriptionId = subscription.id;
   const status = subscription.status;
@@ -611,40 +611,10 @@ export async function handleSubscriptionChange(
       expiresAt: expiryDate,
     });
 
-    if (isPlanChange || isProductSwitch) {
-      return;
-    }
-    
-    try {
-      await sendSubscriptionChangeEmail({
-        email: user.email,
-        name: user.name || user.email.split("@")[0],
-        planName: planName || "Unlimited",
-        status: "canceling",
-        expiryDate: expiryDateString,
-        dashboardUrl: `${getAppUrl()}/dashboard`,
-      });
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      console.error("[Stripe] Error sending cancellation scheduled email:", {
-        userId: user.id,
-        email: user.email,
-        error: errorMessage,
-      });
-    }
     return;
   }
 
   if (status === "active" || status === "trialing") {
-    const isExistingActiveSub = existingProductSub &&
-      (existingProductSub.status === "active" || existingProductSub.status === "trialing");
-    const tierChanged = isExistingActiveSub && existingProductSub.tier !== tier;
-    const billingChanged = isExistingActiveSub &&
-      existingProductSub.billingPeriod !== null &&
-      existingProductSub.billingPeriod !== billingPeriod;
-    const isDetectedPlanChange = tierChanged || billingChanged;
-
     await upsertProductSubscription(user.id, productKey, {
       tier,
       status,
@@ -659,37 +629,13 @@ export async function handleSubscriptionChange(
       metaPurchaseEventId: subscription.metadata?.metaPurchaseEventId || null,
     });
 
-    if (!options?.skipEmail) {
-      if (isPlanChange) {
-        try {
-          await stripe.subscriptions.update(subscriptionId, {
-            metadata: { ...subscription.metadata, isPlanChange: "" },
-          });
-        } catch {}
-        return;
-      }
-
-      const emailStatus = isDetectedPlanChange ? "plan_changed" : status;
-
+    if (isPlanChange) {
       try {
-        await sendSubscriptionChangeEmail({
-          email: user.email,
-          name: user.name || user.email.split("@")[0],
-          planName: planName || "Free",
-          status: emailStatus,
-          expiryDate: expiryDateString,
-          dashboardUrl: `${getAppUrl()}/dashboard`,
+        await stripe.subscriptions.update(subscriptionId, {
+          metadata: { ...subscription.metadata, isPlanChange: "" },
         });
-      } catch (error: unknown) {
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
-        console.error("[Stripe] Error sending subscription change email:", {
-          userId: user.id,
-          email: user.email,
-          status: emailStatus,
-          error: errorMessage,
-        });
-      }
+      } catch {}
+      return;
     }
   } else if (status === "incomplete") {
     await upsertProductSubscription(user.id, productKey, {
@@ -742,29 +688,6 @@ export async function handleSubscriptionChange(
 
     if (isPlanChange || isProductSwitch) {
       return;
-    }
-
-    if (options?.skipEmail) {
-      return;
-    }
-
-    try {
-      await sendSubscriptionChangeEmail({
-        email: user.email,
-        name: user.name || user.email.split("@")[0],
-        planName: planName || "Unlimited",
-        status,
-        dashboardUrl: `${getAppUrl()}/dashboard`,
-      });
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      console.error("[Stripe] Error sending subscription change email:", {
-        userId: user.id,
-        email: user.email,
-        status,
-        error: errorMessage,
-      });
     }
   }
 }

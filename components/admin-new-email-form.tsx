@@ -312,9 +312,9 @@ export function AdminNewEmailForm() {
             <div className="p-3 bg-gray-50 border-b flex items-center justify-between">
               <div className="text-sm text-gray-600">
                 <span className="font-medium text-gray-800">{t("originalMessage")}</span>
-                {" · "}
+                {" - "}
                 <span>{originalEmail.mailFrom}</span>
-                {" · "}
+                {" - "}
                 <span>
                   {new Date(originalEmail.receivedAt).toLocaleString()}
                 </span>

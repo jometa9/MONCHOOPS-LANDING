@@ -6,6 +6,7 @@ import { cn } from '@/components/landing/window-demo-app/lib/cn';
 import { Input } from '@/components/landing/window-demo-app/components/ui/input';
 import { Button } from '@/components/landing/window-demo-app/components/ui/button';
 import { Spinner } from '@/components/landing/window-demo-app/components/common/Spinner';
+import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
 import type { LeadCategoryPublic } from '@/components/landing/window-demo-app/types/domain';
 
 export type CategorySelection =
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export function CategoryPicker({ value, onChange, disabled }: Props) {
+  const { t } = useTranslation();
   const [categories, setCategories] = useState<LeadCategoryPublic[]>([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
@@ -58,7 +60,7 @@ export function CategoryPicker({ value, onChange, disabled }: Props) {
       setDrafting(false);
       setDraftName('');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not create category');
+      setError(err instanceof Error ? err.message : t('components.categoryPicker.couldNotCreate'));
     } finally {
       setCreating(false);
     }
@@ -79,10 +81,10 @@ export function CategoryPicker({ value, onChange, disabled }: Props) {
           onClick={() => onChange({ mode: 'none' })}
         >
           <Tag className="h-3 w-3" />
-          No category
+          {t('components.categoryPicker.noCategory')}
         </Chip>
         {loading ? (
-          <span className="text-xs text-muted-foreground">Loading…</span>
+          <span className="text-xs text-muted-foreground">{t('common.loading')}</span>
         ) : (
           categories.map((cat) => (
             <Chip
@@ -106,7 +108,7 @@ export function CategoryPicker({ value, onChange, disabled }: Props) {
             onClick={() => setDrafting(true)}
           >
             <Plus className="h-3 w-3" />
-            Create new
+            {t('components.categoryPicker.createNew')}
           </Chip>
         ) : null}
       </div>
@@ -126,7 +128,7 @@ export function CategoryPicker({ value, onChange, disabled }: Props) {
                 cancelDraft();
               }
             }}
-            placeholder="New category name"
+            placeholder={t('components.categoryPicker.namePlaceholder')}
             disabled={disabled || creating}
             className="max-w-xs"
           />
@@ -137,7 +139,7 @@ export function CategoryPicker({ value, onChange, disabled }: Props) {
             disabled={disabled || creating || draftName.trim().length === 0}
           >
             {creating ? <Spinner /> : <Check className="h-4 w-4" />}
-            Create
+            {t('components.categoryPicker.create')}
           </Button>
           <Button
             type="button"
@@ -147,7 +149,7 @@ export function CategoryPicker({ value, onChange, disabled }: Props) {
             disabled={creating}
           >
             <X className="h-4 w-4" />
-            Cancel
+            {t('common.cancel')}
           </Button>
         </div>
       ) : null}

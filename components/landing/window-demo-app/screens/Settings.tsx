@@ -5,6 +5,7 @@ import { useSession } from '@/components/landing/window-demo-app/context/Session
 import { useTheme } from '@/components/landing/window-demo-app/context/ThemeContext';
 import { usePreferences } from '@/components/landing/window-demo-app/context/PreferencesContext';
 import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
+import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
 
 function SectionHeader({ title }: { title: string }) {
   return (
@@ -43,6 +44,7 @@ function SwitchRow({
 }
 
 export function Settings() {
+  const { t } = useTranslation();
   const { session, refresh } = useSession();
   const { resolvedTheme, setTheme } = useTheme();
   const { prefs, setHeadless, setFullWindow, setSoundsEnabled } = usePreferences();
@@ -74,31 +76,27 @@ export function Settings() {
   }, [refresh]);
 
   const handleDeleteAccounts = useCallback(async () => {
-    if (!confirm('This will delete ALL Instagram accounts. Are you sure?')) return;
+    if (!confirm(t('settings.confirmDeleteAccounts'))) return;
     setIsDeletingAccounts(true);
     try {
       await b2dm.settings.deleteAllAccounts();
     } finally {
       setIsDeletingAccounts(false);
     }
-  }, []);
+  }, [t]);
 
   const handleDeleteScrapes = useCallback(async () => {
-    if (!confirm('This will delete ALL scraped data. Are you sure?')) return;
+    if (!confirm(t('settings.confirmDeleteScrapes'))) return;
     setIsDeletingScrapes(true);
     try {
       await b2dm.settings.deleteAllScrapes();
     } finally {
       setIsDeletingScrapes(false);
     }
-  }, []);
+  }, [t]);
 
   const handleWipeAllData = useCallback(async () => {
-    if (
-      !confirm(
-        'This will erase ALL your data: accounts, scrapes, categories, history, schedules and preferences. You will stay logged in. Are you sure?'
-      )
-    ) {
+    if (!confirm(t('settings.confirmWipeAll'))) {
       return;
     }
     setIsWipingAll(true);
@@ -113,25 +111,25 @@ export function Settings() {
     } finally {
       setIsWipingAll(false);
     }
-  }, []);
+  }, [t]);
 
   const planLabel = session.subscription?.plan ?? '—';
 
   return (
     <div className="mx-auto flex min-h-full w-full max-w-2xl flex-col justify-center px-4 py-4 pb-30">
-        <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('settings.title')}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Manage your account, preferences, and stored data.
+          {t('settings.description')}
         </p>
 
         <div className="mt-4 flex flex-col gap-2">
           {/* Account */}
           <div className="border border-border bg-background">
-            <SectionHeader title="Account" />
-            <InfoRow label="Name" value={session.profile?.name} />
-            <InfoRow label="Email" value={session.profile?.email} />
-            <InfoRow label="Plan" value={<span className="capitalize">{planLabel}</span>} />
-            <InfoRow label="App version" value={appVersion ? `V${appVersion}` : '—'} />
+            <SectionHeader title={t('settings.account')} />
+            <InfoRow label={t('settings.name')} value={session.profile?.name} />
+            <InfoRow label={t('settings.email')} value={session.profile?.email} />
+            <InfoRow label={t('settings.plan')} value={<span className="capitalize">{planLabel}</span>} />
+            <InfoRow label={t('settings.appVersion')} value={appVersion ? `V${appVersion}` : '—'} />
             <div className="flex items-stretch border-t border-border">
               <button
                 type="button"
@@ -144,33 +142,33 @@ export function Settings() {
                 ) : (
                   <RefreshCw className="h-3.5 w-3.5" />
                 )}
-                Refresh subscription
+                {t('settings.refreshSubscription')}
               </button>
             </div>
           </div>
 
           {/* Preferences */}
           <div className="border border-border bg-background">
-            <SectionHeader title="Preferences" />
+            <SectionHeader title={t('settings.preferences')} />
             <SwitchRow
-              label="Headless mode"
+              label={t('settings.headless')}
               checked={prefs.headless}
               onCheckedChange={setHeadless}
             />
             {!prefs.headless && (
               <SwitchRow
-                label="Full window"
+                label={t('settings.fullWindow')}
                 checked={prefs.fullWindow}
                 onCheckedChange={setFullWindow}
               />
             )}
             <SwitchRow
-              label="Dark theme"
+              label={t('settings.darkTheme')}
               checked={resolvedTheme === 'dark'}
               onCheckedChange={(v) => setTheme(v ? 'dark' : 'light')}
             />
             <SwitchRow
-              label="Sounds on completion"
+              label={t('settings.soundsOnCompletion')}
               checked={prefs.soundsEnabled}
               onCheckedChange={setSoundsEnabled}
             />
@@ -178,7 +176,7 @@ export function Settings() {
 
           {/* Data */}
           <div className="border border-border bg-background">
-            <SectionHeader title="Data" />
+            <SectionHeader title={t('settings.data')} />
             <div className="flex items-stretch border-t border-border">
               <button
                 type="button"
@@ -191,7 +189,7 @@ export function Settings() {
                 ) : (
                   <Trash2 className="h-3.5 w-3.5" />
                 )}
-                Delete all IG accounts
+                {t('settings.deleteIgAccounts')}
               </button>
               <button
                 type="button"
@@ -204,7 +202,7 @@ export function Settings() {
                 ) : (
                   <Trash2 className="h-3.5 w-3.5" />
                 )}
-                Delete all scraped data
+                {t('settings.deleteAllScrapes')}
               </button>
               <button
                 type="button"
@@ -217,7 +215,7 @@ export function Settings() {
                 ) : (
                   <Trash2 className="h-3.5 w-3.5" />
                 )}
-                Delete all my data
+                {t('settings.deleteAllData')}
               </button>
             </div>
           </div>

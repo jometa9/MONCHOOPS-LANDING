@@ -59,7 +59,7 @@
     "heroDescription": "Pull leads from any profile, post, hashtag, or location. Send personalized DMs from every account you own, in parallel.",
     "getStartedFree": "Get started for free",
     "seeHowItWorks": "See how it works",
-    "freePlanNote": "Free plan included · Windows & macOS · No card required",
+    "freePlanNote": "Free plan included - Windows & macOS - No card required",
     "featuresIntroTitle": "One app to scrape leads and send cold DMs on Instagram",
     "featuresIntroSub": "Stop paying for two SaaS tools and copy-pasting CSVs between them. One desktop app does the whole flow.",
     "commonQuestions": "Common questions",
@@ -93,7 +93,22 @@
     "bullet3": "Send mass DMs with up to 20 message variants so every message feels unique",
     "bullet4": "Warm up each lead with a follow, story view and likes before the DM",
     "bullet5": "Never message the same prospect twice — duplicates are skipped automatically",
-    "bullet6": "Track every campaign live with progress, sent count and one-click cancel"
+    "bullet6": "Track every campaign live with progress, sent count and one-click cancel",
+    "extension": {
+      "eyebrow": "…or use it from your browser",
+      "headingP1": "Prefer something lighter?",
+      "headingP2": "MonchoOps also runs",
+      "headingP3": "as a Chrome extension.",
+      "platforms": "Chrome extension",
+      "description": "If you don't want to install the desktop app, send DMs straight from Chrome. The extension runs inside your own browser session — safer for your account, no separate install needed. Note: the extension only sends messages, scraping is desktop-only for now.",
+      "badge": "Send-only",
+      "bullet1": "Sends DMs from your real Chrome session — looks like you, not a bot",
+      "bullet2": "No installer, no admin permissions — add it from the Chrome Web Store and pin it",
+      "bullet3": "Pulls your saved leads and message variants from your MonchoOps account",
+      "bullet4": "Scraping is not available in the extension yet — use the desktop app to build lead lists",
+      "addToChrome": "Add to Chrome",
+      "addToChromeSub": " — free, from the Chrome Web Store"
+    }
   },
   "steps": {
     "eyebrow": "How it works",

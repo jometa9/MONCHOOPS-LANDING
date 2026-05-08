@@ -6,6 +6,7 @@ import { Spinner } from '@/components/landing/window-demo-app/components/common/
 import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
 import { formatDateTime } from '@/components/landing/window-demo-app/lib/format';
 import type { MassDmResultPublic } from '@/components/landing/window-demo-app/types/domain';
+import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
 
 function formatDuration(ms: number): string {
   if (!ms || ms < 1000) return '0s';
@@ -20,6 +21,7 @@ function formatDuration(ms: number): string {
 }
 
 export function ColdDmHistory() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [rows, setRows] = useState<MassDmResultPublic[] | null>(null);
   const [query, setQuery] = useState('');
@@ -61,11 +63,11 @@ export function ColdDmHistory() {
     return (
       <EmptyState
         icon={<History className="h-10 w-10" />}
-        title="No Cold DM runs yet"
-        description="Once you send your first campaign, it will show up here."
+        title={t('screens.coldDmHistory.noRunsTitle')}
+        description={t('screens.coldDmHistory.noRunsDescription')}
         action={
           <EmptyStateLinkButton to="/cold-dm" icon={<ArrowRight className="h-3.5 w-3.5" />}>
-            Start sending DMs
+            {t('screens.coldDmHistory.startSending')}
           </EmptyStateLinkButton>
         }
       />
@@ -80,7 +82,7 @@ export function ColdDmHistory() {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by account…"
+            placeholder={t('screens.coldDmHistory.searchPlaceholder')}
             className="h-9 w-full bg-transparent pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground"
           />
         </div>
@@ -89,8 +91,8 @@ export function ColdDmHistory() {
         <div className="flex min-h-0 flex-1 items-center justify-center border-t border-border">
           <EmptyState
             icon={<Search className="h-10 w-10" />}
-            title="No results"
-            description="No runs match your search."
+            title={t('common.noResults')}
+            description={t('screens.coldDmHistory.noMatchDescription')}
           />
         </div>
       ) : (
@@ -98,12 +100,12 @@ export function ColdDmHistory() {
           <table className="w-full whitespace-nowrap text-sm">
             <thead className="sticky top-0 z-10 border-t border-border bg-muted text-[11px] font-medium uppercase  text-muted-foreground">
               <tr>
-                <th className="px-3 py-1.5 text-left">Account</th>
-                <th className="px-3 py-1.5 text-right">Sent</th>
-                <th className="px-3 py-1.5 text-right">Failed</th>
-                <th className="px-3 py-1.5 text-right">Duration</th>
-                <th className="px-3 py-1.5 text-left">Completed</th>
-                <th className="px-3 py-1.5 text-right">Actions</th>
+                <th className="px-3 py-1.5 text-left">{t('screens.coldDmHistory.tableAccount')}</th>
+                <th className="px-3 py-1.5 text-right">{t('screens.coldDmHistory.tableSent')}</th>
+                <th className="px-3 py-1.5 text-right">{t('screens.coldDmHistory.tableFailed')}</th>
+                <th className="px-3 py-1.5 text-right">{t('screens.coldDmHistory.tableDuration')}</th>
+                <th className="px-3 py-1.5 text-left">{t('screens.coldDmHistory.tableCompleted')}</th>
+                <th className="px-3 py-1.5 text-right">{t('common.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -151,7 +153,7 @@ export function ColdDmHistory() {
                         type="button"
                         onClick={() => navigate(`/dm-history/${row.jobId}`)}
                         className="inline-flex h-7 w-7 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
-                        aria-label="View run detail"
+                        aria-label={t('screens.coldDmHistory.viewDetail')}
                       >
                         <Eye className="h-3.5 w-3.5" />
                       </button>

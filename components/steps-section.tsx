@@ -60,7 +60,8 @@ function LazyDemoFrame({
   return (
     <div
       ref={ref}
-      className="aspect-[980/600] w-full overflow-hidden rounded-lg bg-white shadow-2xl shadow-indigo-500/20 ring-1 ring-black/5"
+      className="aspect-[980/600] w-full overflow-hidden bg-white shadow-2xl shadow-indigo-500/20 ring-1 ring-black/5"
+      style={{ borderRadius: "8px" }}
     >
       {shouldMount ? (
         <MonchoOpsWindowDemo

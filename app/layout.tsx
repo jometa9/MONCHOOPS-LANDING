@@ -15,18 +15,10 @@ export const metadata: Metadata = {
   applicationName: "MonchoOps",
   icons: {
     icon: [
-      {
-        url: "/moncho.svg",
-        type: "image/svg+xml",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/moncho-white.svg",
-        type: "image/svg+xml",
-        media: "(prefers-color-scheme: dark)",
-      },
-      { url: "/favicon.ico", type: "image/x-icon" },
+      { url: "/assets/monchoops_square.png", type: "image/png" },
     ],
+    shortcut: [{ url: "/assets/monchoops_square.png", type: "image/png" }],
+    apple: [{ url: "/assets/monchoops_square.png", type: "image/png" }],
   },
   title: "MonchoOps — Instagram cold DM automation, on your machine",
   description:

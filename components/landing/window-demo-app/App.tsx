@@ -24,15 +24,18 @@ import { Categories } from "@/components/landing/window-demo-app/screens/Categor
 import { CategoryLeadsDetail } from "@/components/landing/window-demo-app/screens/CategoryLeadsDetail";
 import { MessageVariants } from "@/components/landing/window-demo-app/screens/MessageVariants";
 import { Settings } from "@/components/landing/window-demo-app/screens/Settings";
+import { DemoI18nProvider, type DemoLocale } from "@/components/landing/window-demo-app/lib/i18n";
 
 interface AppProps {
   script?: Step[];
   startDelay?: number;
   initialPath?: string;
+  locale?: DemoLocale;
 }
 
-export default function App({ script, startDelay, initialPath }: AppProps) {
+export default function App({ script, startDelay, initialPath, locale = "en" }: AppProps) {
   return (
+    <DemoI18nProvider locale={locale}>
     <ThemeProvider>
       <PreferencesProvider>
         <SessionProvider>
@@ -64,5 +67,6 @@ export default function App({ script, startDelay, initialPath }: AppProps) {
         </SessionProvider>
       </PreferencesProvider>
     </ThemeProvider>
+    </DemoI18nProvider>
   );
 }

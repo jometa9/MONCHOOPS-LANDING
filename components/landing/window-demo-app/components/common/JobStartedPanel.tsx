@@ -4,6 +4,7 @@ import { Spinner } from '@/components/landing/window-demo-app/components/common/
 import { useJobs } from '@/components/landing/window-demo-app/context/JobsContext';
 import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
 import { cn } from '@/components/landing/window-demo-app/lib/cn';
+import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
 import type { JobStatus } from '@/components/landing/window-demo-app/types/domain';
 
 export type JobStartedKind = 'scrape' | 'dm';
@@ -16,6 +17,7 @@ interface JobStartedPanelProps {
 }
 
 export function JobStartedPanel({ jobId, kind, wasEnqueued, onReset }: JobStartedPanelProps) {
+  const { t } = useTranslation();
   const { active, progressByJob } = useJobs();
   const [finalStatus, setFinalStatus] = useState<JobStatus | null>(null);
   const completed = finalStatus != null;
@@ -44,30 +46,30 @@ export function JobStartedPanel({ jobId, kind, wasEnqueued, onReset }: JobStarte
       ? Math.min(100, Math.round((done / total) * 100))
       : null;
 
-  const noun = kind === 'scrape' ? 'Scrape' : 'Cold DM';
+  const noun = kind === 'scrape' ? t('components.jobStartedPanel.scrapeNoun') : t('components.jobStartedPanel.dmNoun');
   const title = completed
     ? finalStatus === 'completed'
-      ? `${noun} completed`
+      ? `${noun} ${t('components.jobStartedPanel.completedSuffix')}`
       : finalStatus === 'cancelled'
-      ? `${noun} cancelled`
-      : `${noun} failed`
+      ? `${noun} ${t('components.jobStartedPanel.cancelledSuffix')}`
+      : `${noun} ${t('components.jobStartedPanel.failedSuffix')}`
     : isQueued || (wasEnqueued && !isRunning)
-    ? `${noun} queued`
-    : `${noun} started`;
+    ? `${noun} ${t('components.jobStartedPanel.queuedSuffix')}`
+    : `${noun} ${t('components.jobStartedPanel.startedSuffix')}`;
 
   const subtitle = completed
     ? finalStatus === 'completed'
       ? kind === 'scrape'
-        ? 'Leads are ready. Open View data to review and export.'
-        : 'All DMs have been sent. Check DM History for delivery details.'
+        ? t('components.jobStartedPanel.completedScrapeSubtitle')
+        : t('components.jobStartedPanel.completedDmSubtitle')
       : finalStatus === 'cancelled'
-      ? 'The job was cancelled before finishing.'
-      : 'The job stopped due to an error. Check the Queue for details.'
+      ? t('components.jobStartedPanel.cancelledSubtitle')
+      : t('components.jobStartedPanel.failedSubtitle')
     : isQueued || (wasEnqueued && !isRunning)
-    ? 'The account is busy — this job will start once earlier jobs finish. Track it in the Queue.'
+    ? t('components.jobStartedPanel.queuedSubtitle')
     : kind === 'scrape'
-    ? 'Collecting leads. Progress updates in real time.'
-    : 'Sending DMs. Progress updates in real time.';
+    ? t('components.jobStartedPanel.scrapeSubtitle')
+    : t('components.jobStartedPanel.dmSubtitle');
 
   const showDataButton = kind === 'scrape';
   const dataEnabled = showDataButton && completed && finalStatus === 'completed';
@@ -79,13 +81,13 @@ export function JobStartedPanel({ jobId, kind, wasEnqueued, onReset }: JobStarte
 
       <div className="mt-4 border border-border bg-background">
         <div className="border-b border-border bg-muted px-3 py-1.5 text-[11px] font-medium uppercase  text-muted-foreground">
-          Progress
+          {t('components.jobStartedPanel.progress')}
         </div>
         <div className="p-3">
           {isQueued ? (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Spinner className="h-4 w-4" />
-              <span>Waiting for the account to free up…</span>
+              <span>{t('components.jobStartedPanel.waiting')}</span>
             </div>
           ) : (
             <div className="flex flex-col gap-2">
@@ -120,14 +122,14 @@ export function JobStartedPanel({ jobId, kind, wasEnqueued, onReset }: JobStarte
                 to="/data"
                 className="inline-flex h-9 items-center gap-1.5 border-r border-border px-3 text-xs font-medium text-foreground transition-colors hover:bg-accent"
               >
-                View data
+                {t('components.jobStartedPanel.viewData')}
               </Link>
             ) : (
               <span
                 aria-disabled="true"
                 className="inline-flex h-9 cursor-not-allowed items-center gap-1.5 border-r border-border px-3 text-xs font-medium text-muted-foreground opacity-50"
               >
-                View data
+                {t('components.jobStartedPanel.viewData')}
               </span>
             )
           ) : null}
@@ -136,7 +138,7 @@ export function JobStartedPanel({ jobId, kind, wasEnqueued, onReset }: JobStarte
               to="/categories"
               className="inline-flex h-9 items-center gap-1.5 border-r border-border px-3 text-xs font-medium text-foreground transition-colors hover:bg-accent"
             >
-              View categories
+              {t('components.jobStartedPanel.viewCategories')}
             </Link>
           ) : null}
           <button
@@ -144,7 +146,7 @@ export function JobStartedPanel({ jobId, kind, wasEnqueued, onReset }: JobStarte
             onClick={onReset}
             className="inline-flex h-9 items-center gap-1.5 px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
           >
-            Queue another
+            {t('components.jobStartedPanel.queueAnother')}
           </button>
         </div>
       </div>

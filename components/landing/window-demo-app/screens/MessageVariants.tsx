@@ -11,10 +11,12 @@ import { Spinner } from '@/components/landing/window-demo-app/components/common/
 import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
 import { formatDateTime } from '@/components/landing/window-demo-app/lib/format';
 import type { MessageVariantGroupPublic } from '@/components/landing/window-demo-app/types/domain';
+import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
 
 const MAX_VARIANTS = 20;
 
 export function MessageVariants() {
+  const { t } = useTranslation();
   const [rows, setRows] = useState<MessageVariantGroupPublic[] | null>(null);
   const [creating, setCreating] = useState(false);
   const [editing, setEditing] = useState<MessageVariantGroupPublic | null>(null);
@@ -55,8 +57,8 @@ export function MessageVariants() {
       {rows.length === 0 ? (
         <EmptyState
           icon={<MessageSquareText className="h-10 w-10" />}
-          title="No message variants yet"
-          description="Save a named set of DM variations once, reuse it across every Cold DM run."
+          title={t('screens.messageVariants.noGroupsTitle')}
+          description={t('screens.messageVariants.noGroupsDescription')}
           action={
             <button
               type="button"
@@ -64,7 +66,7 @@ export function MessageVariants() {
               className="inline-flex h-9 items-center gap-1.5 border border-border bg-primary px-3 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
               <Plus className="h-3.5 w-3.5" />
-              New group
+              {t('screens.messageVariants.newGroup')}
             </button>
           }
         />
@@ -76,7 +78,7 @@ export function MessageVariants() {
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by name…"
+                placeholder={t('screens.messageVariants.searchPlaceholder')}
                 className="h-9 w-full bg-transparent pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground"
               />
             </div>
@@ -86,7 +88,7 @@ export function MessageVariants() {
               className="inline-flex h-9 items-center gap-1.5 bg-primary px-3 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
               <Plus className="h-3.5 w-3.5" />
-              New group
+              {t('screens.messageVariants.newGroup')}
             </button>
           </div>
 
@@ -94,8 +96,8 @@ export function MessageVariants() {
             <div className="flex min-h-0 flex-1 items-center justify-center border-t border-border">
               <EmptyState
                 icon={<Search className="h-10 w-10" />}
-                title="No results"
-                description="No variant groups match your search."
+                title={t('common.noResults')}
+                description={t('screens.messageVariants.noMatchDescription')}
               />
             </div>
           ) : (
@@ -103,10 +105,10 @@ export function MessageVariants() {
               <table className="w-full whitespace-nowrap text-sm">
                 <thead className="sticky top-0 z-10 border-t border-border bg-muted text-[11px] font-medium uppercase  text-muted-foreground">
                   <tr>
-                    <th className="px-3 py-1.5 text-left">Name</th>
-                    <th className="px-3 py-1.5 text-right">Variants</th>
-                    <th className="px-3 py-1.5 text-left">Last updated</th>
-                    <th className="px-3 py-1.5 text-right">Actions</th>
+                    <th className="px-3 py-1.5 text-left">{t('screens.messageVariants.tableName')}</th>
+                    <th className="px-3 py-1.5 text-right">{t('screens.messageVariants.tableVariants')}</th>
+                    <th className="px-3 py-1.5 text-left">{t('screens.messageVariants.tableLastUpdated')}</th>
+                    <th className="px-3 py-1.5 text-right">{t('common.actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -132,7 +134,7 @@ export function MessageVariants() {
                             type="button"
                             onClick={() => setEditing(row)}
                             className="inline-flex h-7 w-7 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
-                            aria-label="Edit group"
+                            aria-label={t('screens.messageVariants.editGroup')}
                           >
                             <Pencil className="h-3.5 w-3.5" />
                           </button>
@@ -140,7 +142,7 @@ export function MessageVariants() {
                             type="button"
                             onClick={() => setDeleteTarget(row)}
                             className="inline-flex h-7 w-7 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
-                            aria-label="Delete group"
+                            aria-label={t('screens.messageVariants.deleteGroup')}
                           >
                             <Trash2 className="h-3.5 w-3.5" />
                           </button>
@@ -176,6 +178,7 @@ function EditGroupDialog({
   group?: MessageVariantGroupPublic;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const isEdit = !!group;
   const [name, setName] = useState(group?.name ?? '');
   const [variants, setVariants] = useState<string[]>(
@@ -213,7 +216,7 @@ function EditGroupDialog({
       }
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not save group');
+      setError(err instanceof Error ? err.message : t('screens.messageVariants.couldNotSave'));
     } finally {
       setBusy(false);
     }
@@ -225,45 +228,45 @@ function EditGroupDialog({
       onClose={() => {
         if (!busy) onClose();
       }}
-      title={isEdit ? `Edit ${group!.name}` : 'New message variants group'}
-      description="Save a reusable set of DM variations. One will be picked at random per DM when you use this group in a Cold DM run."
+      title={isEdit ? t('screens.messageVariants.editDialogTitle', { name: group!.name }) : t('screens.messageVariants.newDialogTitle')}
+      description={t('screens.messageVariants.dialogDescription')}
       className="max-w-lg"
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button onClick={submit} disabled={!canSubmit}>
             {busy ? <Spinner /> : null}
             {busy
               ? isEdit
-                ? 'Saving…'
-                : 'Creating…'
+                ? t('screens.messageVariants.saving')
+                : t('screens.messageVariants.creating')
               : isEdit
-              ? 'Save changes'
-              : 'Create group'}
+              ? t('screens.messageVariants.saveChanges')
+              : t('screens.messageVariants.createGroup')}
           </Button>
         </>
       }
     >
       <div className="space-y-3">
         <div className="space-y-1">
-          <Label htmlFor="mvg-name">Name</Label>
+          <Label htmlFor="mvg-name">{t('screens.messageVariants.nameLabel')}</Label>
           <Input
             id="mvg-name"
             autoFocus
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Fitness coachs, SaaS founders, …"
+            placeholder={t('screens.messageVariants.namePlaceholder')}
             disabled={busy}
           />
         </div>
 
         <div className="flex flex-col border border-border bg-background">
           <div className="flex items-center justify-between border-b border-border bg-muted px-3 py-1.5 text-[11px] font-medium uppercase  text-muted-foreground">
-            <span>Variants</span>
+            <span>{t('screens.messageVariants.variants')}</span>
             <span className="normal-case font-normal">
-              {nonEmpty}/{MAX_VARIANTS} ·{' '}
+              {t('screens.messageVariants.variantsCount', { n: nonEmpty, max: MAX_VARIANTS })}{' '}
               <code className="rounded bg-background px-1 py-0.5 text-[10px]">
                 {'{{username}}'}
               </code>
@@ -274,7 +277,7 @@ function EditGroupDialog({
               <div key={i} className="flex items-start gap-2">
                 <Textarea
                   rows={3}
-                  placeholder={i === 0 ? 'Hey {{username}}, …' : `Variant ${i + 1}`}
+                  placeholder={i === 0 ? t('screens.messageVariants.variantPlaceholderFirst', { username: '{{username}}' }) : t('screens.messageVariants.variantPlaceholderNth', { n: i + 1 })}
                   value={value}
                   onChange={(e) => updateVariant(i, e.target.value)}
                   disabled={busy}
@@ -283,7 +286,7 @@ function EditGroupDialog({
                   type="button"
                   onClick={() => removeVariant(i)}
                   disabled={variants.length <= 1 || busy}
-                  aria-label={`Remove variant ${i + 1}`}
+                  aria-label={t('screens.messageVariants.removeVariant', { n: i + 1 })}
                   className="inline-flex h-9 w-9 flex-none items-center justify-center bg-destructive/10 text-destructive transition-colors hover:bg-destructive/20 disabled:opacity-40 disabled:hover:bg-destructive/10"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
@@ -299,7 +302,7 @@ function EditGroupDialog({
               className="inline-flex h-9 items-center gap-1.5 border border-border bg-background px-3 text-xs font-medium text-foreground transition-colors hover:bg-accent disabled:opacity-60"
             >
               <Plus className="h-3.5 w-3.5" />
-              Add variant
+              {t('screens.messageVariants.addVariant')}
             </button>
           </div>
         </div>
@@ -317,6 +320,7 @@ function ConfirmDeleteGroupDialog({
   group: MessageVariantGroupPublic;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -327,7 +331,7 @@ function ConfirmDeleteGroupDialog({
       await b2dm.messageVariants.delete(group.id);
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not delete group');
+      setError(err instanceof Error ? err.message : t('screens.messageVariants.couldNotDelete'));
     } finally {
       setBusy(false);
     }
@@ -339,16 +343,16 @@ function ConfirmDeleteGroupDialog({
       onClose={() => {
         if (!busy) onClose();
       }}
-      title={`Delete ${group.name}?`}
-      description="Historical Cold DM jobs keep their original variants — only this reusable group is removed."
+      title={t('screens.messageVariants.deleteDialogTitle', { name: group.name })}
+      description={t('screens.messageVariants.deleteDialogDescription')}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button onClick={confirm} disabled={busy}>
             {busy ? <Spinner /> : null}
-            {busy ? 'Deleting…' : 'Delete group'}
+            {busy ? t('screens.messageVariants.deleting') : t('screens.messageVariants.deleteButton')}
           </Button>
         </>
       }

@@ -345,7 +345,7 @@ export async function collectDailySaasMetrics(): Promise<DailySaasMetrics> {
 
   const stripeError = [renewalStripe.error, revenueMonth.error]
     .filter(Boolean)
-    .join(" · ");
+    .join(" - ");
 
   return {
     generatedAtIso: now.toISOString(),

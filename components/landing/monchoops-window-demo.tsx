@@ -1,8 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useLocale } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import type { Step } from "@/components/landing/window-demo-app/components/DemoAutoplay";
+import type { DemoLocale } from "@/components/landing/window-demo-app/lib/i18n";
 
 const App = dynamic(
   () => import("@/components/landing/window-demo-app/App"),
@@ -28,6 +30,8 @@ interface MonchoOpsWindowDemoProps {
 export function MonchoOpsWindowDemo({ script, startDelay, initialPath }: MonchoOpsWindowDemoProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [scale, setScale] = useState(1);
+  const nextIntlLocale = useLocale();
+  const demoLocale: DemoLocale = nextIntlLocale === "es" ? "es" : "en";
 
   useEffect(() => {
     const el = containerRef.current;
@@ -47,10 +51,11 @@ export function MonchoOpsWindowDemo({ script, startDelay, initialPath }: MonchoO
     <div
       ref={containerRef}
       data-monchoops-demo-root
-      className="monchoops-demo-root relative h-full w-full overflow-hidden rounded-lg border border-gray-200 bg-white text-[13px] antialiased"
+      className="monchoops-demo-root relative h-full w-full overflow-hidden border border-gray-200 bg-white text-[13px] antialiased"
       style={{
         containerType: "size",
-        clipPath: "inset(0 round 0.5rem)",
+        borderRadius: "8px",
+        clipPath: "inset(0 round 8px)",
         isolation: "isolate",
       }}
     >
@@ -82,7 +87,7 @@ export function MonchoOpsWindowDemo({ script, startDelay, initialPath }: MonchoO
             flex: "none",
           }}
         >
-          <App script={script} startDelay={startDelay} initialPath={initialPath} />
+          <App script={script} startDelay={startDelay} initialPath={initialPath} locale={demoLocale} />
         </div>
       </div>
     </div>

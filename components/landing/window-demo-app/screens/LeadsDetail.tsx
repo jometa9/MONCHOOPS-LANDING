@@ -6,8 +6,10 @@ import { ScrapeSummaryOf } from '@/components/landing/window-demo-app/components
 import { Spinner } from '@/components/landing/window-demo-app/components/common/Spinner';
 import { b2dm } from '@/components/landing/window-demo-app/lib/b2dm';
 import type { ScrapeResultPublic, ScrapeUsernameRow } from '@/components/landing/window-demo-app/types/domain';
+import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
 
 export function LeadsDetail() {
+  const { t } = useTranslation();
   const { jobId = '' } = useParams<{ jobId: string }>();
   const navigate = useNavigate();
   const [result, setResult] = useState<ScrapeResultPublic | null>(null);
@@ -55,24 +57,24 @@ export function LeadsDetail() {
           type="button"
           onClick={goBack}
           className="inline-flex h-9 items-center gap-1.5 border-r border-border bg-transparent px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-          aria-label="Back to leads"
+          aria-label={t('screens.leadsDetail.backAria')}
         >
           <ArrowLeft className="h-3.5 w-3.5" />
-          Back
+          {t('screens.leadsDetail.back')}
         </button>
         <div className="relative min-w-0 flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search username…"
+            placeholder={t('screens.leadsDetail.searchPlaceholder')}
             className="h-9 w-full bg-transparent pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground"
           />
         </div>
         {result ? (
           <div className="flex items-center gap-2 border-l border-border px-3 text-xs text-muted-foreground">
             <ScrapeSummaryOf row={result} className="truncate text-xs text-muted-foreground" />
-            <span className="tabular-nums">· {result.usernameCount}</span>
+            <span className="tabular-nums">- {result.usernameCount}</span>
           </div>
         ) : null}
       </div>
@@ -81,11 +83,11 @@ export function LeadsDetail() {
         <div className="flex min-h-0 flex-1 items-center justify-center border-t border-border">
           <EmptyState
             icon={rows.length === 0 ? <Users className="h-10 w-10" /> : <Search className="h-10 w-10" />}
-            title="No results"
+            title={t('screens.leadsDetail.noResultsTitle')}
             description={
               rows.length === 0
-                ? 'This scrape finished without producing any usernames.'
-                : 'No usernames match your search.'
+                ? t('screens.leadsDetail.noResultsEmpty')
+                : t('screens.leadsDetail.noResultsFiltered')
             }
           />
         </div>
@@ -94,8 +96,8 @@ export function LeadsDetail() {
         <table className="w-full whitespace-nowrap text-sm">
           <thead className="sticky top-0 z-10 border-t border-border bg-muted text-[11px] font-medium uppercase  text-muted-foreground">
             <tr>
-              <th className="px-3 py-1.5 text-left">Username</th>
-              <th className="px-3 py-1.5 text-right">Profile</th>
+              <th className="px-3 py-1.5 text-left">{t('screens.leadsDetail.tableUsername')}</th>
+              <th className="px-3 py-1.5 text-right">{t('screens.leadsDetail.tableProfile')}</th>
             </tr>
           </thead>
           <tbody>
@@ -117,7 +119,7 @@ export function LeadsDetail() {
                         type="button"
                         onClick={(e) => { e.stopPropagation(); openProfile(); }}
                         className="inline-flex h-7 w-7 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
-                        aria-label={`Open @${row.username} on Instagram`}
+                        aria-label={t('screens.leadsDetail.openProfile', { username: row.username })}
                       >
                         <ExternalLink className="h-3.5 w-3.5" />
                       </button>
