@@ -584,8 +584,8 @@ function AddAccountDialog({
   const [bulkFileName, setBulkFileName] = useState<string | null>(null);
 
   useEffect(() => {
-    setBulkParsed(parseBulkText(bulkText));
-  }, [bulkText]);
+    setBulkParsed(parseBulkText(bulkText, t));
+  }, [bulkText, t]);
 
   const validRows = useMemo(() => bulkParsed.filter((r) => !r.error), [bulkParsed]);
   const errorRows = useMemo(() => bulkParsed.filter((r) => r.error), [bulkParsed]);
@@ -1025,16 +1025,16 @@ function splitCsvLine(line: string, rowNumber: number, t: (key: string, params?:
     proxyPassword: proxyPassword || undefined,
   };
 
-  if (!row.username) row.error = 'Missing username';
-  else if (!row.password) row.error = 'Missing password';
+  if (!row.username) row.error = t('screens.instagramAccounts.missingUsername');
+  else if (!row.password) row.error = t('screens.instagramAccounts.missingPassword');
   else if (row.proxyUrl && !/^(https?|socks5):\/\/[^\s]+:\d+/.test(row.proxyUrl)) {
-    row.error = 'Bad proxy URL format';
+    row.error = t('screens.instagramAccounts.badProxyUrlFormat');
   }
 
   return row;
 }
 
-function parseBulkText(raw: string): ParsedRow[] {
+function parseBulkText(raw: string, t: (key: string, params?: Record<string, unknown>) => string): ParsedRow[] {
   const lines = raw
     .split(/\r?\n/)
     .map((l) => l.trim())
@@ -1045,10 +1045,11 @@ function parseBulkText(raw: string): ParsedRow[] {
   const hasHeader = /username/.test(first) && /password/.test(first);
   const dataLines = hasHeader ? lines.slice(1) : lines;
 
-  return dataLines.map((line, i) => splitCsvLine(line, hasHeader ? i + 2 : i + 1));
+  return dataLines.map((line, i) => splitCsvLine(line, hasHeader ? i + 2 : i + 1, t));
 }
 
 export function InstagramAccounts() {
+  const { t } = useTranslation();
   const { accounts, loading } = useAccounts();
   const [adding, setAdding] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
@@ -1086,7 +1087,7 @@ export function InstagramAccounts() {
     try {
       await b2dm.accounts.startLogin(proxy ?? undefined);
     } catch (err) {
-      setAddError(err instanceof Error ? err.message : 'Could not start login');
+      setAddError(err instanceof Error ? err.message : t('screens.instagramAccounts.couldNotStartLogin'));
     } finally {
       setAdding(false);
     }
@@ -1103,7 +1104,7 @@ export function InstagramAccounts() {
     try {
       await b2dm.accounts.startAutoLogin(username, password, proxy ?? undefined);
     } catch (err) {
-      setAddError(err instanceof Error ? err.message : 'Could not start login');
+      setAddError(err instanceof Error ? err.message : t('screens.instagramAccounts.couldNotStartLogin'));
     } finally {
       setAdding(false);
     }
@@ -1115,7 +1116,7 @@ export function InstagramAccounts() {
     try {
       await b2dm.accounts.startBulkAutoLogin(rows);
     } catch (err) {
-      setAddError(err instanceof Error ? err.message : 'Could not start bulk login');
+      setAddError(err instanceof Error ? err.message : t('screens.instagramAccounts.couldNotStartBulk'));
       throw err;
     } finally {
       setAdding(false);
@@ -1139,8 +1140,8 @@ export function InstagramAccounts() {
       <>
         <EmptyState
           icon={<Instagram className="h-10 w-10" />}
-          title="No Instagram accounts yet"
-          description="Link an Instagram account to start sending DMs or scraping usernames."
+          title={t('screens.instagramAccounts.noAccountsTitle')}
+          description={t('screens.instagramAccounts.noAccountsDescription')}
           action={
             <div className="flex flex-col items-center gap-2">
               <button
@@ -1151,7 +1152,7 @@ export function InstagramAccounts() {
                 className="inline-flex h-9 items-center gap-1.5 border border-border bg-primary px-3 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-60"
               >
                 {adding ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
-                {adding ? 'Working…' : 'Add account'}
+                {adding ? t('screens.instagramAccounts.working') : t('screens.instagramAccounts.addAccount')}
               </button>
               {addError ? <p className="text-xs text-destructive">{addError}</p> : null}
             </div>
@@ -1180,14 +1181,14 @@ export function InstagramAccounts() {
             className="inline-flex h-9 items-center gap-1.5 border-r border-border bg-primary px-3 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-60"
           >
             {adding ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
-            {adding ? 'Working…' : 'Add account'}
+            {adding ? t('screens.instagramAccounts.working') : t('screens.instagramAccounts.addAccount')}
           </button>
           <div className="relative min-w-0 flex-1 border-r border-border bg-background">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by username, name or proxy…"
+              placeholder={t('screens.instagramAccounts.searchPlaceholder')}
               className="h-9 w-full bg-transparent pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground"
             />
           </div>
@@ -1204,7 +1205,7 @@ export function InstagramAccounts() {
                   : 'bg-background text-muted-foreground hover:bg-accent/50'
               )}
             >
-              {option.label}
+              {t(option.labelKey)}
             </button>
           ))}
         </div>
@@ -1213,8 +1214,8 @@ export function InstagramAccounts() {
           <div className="flex min-h-0 flex-1 items-center justify-center border-t border-border">
             <EmptyState
               icon={<Search className="h-10 w-10" />}
-              title="No accounts match your filters"
-              description="Adjust your search or status filter to find the account you're looking for."
+              title={t('screens.instagramAccounts.noMatchTitle')}
+              description={t('screens.instagramAccounts.noMatchDescription')}
             />
           </div>
         ) : (
@@ -1222,11 +1223,11 @@ export function InstagramAccounts() {
             <table className="w-full whitespace-nowrap border-collapse text-left">
               <thead className="sticky top-0 z-10 border-t border-border bg-muted text-[11px] font-medium uppercase  text-muted-foreground">
                 <tr>
-                  <th className="px-3 py-1.5 text-left">Account</th>
-                  <th className="px-3 py-1.5 text-left">Status</th>
-                  <th className="px-3 py-1.5 text-left">Proxy</th>
-                  <th className="px-3 py-1.5 text-right">Updated</th>
-                  <th className="px-2 py-1.5 text-right">Actions</th>
+                  <th className="px-3 py-1.5 text-left">{t('screens.instagramAccounts.tableAccount')}</th>
+                  <th className="px-3 py-1.5 text-left">{t('screens.instagramAccounts.tableStatus')}</th>
+                  <th className="px-3 py-1.5 text-left">{t('screens.instagramAccounts.tableProxy')}</th>
+                  <th className="px-3 py-1.5 text-right">{t('screens.instagramAccounts.tableUpdated')}</th>
+                  <th className="px-2 py-1.5 text-right">{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody>

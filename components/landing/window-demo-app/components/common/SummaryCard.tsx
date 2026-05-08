@@ -1,5 +1,6 @@
 import { Pencil } from 'lucide-react';
 import { cn } from '@/components/landing/window-demo-app/lib/cn';
+import { useTranslation } from '@/components/landing/window-demo-app/lib/i18n';
 
 interface Props {
   title: string;
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export function SummaryCard({ title, onEdit, children, className }: Props) {
+  const { t } = useTranslation();
   return (
     <div className={cn('border border-border bg-background', className)}>
       <div className="flex items-center justify-between border-b border-border bg-muted px-3 py-1.5 text-[11px] font-medium uppercase  text-muted-foreground">
@@ -20,7 +22,7 @@ export function SummaryCard({ title, onEdit, children, className }: Props) {
             className="inline-flex h-6 items-center gap-1 rounded px-1.5 text-[10px] font-medium normal-case text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
           >
             <Pencil className="h-3 w-3" />
-            Edit
+            {t('components.summaryCard.edit')}
           </button>
         ) : null}
       </div>

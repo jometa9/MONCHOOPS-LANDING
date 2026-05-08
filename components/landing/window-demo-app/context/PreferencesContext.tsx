@@ -23,6 +23,7 @@ const STORAGE_KEY = 'b2dm-prefs';
 // their own IPC respectively — this cache exists only to keep the renderer's
 // initial paint from flashing stale values before the backend responds.
 function loadPrefs(): Preferences {
+  if (typeof window === 'undefined') return defaults();
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return defaults();
@@ -38,6 +39,7 @@ function defaults(): Preferences {
 }
 
 function savePrefs(prefs: Preferences): void {
+  if (typeof window === 'undefined') return;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
 }
 

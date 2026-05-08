@@ -1,30 +1,76 @@
 export function ChromeIcon({ className }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 48 48"
+      viewBox="0 0 152 132"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       aria-hidden
     >
       <defs>
-        <linearGradient id="chromeRed" x1="3.2" y1="15" x2="44.7" y2="15" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id="cwsRed"
+          gradientUnits="userSpaceOnUse"
+          x1="19.16"
+          y1="125.015"
+          x2="132.84"
+          y2="125.015"
+        >
           <stop offset="0" stopColor="#d93025" />
           <stop offset="1" stopColor="#ea4335" />
         </linearGradient>
-        <linearGradient id="chromeYellow" x1="20.7" y1="47.7" x2="41.5" y2="11.7" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#fcc934" />
-          <stop offset="1" stopColor="#fbbc04" />
-        </linearGradient>
-        <linearGradient id="chromeGreen" x1="26.6" y1="46.5" x2="5.8" y2="10.6" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id="cwsGreen"
+          gradientUnits="userSpaceOnUse"
+          gradientTransform="matrix(-0.5,-0.866,0.866,-0.5,-553.5404,-800.0297)"
+          x1="-1169.8269"
+          y1="59.7414"
+          x2="-1056.1232"
+          y2="59.7414"
+        >
           <stop offset="0" stopColor="#1e8e3e" />
           <stop offset="1" stopColor="#34a853" />
         </linearGradient>
+        <linearGradient
+          id="cwsYellow"
+          gradientUnits="userSpaceOnUse"
+          gradientTransform="matrix(-0.5,0.866,-0.866,-0.5,-423.9008,-292.818)"
+          x1="56.7071"
+          y1="-664.7747"
+          x2="170.4071"
+          y2="-664.7747"
+        >
+          <stop offset="0" stopColor="#fbbc04" />
+          <stop offset="1" stopColor="#fcc934" />
+        </linearGradient>
       </defs>
-      <circle cx="24" cy="24" r="12" fill="#fff" />
-      <path d="M3.2 36A24 24 0 0 0 44.7 36L33.3 30A12 12 0 0 1 14.7 30Z" fill="url(#chromeGreen)" />
-      <path d="M44.7 36A24 24 0 0 0 24 0v12a12 12 0 0 1 9.3 18Z" fill="url(#chromeYellow)" />
-      <path d="M24 0A24 24 0 0 0 3.2 36l11.4-6A12 12 0 0 1 24 12Z" fill="url(#chromeRed)" />
-      <circle cx="24" cy="24" r="6" fill="#1a73e8" />
+      <path
+        d="M 0,0 V 121.63086 C 0,127.35086 4.6391406,132 10.369141,132 H 141.64062 c 5.72,0 10.36915,-4.63914 10.36915,-10.36914 L 152,0 Z m 58.730469,14.519531 h 34.539062 c 3.82,0 6.910159,3.090157 6.910159,6.910157 0,3.809999 -3.090159,6.910156 -6.910159,6.910156 H 58.730469 c -3.82,0 -6.910157,-3.090156 -6.910157,-6.910156 0,-3.820001 3.090157,-6.910157 6.910157,-6.910157 z"
+        fill="#f1f3f4"
+      />
+      <path
+        d="M 0,0 V 66.349609 H 152 V 0 Z m 58.730469,14.519531 h 34.539062 c 3.82,0 6.910159,3.090157 6.910159,6.910157 0,3.809999 -3.090159,6.910156 -6.910159,6.910156 H 58.730469 c -3.82,0 -6.910157,-3.090156 -6.910157,-6.910156 0,-3.820001 3.090157,-6.910157 6.910157,-6.910157 z"
+        fill="#e8eaed"
+      />
+      <path
+        fill="url(#cwsRed)"
+        d="m 76,55.990236 c -24.29,0 -45.48984,13.190544 -56.83984,32.810544 L 28.21094,116.41016 42.17969,132 h 8.89453 L 76,88.81055 l 56.83984,-0.01 C 121.48984,69.18078 100.29,55.990236 76,55.990236 Z"
+      />
+      <path
+        fill="url(#cwsGreen)"
+        d="M 19.16016,88.80078 C 11.69401,101.76587 8.79854,117.05336 11.18555,132 h 32.9082 z"
+      />
+      <path
+        fill="url(#cwsYellow)"
+        d="M 76,88.81055 100.93359,132 h 39.88086 c 2.38639,-14.943 -0.50881,-30.22498 -7.97461,-43.18945 z"
+      />
+      <path
+        fill="#f1f3f4"
+        d="m 76,88.81055 c -18.12046,0 -32.810541,14.69433 -32.810547,32.82031 0,3.62529 0.598449,7.10853 1.683594,10.36914 h 62.253903 c 1.08515,-3.26061 1.6836,-6.74385 1.6836,-10.36914 C 108.81054,103.50488 94.12046,88.81055 76,88.81055 Z"
+      />
+      <path
+        fill="#1a73e8"
+        d="M 76,94.96094 A 26.66,26.67 0 0 0 49.33984,121.63086 26.66,26.67 0 0 0 51.48633,132 h 49.02734 A 26.66,26.67 0 0 0 102.66016,121.63086 26.66,26.67 0 0 0 76,94.96094 Z"
+      />
     </svg>
   );
 }

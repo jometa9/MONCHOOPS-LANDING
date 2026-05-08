@@ -1,7 +1,4 @@
-import { verifyToken } from "@/lib/auth/session";
-import { generateResetToken, getResetTokenExpiry } from "@/lib/utils";
-import { and, eq, gt, isNull } from "drizzle-orm";
-import { cookies } from "next/headers";
+import { and, eq, isNull } from "drizzle-orm";
 import { cache } from "react";
 import { auth } from "../auth/config";
 import { db } from "./drizzle";
@@ -14,38 +11,6 @@ import {
 } from "./schema";
 
 export async function getUser() {
-  const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get("session");
-  let customSessionValid = false;
-
-  if (sessionCookie && sessionCookie.value) {
-    try {
-      const sessionData = await verifyToken(sessionCookie.value);
-      if (
-        sessionData &&
-        sessionData.user &&
-        typeof sessionData.user.id === "string"
-      ) {
-        if (new Date(sessionData.expires) >= new Date()) {
-          const userResult = await db
-            .select()
-            .from(user)
-            .where(
-              and(eq(user.id, sessionData.user.id), isNull(user.deletedAt))
-            )
-            .limit(1);
-
-          if (userResult.length > 0) {
-            customSessionValid = true;
-            return userResult[0];
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Error verifying custom session token:", error);
-    }
-  }
-
   try {
     const session = await auth();
 
@@ -62,13 +27,6 @@ export async function getUser() {
     }
   } catch (error) {
     console.error("Error getting current user from NextAuth session:", error);
-  }
-
-  if (sessionCookie && !customSessionValid) {
-    try {
-      cookieStore.delete("session");
-    } catch {
-    }
   }
 
   return null;
@@ -256,65 +214,6 @@ export async function getUserByApiKey(apiKey: string) {
   return result.length > 0 ? result[0] : null;
 }
 
-export async function createPasswordResetToken(email: string) {
-  const userResult = await db
-    .select()
-    .from(user)
-    .where(and(eq(user.email, email), isNull(user.deletedAt)))
-    .limit(1);
-
-  if (userResult.length === 0) {
-    return null;
-  }
-
-  const foundUser = userResult[0];
-  const resetToken = generateResetToken();
-  const resetTokenExpiry = getResetTokenExpiry();
-
-  await db
-    .update(user)
-    .set({
-      resetToken,
-      resetTokenExpiry,
-      updatedAt: new Date(),
-    })
-    .where(eq(user.id, foundUser.id));
-
-  return {
-    user: foundUser,
-    resetToken,
-  };
-}
-
-export async function validateResetToken(token: string) {
-  const now = new Date();
-
-  const result = await db
-    .select()
-    .from(user)
-    .where(
-      and(
-        eq(user.resetToken, token),
-        gt(user.resetTokenExpiry!, now),
-        isNull(user.deletedAt)
-      )
-    )
-    .limit(1);
-
-  return result.length > 0 ? result[0] : null;
-}
-
-export async function resetPassword(token: string, newPassword: string) {
-  void newPassword;
-  const currentUser = await validateResetToken(token);
-
-  if (!currentUser) {
-    return null;
-  }
-
-  return currentUser;
-}
-
 export async function updateUserById(
   userId: string,
   userData: Partial<{
@@ -323,8 +222,6 @@ export async function updateUserById(
     email: string | null;
     role: string | null;
     apiKey: string | null;
-    resetToken: string | null;
-    resetTokenExpiry: Date | null;
     metaPurchaseEventId: string | null;
   }>
 ) {

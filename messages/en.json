@@ -41,6 +41,7 @@
     "howItWorks": "How it works",
     "pricing": "Pricing",
     "docs": "Docs",
+    "signIn": "Sign in",
     "signUp": "Sign up",
     "getStarted": "Get started"
   },
@@ -107,7 +108,19 @@
       "bullet3": "Pulls your saved leads and message variants from your MonchoOps account",
       "bullet4": "Scraping is not available in the extension yet — use the desktop app to build lead lists",
       "addToChrome": "Add to Chrome",
-      "addToChromeSub": " — free, from the Chrome Web Store"
+      "popup": {
+        "instagramSession": "Instagram session",
+        "active": "Active",
+        "operatesOnAccount": "The extension will operate on the IG account you're logged into in this browser.",
+        "activeProcesses": "Active processes",
+        "running": "Running",
+        "paused": "Paused",
+        "openDashboard": "Open dashboard",
+        "campaign1": "Fitness coaches · LATAM",
+        "campaign2": "DTC founders",
+        "processed1": "743 / 1,200 processed",
+        "processed2": "182 / 500 processed"
+      }
     }
   },
   "steps": {

@@ -555,10 +555,6 @@ export async function handleSubscriptionChange(
     ? new Date(subscription.current_period_end * 1000)
     : null;
 
-  const expiryDateString = expiryDate
-    ? expiryDate.toISOString().split("T")[0]
-    : undefined;
-
   let billingPeriod: "monthly" | "annual" | null = null;
   const price = subscription.items.data[0]?.price;
   if (price?.recurring?.interval === "year") {

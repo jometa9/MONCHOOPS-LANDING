@@ -121,8 +121,8 @@ export function LandingHeader() {
         <div className="flex items-center gap-3">
           <LanguageSwitcher />
           <div className="rounded-full border border-transparent bg-gray-900 px-2 py-0.5 text-sm text-white shadow-none hover:bg-gray-600 cursor-pointer md:border md:border-gray-300 md:bg-white md:text-gray-900 md:hover:bg-gray-100">
-            <Link href="/sign-up" target="_blank" rel="noopener noreferrer">
-              {t("signUp")}
+            <Link href="/sign-in" target="_blank" rel="noopener noreferrer">
+              {t("signIn")}
             </Link>
           </div>
 

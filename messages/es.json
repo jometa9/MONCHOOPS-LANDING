@@ -41,6 +41,7 @@
     "howItWorks": "Cómo funciona",
     "pricing": "Precios",
     "docs": "Docs",
+    "signIn": "Iniciar sesión",
     "signUp": "Registrarse",
     "getStarted": "Empezar"
   },
@@ -107,7 +108,19 @@
       "bullet3": "Trae tus leads guardados y tus variantes de mensaje desde tu cuenta MonchoOps",
       "bullet4": "El scraping todavía no está en la extensión — usá la app de escritorio para armar las listas",
       "addToChrome": "Agregar a Chrome",
-      "addToChromeSub": " — gratis, desde la Chrome Web Store"
+      "popup": {
+        "instagramSession": "Sesión de Instagram",
+        "active": "Activa",
+        "operatesOnAccount": "La extensión operará sobre la cuenta de IG con la que tengas sesión en este navegador.",
+        "activeProcesses": "Procesos activos",
+        "running": "En curso",
+        "paused": "Pausada",
+        "openDashboard": "Abrir dashboard",
+        "campaign1": "Fitness coaches · LATAM",
+        "campaign2": "DTC founders",
+        "processed1": "743 / 1.200 procesados",
+        "processed2": "182 / 500 procesados"
+      }
     }
   },
   "steps": {

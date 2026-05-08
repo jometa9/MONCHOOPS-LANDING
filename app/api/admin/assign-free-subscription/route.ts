@@ -4,7 +4,6 @@ import { auth } from "@/lib/auth/config";
 import { db } from "@/lib/db/drizzle";
 import { getUserById, getUserProductSubscription, upsertProductSubscription, deleteProductSubscription } from "@/lib/db/queries";
 import { user, ProductKey } from "@/lib/db/schema";
-import { sendSubscriptionChangeEmail } from "@/lib/email";
 import { stripe } from "@/lib/payments/stripe";
 import { eq } from "drizzle-orm";
 
@@ -101,7 +100,6 @@ export async function POST(req: NextRequest) {
 
     const expiryDate = new Date();
     expiryDate.setMonth(expiryDate.getMonth() + duration);
-    const expiryDateString = expiryDate.toISOString().split("T")[0];
 
     if (plan === "none") {
       await deleteProductSubscription(foundUser.id, productKey as ProductKey);
@@ -116,25 +114,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    let emailSent = false;
-    try {
-      const planNameForEmail = plan === "none" 
-        ? "Removed" 
-        : `${plan} (${productKey.toUpperCase()})`;
-      
-      await sendSubscriptionChangeEmail({
-        email: foundUser.email,
-        name: foundUser.name || foundUser.email.split("@")[0],
-        planName: planNameForEmail,
-        status: plan !== "none" ? "active" : "canceled",
-        expiryDate: plan !== "none" ? expiryDateString : undefined,
-      });
-      emailSent = true;
-    } catch (emailError) {
-      console.error("[assign-free-subscription] Failed to send subscription change email:", emailError);
-    }
-
-    const successMessage = plan === "none" 
+    const successMessage = plan === "none"
       ? `Subscription for ${productKey.toUpperCase()} removed from ${email}.`
       : `${plan} subscription for ${productKey.toUpperCase()} assigned to ${email} for ${duration} month(s).${stripeCanceled ? " Previous Stripe subscription was canceled." : ""}`;
 
@@ -142,7 +122,6 @@ export async function POST(req: NextRequest) {
       success: true,
       message: successMessage,
       stripeCanceled,
-      emailSent,
     });
   } catch (error) {
     return NextResponse.json(

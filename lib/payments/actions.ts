@@ -10,8 +10,6 @@ import {
   createCustomerPortalSession,
   stripe,
 } from "@/lib/payments/stripe";
-import { sendSubscriptionChangeEmail } from "@/lib/email";
-import { getAppUrl } from "@/lib/app-url";
 
 export async function customerPortalAction(
   productKey: ProductKey = "monchoops"
@@ -160,35 +158,7 @@ export async function changePlanAction(
     );
 
     const { handleSubscriptionChange } = await import("@/lib/payments/stripe");
-    await handleSubscriptionChange(expandedSubscription, "customer.subscription.updated", {
-      skipEmail: true,
-    });
-
-    let newPlanName = "Subscription";
-    const updatedItem = expandedSubscription.items.data[0];
-    if (updatedItem?.price) {
-      const prod = updatedItem.price.product;
-      if (typeof prod === "object" && prod !== null && "name" in prod) {
-        newPlanName = (prod as { name: string }).name;
-      }
-    }
-
-    const expiryDate = expandedSubscription.current_period_end
-      ? new Date(expandedSubscription.current_period_end * 1000).toISOString().split("T")[0]
-      : undefined;
-
-    try {
-      await sendSubscriptionChangeEmail({
-        email: user.email,
-        name: user.name || user.email.split("@")[0],
-        planName: newPlanName,
-        status: "plan_changed",
-        expiryDate,
-        dashboardUrl: `${getAppUrl()}/dashboard`,
-      });
-    } catch (emailError) {
-      console.error("[changePlanAction] Error sending plan change email:", emailError);
-    }
+    await handleSubscriptionChange(expandedSubscription, "customer.subscription.updated");
 
     return {
       success: true,

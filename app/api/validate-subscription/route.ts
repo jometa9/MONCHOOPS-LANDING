@@ -1,4 +1,3 @@
-import { getAppUrl } from "@/lib/app-url";
 import { db } from "@/lib/db/drizzle";
 import {
   getAppSettings,
@@ -12,7 +11,6 @@ import {
   countDmsThisMonth,
 } from "@/lib/db/usage-queries";
 import { userProductSubscription } from "@/lib/db/schema";
-import { sendSubscriptionChangeEmail } from "@/lib/email/services";
 import { paymentsEnabled } from "@/lib/payments/feature-flag";
 import { handleSubscriptionChange, stripe } from "@/lib/payments/stripe";
 import { limitsForTier } from "@/lib/subscriptions/plan-limits";
@@ -213,21 +211,6 @@ export async function GET(request: NextRequest) {
           
           if (entitlements[key]) {
             entitlements[key]!.status = "expired";
-          }
-
-          try {
-            await sendSubscriptionChangeEmail({
-              email: user.email,
-              name: user.name || user.email.split("@")[0],
-              planName: `${sub.planName || sub.tier} (${key.toUpperCase()})`,
-              status: "expired",
-              dashboardUrl: `${getAppUrl()}/dashboard`,
-            });
-          } catch (emailError) {
-            console.error(
-              "[Validate Subscription] Error sending subscription expiration email:",
-              emailError
-            );
           }
         }
       }

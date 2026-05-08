@@ -51,7 +51,6 @@ import type {
 
 const MAX_VARIANTS = 20;
 const MAX_LIKE_COUNT = 5;
-const STEP_LABELS = ['Account', 'Leads', 'Message', 'Interactions', 'Review'] as const;
 
 type Step = 1 | 2 | 3 | 4 | 5;
 
@@ -370,13 +369,6 @@ export function MassDMs() {
 /* ---------------- Step 2: Leads ---------------- */
 
 type LeadsTab = 'file' | 'job' | 'category' | 'manual';
-
-const LEADS_TABS: { id: LeadsTab; label: string; icon: typeof FileUp }[] = [
-  { id: 'file', label: 'Upload file', icon: UploadCloud },
-  { id: 'job', label: 'From a scrape', icon: Inbox },
-  { id: 'category', label: 'From a category', icon: FolderTree },
-  { id: 'manual', label: 'Manual', icon: Keyboard },
-];
 
 function LeadsStep({
   value,
@@ -1014,11 +1006,6 @@ function CategoryPanel({
 
 type MessageTab = 'write' | 'saved';
 
-const MESSAGE_TABS: { id: MessageTab; label: string; icon: typeof Pencil }[] = [
-  { id: 'write', label: 'Write', icon: Pencil },
-  { id: 'saved', label: 'Saved', icon: MessageSquareText },
-];
-
 function MessageStep({
   variants,
   onVariantsChange,
@@ -1310,9 +1297,9 @@ function InteractionsStep({
               <div className="flex min-w-0 items-start gap-2">
                 <UserPlus className="mt-0.5 h-4 w-4 flex-none text-muted-foreground" />
                 <div>
-                  <div className="font-medium">Follow the user</div>
+                  <div className="font-medium">{t('screens.massDms.followTitle')}</div>
                   <p className="text-[11px] text-muted-foreground">
-                    Sends a follow request. Skipped when already following / requested.
+                    {t('screens.massDms.followDesc')}
                   </p>
                 </div>
               </div>
@@ -1328,10 +1315,9 @@ function InteractionsStep({
               <div className="flex min-w-0 items-start gap-2">
                 <Heart className="mt-0.5 h-4 w-4 flex-none text-muted-foreground" />
                 <div>
-                  <div className="font-medium">Like recent posts</div>
+                  <div className="font-medium">{t('screens.massDms.likeTitle')}</div>
                   <p className="text-[11px] text-muted-foreground">
-                    Likes this many of their most recent posts. Skipped if the profile has no posts
-                    or is private.
+                    {t('screens.massDms.likeDesc')}
                   </p>
                 </div>
               </div>
@@ -1360,10 +1346,9 @@ function InteractionsStep({
               <div className="flex min-w-0 items-start gap-2">
                 <Sparkles className="mt-0.5 h-4 w-4 flex-none text-muted-foreground" />
                 <div>
-                  <div className="font-medium">Watch their stories first</div>
+                  <div className="font-medium">{t('screens.massDms.watchTitle')}</div>
                   <p className="text-[11px] text-muted-foreground">
-                    Silently views any active stories before the DM. Adds a few seconds per
-                    target; nudges reply rate up. Skipped when no story is available.
+                    {t('screens.massDms.watchDesc')}
                   </p>
                 </div>
               </div>
@@ -1374,7 +1359,7 @@ function InteractionsStep({
             </div>
             {value.watchStories ? (
               <div className="flex items-center justify-between gap-3 border-t border-border px-3 py-2 text-xs">
-                <span className="text-muted-foreground">Dwell per story (s)</span>
+                <span className="text-muted-foreground">{t('screens.massDms.dwellLabel')}</span>
                 <input
                   type="number"
                   min={1}
@@ -1388,8 +1373,7 @@ function InteractionsStep({
           </div>
 
           <p className="text-[11px] text-muted-foreground">
-            Max {MAX_LIKE_COUNT} likes per target. A human-ish delay sits between the interactions
-            and the DM so the funnel reads as organic to Instagram's anti-spam checks.
+            {t('screens.massDms.interactionsFootnote', { max: MAX_LIKE_COUNT })}
           </p>
         </>
       ) : null}
@@ -1397,12 +1381,12 @@ function InteractionsStep({
   );
 }
 
-function summariseInteractions(s: InteractionsState): string {
-  if (!interactionsHaveEffect(s)) return 'No interactions';
+function summariseInteractions(s: InteractionsState, t: (key: string, vars?: Record<string, unknown>) => string): string {
+  if (!interactionsHaveEffect(s)) return t('screens.massDms.summaryNoInteractions');
   const parts: string[] = [];
-  if (s.follow) parts.push('Follow');
-  if (s.likeCount > 0) parts.push(`Like ${s.likeCount} post${s.likeCount === 1 ? '' : 's'}`);
-  if (s.watchStories) parts.push(`Watch stories ${s.storyDwellSec}s`);
+  if (s.follow) parts.push(t('screens.massDms.summaryFollow'));
+  if (s.likeCount > 0) parts.push(t('screens.massDms.summaryLike', { count: s.likeCount }));
+  if (s.watchStories) parts.push(t('screens.massDms.summaryWatch', { secs: s.storyDwellSec }));
   return parts.join(' - ');
 }
 
@@ -1441,28 +1425,29 @@ function ReviewStep({
   onEditMessage: () => void;
   onEditInteractions: () => void;
 }) {
+  const { t } = useTranslation();
   const sourceLabel =
     source?.kind === 'file'
-      ? 'File'
+      ? t('screens.massDms.summarySourceFile')
       : source?.kind === 'job'
-      ? 'Scrape'
+      ? t('screens.massDms.summarySourceJob')
       : source?.kind === 'category'
-      ? 'Category'
+      ? t('screens.massDms.summarySourceCategory')
       : source?.kind === 'manual'
-      ? 'Manual'
-      : '—';
+      ? t('screens.massDms.summarySourceManual')
+      : t('common.none');
   const sourcePlural =
     source?.kind === 'category'
-      ? 'categories'
+      ? t('screens.massDms.sourcePluralCategory')
       : source?.kind === 'job'
-      ? 'scrapes'
+      ? t('screens.massDms.sourcePluralJob')
       : source?.kind === 'manual'
-      ? 'usernames'
-      : 'files';
+      ? t('screens.massDms.sourcePluralManual')
+      : t('screens.massDms.sourcePluralFile');
 
   return (
     <div className="flex flex-col gap-2">
-      <SummaryCard title="Account" onEdit={onEditAccount}>
+      <SummaryCard title={t('screens.massDms.summaryAccount')} onEdit={onEditAccount}>
         {account ? (
           <div className="flex items-center gap-2.5">
             {account.profilePicUrl ? (
@@ -1480,25 +1465,25 @@ function ReviewStep({
             <span className="text-sm font-medium">@{account.username}</span>
           </div>
         ) : (
-          <span className="text-sm text-muted-foreground">—</span>
+          <span className="text-sm text-muted-foreground">{t('common.none')}</span>
         )}
       </SummaryCard>
 
-      <SummaryCard title="Leads" onEdit={onEditLeads}>
+      <SummaryCard title={t('screens.massDms.summaryLeads')} onEdit={onEditLeads}>
         {source ? (
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0">
                 <div className="truncate font-medium">
                   {source.labels && source.labels.length > 1
-                    ? `${source.labels.length} ${sourcePlural} selected`
+                    ? t('screens.massDms.summarySelectedCount', { count: source.labels.length, plural: sourcePlural })
                     : source.label.length > 40
                     ? `${source.label.slice(0, 40)}…`
                     : source.label}
                 </div>
                 <div className="text-[11px] text-muted-foreground">{sourceLabel}</div>
               </div>
-              <span className="tabular-nums text-sm">{source.count} usernames</span>
+              <span className="tabular-nums text-sm">{t('screens.massDms.summaryUsernamesCount', { count: source.count })}</span>
             </div>
             {source.labels && source.labels.length > 1 ? (
               <div className="flex flex-wrap gap-1.5">
@@ -1519,17 +1504,17 @@ function ReviewStep({
             ) : null}
           </div>
         ) : (
-          <span className="text-sm text-muted-foreground">—</span>
+          <span className="text-sm text-muted-foreground">{t('common.none')}</span>
         )}
       </SummaryCard>
 
       <SummaryCard
-        title={`Message - ${variants.length} variant${variants.length === 1 ? '' : 's'}`}
+        title={t('screens.massDms.summaryMessageWithVariants', { count: variants.length })}
         onEdit={onEditMessage}
       >
         <div className="space-y-1.5">
           {variants.length === 0 ? (
-            <span className="text-sm text-muted-foreground">No variants</span>
+            <span className="text-sm text-muted-foreground">{t('screens.massDms.summaryNoVariants')}</span>
           ) : (
             variants.map((v, i) => (
               <div
@@ -1543,20 +1528,20 @@ function ReviewStep({
         </div>
       </SummaryCard>
 
-      <SummaryCard title="Pace" onEdit={onEditMessage}>
+      <SummaryCard title={t('screens.massDms.summaryPace')} onEdit={onEditMessage}>
         <div className="text-sm">
-          1 DM every <span className="font-medium">{intervalSec}s</span>
-          <span className="ml-1 text-[11px] text-muted-foreground">(±25% jitter)</span>
+          {t('screens.massDms.summaryPaceText')} <span className="font-medium">{intervalSec}s</span>
+          <span className="ml-1 text-[11px] text-muted-foreground">{t('screens.massDms.summaryPaceJitter')}</span>
         </div>
       </SummaryCard>
 
-      <SummaryCard title="Interactions" onEdit={onEditInteractions}>
+      <SummaryCard title={t('screens.massDms.summaryInteractions')} onEdit={onEditInteractions}>
         <div className="flex items-center gap-2 text-sm">
           {interactionsHaveEffect(interactions) ? (
             <Sparkles className="h-3.5 w-3.5 text-primary" />
           ) : null}
           <span className={interactionsHaveEffect(interactions) ? 'font-medium' : 'text-muted-foreground'}>
-            {summariseInteractions(interactions)}
+            {summariseInteractions(interactions, t)}
           </span>
         </div>
       </SummaryCard>
@@ -1566,13 +1551,16 @@ function ReviewStep({
           <div className="flex items-center justify-between gap-2">
             <div className="min-w-0">
               <div className="font-medium">
-                {alreadyDmed.length} of {source.count} recipients were already DMed by{' '}
-                {account ? `@${account.username}` : 'this account'}
+                {t('screens.massDms.alreadyDmedTitle', {
+                  count: alreadyDmed.length,
+                  total: source.count,
+                  account: account ? `@${account.username}` : t('screens.massDms.alreadyDmedThisAccount'),
+                })}
               </div>
               <div className="mt-0.5 text-muted-foreground">
                 {skipAlreadyDmed
-                  ? `Those targets will be skipped — this run will attempt ${source.count - alreadyDmed.length}.`
-                  : 'They will be DMed again.'}
+                  ? t('screens.massDms.alreadyDmedSkipping', { count: source.count - alreadyDmed.length })
+                  : t('screens.massDms.alreadyDmedNotSkipping')}
               </div>
             </div>
             <label className="inline-flex flex-none items-center gap-2">
@@ -1580,17 +1568,16 @@ function ReviewStep({
                 checked={skipAlreadyDmed}
                 onCheckedChange={(v) => onToggleSkipAlreadyDmed(!!v)}
               />
-              <span className="text-[11px] font-medium">Skip</span>
+              <span className="text-[11px] font-medium">{t('screens.massDms.skip')}</span>
             </label>
           </div>
         </div>
       ) : alreadyDmedLoading ? (
-        <p className="text-[11px] text-muted-foreground">Checking for previously DMed recipients…</p>
+        <p className="text-[11px] text-muted-foreground">{t('screens.massDms.alreadyDmedLoading')}</p>
       ) : null}
       {willEnqueue ? (
         <p className="text-[11px] text-muted-foreground">
-          This account is busy. The Cold DM will be added to its queue and start once the
-          current jobs finish.
+          {t('screens.massDms.willEnqueue')}
         </p>
       ) : null}
       {error ? <p className="text-xs text-destructive">{error}</p> : null}

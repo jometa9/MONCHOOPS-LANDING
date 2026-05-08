@@ -1,22 +1,10 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useLocale } from "next-intl";
 import { useEffect, useRef, useState } from "react";
+import App from "@/components/landing/window-demo-app/App";
 import type { Step } from "@/components/landing/window-demo-app/components/DemoAutoplay";
 import type { DemoLocale } from "@/components/landing/window-demo-app/lib/i18n";
-
-const App = dynamic(
-  () => import("@/components/landing/window-demo-app/App"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex h-full w-full items-center justify-center bg-white text-xs text-gray-400">
-        Loading MonchoOps…
-      </div>
-    ),
-  }
-);
 
 const BASE_WIDTH = 980;
 const BASE_HEIGHT = 600;

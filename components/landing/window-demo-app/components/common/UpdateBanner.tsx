@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ArrowDownCircle, Loader, RotateCw } from 'lucide-react';
 import { b2dm, type UpdateStatus } from '@/components/landing/window-demo-app/lib/b2dm';
+import { useTranslation, type TFunction } from '@/components/landing/window-demo-app/lib/i18n';
 
 // Preview mode: set to any UpdateStatus to see how the banner renders
 // without waiting for a real update. Keep null in production.
@@ -11,6 +12,7 @@ import { b2dm, type UpdateStatus } from '@/components/landing/window-demo-app/li
 const PREVIEW: UpdateStatus | null = null;
 
 export function UpdateBanner() {
+  const { t } = useTranslation();
   const [state, setState] = useState<UpdateStatus>(PREVIEW ?? { kind: 'idle' });
   const [isInstalling, setIsInstalling] = useState(false);
 
@@ -51,8 +53,8 @@ export function UpdateBanner() {
       <div className="flex min-w-0 items-center gap-3">
         <UpdaterIcon state={state} />
         <div className="min-w-0">
-          <div className="truncate text-sm font-medium">{titleFor(state)}</div>
-          <div className="truncate text-xs text-muted-foreground">{subtitleFor(state)}</div>
+          <div className="truncate text-sm font-medium">{titleFor(state, t)}</div>
+          <div className="truncate text-xs text-muted-foreground">{subtitleFor(state, t)}</div>
         </div>
       </div>
 
@@ -90,10 +92,10 @@ function UpdaterIcon({ state }: { state: UpdateStatus }) {
   return <Loader className="h-4 w-4 animate-spin text-muted-foreground" />;
 }
 
-function titleFor(state: UpdateStatus): string {
+function titleFor(state: UpdateStatus, t: TFunction): string {
   switch (state.kind) {
     case 'available':
-      return `Update available — v${state.version}`;
+      return t('components.updateBanner.available', { version: state.version });
     case 'downloading':
       return state.version
         ? `Downloading update v${state.version}`
@@ -105,10 +107,10 @@ function titleFor(state: UpdateStatus): string {
   }
 }
 
-function subtitleFor(state: UpdateStatus): string {
+function subtitleFor(state: UpdateStatus, t: TFunction): string {
   switch (state.kind) {
     case 'available':
-      return 'Download will start automatically.';
+      return t('components.updateBanner.availableHint');
     case 'downloading':
       return 'Keep the app open — this only takes a moment.';
     case 'downloaded':
