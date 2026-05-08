@@ -241,7 +241,7 @@ export function ProductsSection() {
           </h2>
 
           <div className="bg-gray-100 rounded-lg p-5 md:p-6">
-            <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-6 md:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-6 md:gap-8 md:items-start">
               <div className="flex flex-col justify-between order-1 md:order-1">
                 <div>
                   <div className="flex items-center gap-4 mb-3">
@@ -290,7 +290,7 @@ export function ProductsSection() {
               </div>
 
               <div
-                className="order-2 md:order-2 relative h-full min-h-[320px] md:min-h-0 overflow-hidden rounded-lg border border-gray-200 shadow-lg flex items-start justify-center px-4 py-6 md:px-8 md:py-10"
+                className="order-2 md:order-2 relative overflow-hidden rounded-lg border border-gray-200 shadow-lg flex items-center justify-center px-8 py-14 md:px-12 md:py-20"
                 style={{
                   background:
                     "radial-gradient(ellipse 90% 70% at 25% 15%, rgba(254,226,226,0.6) 0%, transparent 70%), radial-gradient(ellipse 100% 80% at 90% 35%, rgba(254,243,199,0.55) 0%, transparent 75%), radial-gradient(ellipse 110% 90% at 50% 110%, rgba(187,247,208,0.5) 0%, transparent 75%), linear-gradient(160deg, #1d4ed8 0%, #1e40af 50%, #0f172a 100%)",
@@ -319,33 +319,12 @@ export function ProductsSection() {
                       <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
                       <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
                     </div>
-                    <div className="ml-2 relative bg-white px-3 pt-1 pb-0.5 text-[9px] text-gray-700 flex items-center gap-1.5"
+                    <div className="ml-2 bg-white px-3 pt-1 pb-0.5 text-[9px] text-gray-700 flex items-center gap-1.5"
                       style={{
                         borderTopLeftRadius: "7px",
                         borderTopRightRadius: "7px",
                       }}
                     >
-                      <span
-                        aria-hidden
-                        className="absolute bottom-0 left-[-7px] h-[7px] w-[7px] bg-white"
-                        style={{
-                          WebkitMaskImage:
-                            "radial-gradient(circle 7px at top right, transparent 7px, black 7px)",
-                          maskImage:
-                            "radial-gradient(circle 7px at top right, transparent 7px, black 7px)",
-                        }}
-                      />
-                      <span
-                        aria-hidden
-                        className="absolute bottom-0 right-[-7px] h-[7px] w-[7px] bg-white"
-                        style={{
-                          WebkitMaskImage:
-                            "radial-gradient(circle 7px at top left, transparent 7px, black 7px)",
-                          maskImage:
-                            "radial-gradient(circle 7px at top left, transparent 7px, black 7px)",
-                        }}
-                      />
-                      <span className="h-2 w-2 rounded-full bg-gradient-to-br from-pink-500 to-yellow-400" />
                       Instagram
                     </div>
                   </div>
