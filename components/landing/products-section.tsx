@@ -7,7 +7,7 @@ import { MonchoOpsWindowDemo } from "@/components/landing/monchoops-window-demo"
 import { Activity, ArrowDownToLine, ArrowLeft, ArrowRight, Check, ExternalLink, Instagram, Lock, LogOut, MoreVertical, Pause, Play, Puzzle, RotateCw } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ProductKey } from "@/lib/db/schema";
 import {
   DownloadOS,
@@ -20,11 +20,30 @@ interface AppVersionInfo {
   downloadUrls: { mac: string; windows: string };
 }
 
+const EXTENSION_BASE_WIDTH = 800;
+const EXTENSION_BASE_HEIGHT = 500;
+
 export function ProductsSection() {
   const t = useTranslations("products");
   const locale = useLocale();
   const [downloads, setDownloads] = useState<AppVersionInfo | null>(null);
   const [menuBarClock, setMenuBarClock] = useState("");
+  const extensionRef = useRef<HTMLDivElement | null>(null);
+  const [extensionScale, setExtensionScale] = useState(1);
+
+  useEffect(() => {
+    const el = extensionRef.current;
+    if (!el) return;
+    const update = () => {
+      const { width } = el.getBoundingClientRect();
+      if (width <= 0) return;
+      setExtensionScale(width / EXTENSION_BASE_WIDTH);
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   useEffect(() => {
     const loadDownloads = async () => {
@@ -311,8 +330,20 @@ export function ProductsSection() {
                 />
 
                 <div
-                  className="relative z-10 w-full max-w-[92%] aspect-[16/10] overflow-hidden rounded-lg shadow-2xl shadow-black/50 ring-1 ring-white/10 bg-[#dadce0]"
+                  ref={extensionRef}
+                  className="relative z-10 w-full max-w-[92%] aspect-[16/10] overflow-hidden rounded-lg shadow-2xl shadow-black/50 ring-1 ring-white/10"
                 >
+                  <div className="absolute inset-0 flex items-center justify-center">
+                  <div
+                    style={{
+                      width: EXTENSION_BASE_WIDTH,
+                      height: EXTENSION_BASE_HEIGHT,
+                      transform: `scale(${extensionScale})`,
+                      transformOrigin: "center center",
+                      flex: "none",
+                    }}
+                  >
+                  <div className="relative h-full w-full bg-[#dadce0]">
                   <div className="flex items-end gap-2 px-3 pt-2 pb-0 bg-[#dadce0]">
                     <div className="flex items-center gap-1.5 pb-1.5">
                       <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
@@ -361,6 +392,15 @@ export function ProductsSection() {
                         backgroundSize: "20px 20px",
                       }}
                     />
+
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute inset-0 flex items-center justify-center pb-20"
+                    >
+                      <span className="text-6xl font-bold text-gray-300 select-none">
+                        MonchoOps
+                      </span>
+                    </div>
 
                     <div className="absolute right-[4%] top-0 z-10 w-[58%] max-w-[280px] overflow-hidden bg-white shadow-2xl shadow-black/30 ring-1 ring-black/5 text-gray-900">
                       <div className="flex items-center justify-between gap-2 border-b border-gray-200 bg-gray-50 px-2.5 py-1.5">
@@ -446,6 +486,9 @@ export function ProductsSection() {
                         </div>
                       </div>
                     </div>
+                  </div>
+                  </div>
+                  </div>
                   </div>
                 </div>
               </div>

@@ -371,6 +371,7 @@ export async function getAppSettings() {
         monchoopsVersion: "1.0.0",
         monchoopsWindowsDownloadUrl: "",
         monchoopsMacDownloadUrl: "",
+        monchoopsExtensionUrl: "",
         updatedAt: new Date(),
       })
       .returning();
@@ -404,6 +405,7 @@ export async function updateAppSettings(
     monchoopsVersion: string;
     monchoopsWindowsDownloadUrl: string;
     monchoopsMacDownloadUrl: string;
+    monchoopsExtensionUrl: string;
     resendApiKey: string | null;
     resendTestEmail: string | null;
     emailFrom: string | null;
@@ -426,6 +428,7 @@ export async function updateAppSettings(
           monchoopsVersion: data.monchoopsVersion || "1.0.0",
           monchoopsWindowsDownloadUrl: data.monchoopsWindowsDownloadUrl || "",
           monchoopsMacDownloadUrl: data.monchoopsMacDownloadUrl || "",
+          monchoopsExtensionUrl: data.monchoopsExtensionUrl || "",
           resendApiKey: data.resendApiKey ?? null,
           resendTestEmail: data.resendTestEmail ?? null,
           emailFrom: data.emailFrom ?? null,
@@ -451,6 +454,9 @@ export async function updateAppSettings(
       }
       if (data.monchoopsMacDownloadUrl !== undefined) {
         updateData.monchoopsMacDownloadUrl = data.monchoopsMacDownloadUrl;
+      }
+      if (data.monchoopsExtensionUrl !== undefined) {
+        updateData.monchoopsExtensionUrl = data.monchoopsExtensionUrl;
       }
       if (data.resendApiKey !== undefined) {
         updateData.resendApiKey = data.resendApiKey ?? null;

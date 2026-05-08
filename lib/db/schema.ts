@@ -51,6 +51,7 @@ export const appSettings = pgTable("appSettings", {
     .default("1.0.0"),
   monchoopsWindowsDownloadUrl: text("monchoopsWindowsDownloadUrl"),
   monchoopsMacDownloadUrl: text("monchoopsMacDownloadUrl"),
+  monchoopsExtensionUrl: text("monchoopsExtensionUrl"),
   resendApiKey: text("resendApiKey"),
   resendTestEmail: text("resendTestEmail"),
   emailFrom: text("emailFrom"),
