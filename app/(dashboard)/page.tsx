@@ -14,7 +14,7 @@ import { PricingSection } from "@/components/pricing-section";
 import { StepsSection } from "@/components/steps-section";
 import { StructuredData } from "@/components/structured-data";
 import { Button } from "@/components/ui/button";
-import { handleDownload } from "@/lib/download-handler";
+import { detectOS, handleDownload } from "@/lib/download-handler";
 import {
   ArrowRight,
   AtSign,
@@ -25,9 +25,12 @@ import {
   Sparkles,
   UserPlus,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Suspense, useEffect, useState } from "react";
 
 export default function HomePage() {
+  const t = useTranslations("landing");
+  const tCommon = useTranslations("common");
   const { trackViewContent } = useMetaPixel();
   const [hasTrackedPricingView, setHasTrackedPricingView] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
@@ -36,10 +39,12 @@ export default function HomePage() {
   useEffect(() => {
     const fetchDownloadUrl = async () => {
       try {
-        const response = await fetch("/api/download-url");
+        const response = await fetch("/api/app-version");
         if (response.ok) {
           const data = await response.json();
-          setDownloadUrl(data.downloadUrl || null);
+          const os = detectOS();
+          const url = data?.downloadUrls?.[os] || null;
+          setDownloadUrl(url);
         }
       } catch (error) {
         console.error("Failed to fetch download URL:", error);
@@ -147,15 +152,12 @@ export default function HomePage() {
   
           <h1 className="md:text-5xl text-3xl font-semibold text-gray-900 tracking-tight max-w-4xl relative">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-black via-gray-700 to-indigo-600">
-              Scrape any lead on Instagram.
-              <br />
-              Cold DM them at scale.
-
-
+              {t("heroTitle")}
             </span>
           </h1>
           <p className="mt-4 text-gray-600 text-xl max-w-2xl">
-Pull leads from any profile, post, hashtag, or location. Send personalized DMs from every account you own, in parallel.          </p>
+            {t("heroDescription")}
+          </p>
         </div>
         <div className="max-w-7xl mx-auto px-3 pb-0 flex items-center gap-3 flex-wrap">
           <Button
@@ -163,18 +165,18 @@ Pull leads from any profile, post, hashtag, or location. Send personalized DMs f
             onClick={handleDownloadClick}
             className="mt-4 inline-flex items-center gap-3 rounded-full bg-indigo-600 px-3 py-4 text-md text-white transition-all duration-200 hover:bg-indigo-700"
           >
-            <span>Get started for free</span>
+            <span>{t("getStartedFree")}</span>
             <ArrowRight className="h-4 w-4" />
           </Button>
           <a
             href="#how-it-works"
             className="mt-4 hidden md:inline-flex items-center gap-3 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-md text-gray-900 transition-all duration-200 hover:bg-gray-100"
           >
-            See how it works
+            {t("seeHowItWorks")}
           </a>
         </div>
         <div className="max-w-7xl mx-auto px-3 pt-3 text-xs text-gray-500">
-          Free plan included · Windows &amp; macOS · No card required
+          {t("freePlanNote")}
         </div>
 
         <section className="max-w-7xl mx-auto px-3 pt-8 user-select-none">
@@ -268,11 +270,10 @@ Pull leads from any profile, post, hashtag, or location. Send personalized DMs f
 
         <div className="py-24 px-6" id="features">
           <h2 className="text-3xl text-center text-gray-900 mb-1">
-            One app to scrape leads and send cold DMs on Instagram
+            {t("featuresIntroTitle")}
           </h2>
           <p className="text-md text-center text-gray-600 max-w-2xl mx-auto px-6">
-            Stop paying for two SaaS tools and copy-pasting CSVs between
-            them. One desktop app does the whole flow.
+            {t("featuresIntroSub")}
           </p>
         </div>
 
@@ -289,7 +290,7 @@ Pull leads from any profile, post, hashtag, or location. Send personalized DMs f
         <Suspense
           fallback={
             <div className="py-24 text-center text-gray-600">
-              Loading pricing...
+              {tCommon("loading")}
             </div>
           }
         >
@@ -298,9 +299,9 @@ Pull leads from any profile, post, hashtag, or location. Send personalized DMs f
 
         <div className="max-w-7xl pt-24 mx-auto px-3 grid grid-cols-1 md:grid-cols-6 md:gap-3">
           <div className="md:col-span-4 pb-6">
-            <p className="text-xl text-gray-600 mb-1">Common questions</p>
+            <p className="text-xl text-gray-600 mb-1">{t("commonQuestions")}</p>
             <p className="md:text-3xl text-2xl mb-3 text-gray-900">
-              Frequently Asked Questions
+              {t("faqHeading")}
             </p>
             <FAQSection />
           </div>

@@ -1,35 +1,34 @@
 "use client";
 
 import { Database, History, Layers, Shuffle } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function FeaturesSection() {
+  const t = useTranslations("features");
+
   const features = [
     {
       Icon: Database,
-      title: "Thousands of qualified leads in one afternoon",
-      description:
-        "Scrape from any competitor, post, hashtag or location — straight from your own account.",
+      title: t("leadsTitle"),
+      description: t("leadsDescription"),
       bg: "bg-indigo-600",
     },
     {
       Icon: Layers,
-      title: "20+ accounts running in parallel",
-      description:
-        "Each account on its own proxy and isolated Chromium profile. Real device, real session.",
+      title: t("parallelTitle"),
+      description: t("parallelDescription"),
       bg: "bg-indigo-800",
     },
     {
       Icon: Shuffle,
-      title: "20 unique message variants per campaign",
-      description:
-        "Rotated at random with {{username}} per recipient — no two DMs look alike.",
+      title: t("variantsTitle"),
+      description: t("variantsDescription"),
       bg: "bg-indigo-950",
     },
     {
       Icon: History,
-      title: "Full DM history, every reply tracked",
-      description:
-        "Open any past campaign: who, what, when — with deep-links to the profile and the DM thread.",
+      title: t("historyTitle"),
+      description: t("historyDescription"),
       bg: "bg-gray-950",
     },
   ];
@@ -37,10 +36,8 @@ export function FeaturesSection() {
   return (
     <section id="features" className="scroll-mt-24">
       <div className="px-3 max-w-7xl mx-auto">
-        <p className="text-gray-600 text-xl mb-1">What MonchoOps does</p>
-        <h2 className="text-3xl text-gray-900 mb-6">
-          More replies, less manual work.
-        </h2>
+        <p className="text-gray-600 text-xl mb-1">{t("eyebrow")}</p>
+        <h2 className="text-3xl text-gray-900 mb-6">{t("heading")}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mx-auto">
           {features.map(({ Icon, title, description, bg }) => (
             <div

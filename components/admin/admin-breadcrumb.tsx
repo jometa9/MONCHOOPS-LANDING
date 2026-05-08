@@ -1,17 +1,19 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export function AdminBreadcrumb() {
+  const t = useTranslations("admin");
   const pathname = usePathname();
 
   const getCurrentPageTitle = () => {
     if (pathname?.includes("/inbox")) {
-      return "Inbox";
+      return t("inboxBreadcrumb");
     }
     if (pathname?.includes("/settings")) {
-      return "Settings";
+      return t("settingsBreadcrumb");
     }
     return null;
   };
@@ -27,10 +29,10 @@ export function AdminBreadcrumb() {
           href="/dashboard/admin/inbox"
           className="text-sm text-gray-400 hover:text-gray-800"
         >
-          Inbox
+          {t("inboxBreadcrumb")}
         </Link>
         <span className="text-sm text-gray-400">/</span>
-        <span className="text-sm text-gray-400">Email</span>
+        <span className="text-sm text-gray-400">{t("emailLabel")}</span>
       </div>
     );
   }
@@ -42,10 +44,10 @@ export function AdminBreadcrumb() {
           href="/dashboard/admin/inbox"
           className="text-sm text-gray-400 hover:text-gray-800"
         >
-          Inbox
+          {t("inboxBreadcrumb")}
         </Link>
         <span className="text-sm text-gray-400">/</span>
-        <span className="text-sm text-gray-400">New</span>
+        <span className="text-sm text-gray-400">{t("newLabel")}</span>
       </div>
     );
   }

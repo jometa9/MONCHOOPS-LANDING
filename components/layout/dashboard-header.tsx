@@ -1,10 +1,12 @@
 "use client";
 
 import { logoutAction } from "@/app/(login)/actions";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { useSidebar } from "@/contexts/sidebar-context";
 import { User } from "@/lib/db/schema";
 import { LogOut, Menu, X } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 
 interface DashboardHeaderProps {
@@ -16,6 +18,7 @@ export function DashboardHeader({
   user,
   showSidebar = true,
 }: DashboardHeaderProps) {
+  const t = useTranslations("sidebar");
   const searchParams = useSearchParams();
   const source = searchParams.get("source");
   const isWeb = source !== "app";
@@ -36,7 +39,7 @@ export function DashboardHeader({
                 <button
                   onClick={toggleSidebar}
                   className="text-gray-400 hover:text-gray-800 transition-colors min-[600px]:hidden"
-                  aria-label="Toggle menu"
+                  aria-label={t("toggleMenu")}
                 >
                   {isSidebarOpen ? (
                     <X className="h-5 w-5" />
@@ -50,6 +53,7 @@ export function DashboardHeader({
               </span>
             </div>
             <div className="flex items-center gap-3">
+              <LanguageSwitcher />
               {isWeb && user && (
                 <span className="hidden md:block text-sm text-gray-400">
                   {user.name || user.email?.split("@")[0]}

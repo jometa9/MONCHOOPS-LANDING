@@ -3,15 +3,19 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 export default function AdminEmailBroadcast() {
+  const t = useTranslations("admin");
+  const tCommon = useTranslations("common");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [recipientEmail, setRecipientEmail] = useState("");
   const [emailType, setEmailType] = useState<"mass" | "individual">("mass");
   const [isSending, setIsSending] = useState(false);
   const [testButtonStatus, setTestButtonStatus] = useState<
+
     "success" | "error" | null
   >(null);
   const [sendButtonStatus, setSendButtonStatus] = useState<
@@ -142,7 +146,7 @@ export default function AdminEmailBroadcast() {
               }
               className="sr-only "
             />
-            Mass Email
+            {t("massEmail")}
           </label>
 
           <label
@@ -160,14 +164,14 @@ export default function AdminEmailBroadcast() {
               }
               className="sr-only bg-white"
             />
-            Individual Email
+            {t("individualEmail")}
           </label>
         </div>
       </div>
 
       {emailType === "individual" && (
         <Input
-          placeholder="Recipient Email Address"
+          placeholder={t("recipientEmailPlaceholder")}
           value={recipientEmail}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setRecipientEmail(e.target.value)
@@ -178,7 +182,7 @@ export default function AdminEmailBroadcast() {
       )}
 
       <Input
-        placeholder="Email Subject"
+        placeholder={t("emailSubjectPlaceholder")}
         value={subject}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setSubject(e.target.value)
@@ -186,7 +190,7 @@ export default function AdminEmailBroadcast() {
         className="shadow-none bg-white"
       />
       <Textarea
-        placeholder="Email Message"
+        placeholder={t("emailMessagePlaceholder")}
         value={message}
         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
           setMessage(e.target.value)
@@ -201,14 +205,14 @@ export default function AdminEmailBroadcast() {
           className="w-full shadow-none"
         >
           {isSending
-            ? "Sending..."
+            ? tCommon("sending")
             : testButtonStatus === "success"
-              ? "Success"
+              ? t("success")
               : testButtonStatus === "error"
-                ? "Error"
+                ? t("error")
                 : emailType === "individual"
-                  ? "Send Test Individual Email"
-                  : "Send Test Email"}
+                  ? t("sendTestIndividualEmail")
+                  : t("sendTestEmail")}
         </Button>
         <Button
           onClick={() => handleSendEmail(false)}
@@ -216,14 +220,14 @@ export default function AdminEmailBroadcast() {
           className="w-full"
         >
           {isSending
-            ? "Sending..."
+            ? tCommon("sending")
             : sendButtonStatus === "success"
-              ? "Success"
+              ? t("success")
               : sendButtonStatus === "error"
-                ? "Error"
+                ? t("error")
                 : emailType === "individual"
-                  ? "Send Individual Email"
-                  : "Send to All Users"}
+                  ? t("sendIndividualEmail")
+                  : t("sendToAllUsers")}
         </Button>
       </div>
     </div>

@@ -9,9 +9,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 export default function AdminSettings() {
+  const t = useTranslations("admin");
   const [isAssigningSubscription, setIsAssigningSubscription] = useState(false);
   const [subscriptionEmail, setSubscriptionEmail] = useState("");
   const subscriptionProduct = "monchoops" as const;
@@ -31,7 +33,7 @@ export default function AdminSettings() {
   );
 
   const availablePlans = [
-    { value: "none", label: "No Plan (Remove Subscription)" },
+    { value: "none", label: t("noPlanRemove") },
     { value: "pro", label: "Pro" },
     { value: "unlimited", label: "Unlimited" },
   ];
@@ -103,12 +105,12 @@ export default function AdminSettings() {
         <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-3 py-3 rounded-lg mb-4">
           <p className="font-medium">{subscriptionWarning.message}</p>
           <p className="text-sm">
-            Current plan: {subscriptionWarning.existingSubscription.planName}
+            {t("currentPlan", { plan: subscriptionWarning.existingSubscription.planName })}
             <br />
-            Status: {subscriptionWarning.existingSubscription.status}
+            {t("status")} {subscriptionWarning.existingSubscription.status}
             <br />
             {subscriptionWarning.existingSubscription.isPaid && (
-              <strong>Warning: This is a paid subscription!</strong>
+              <strong>{t("warningPaid")}</strong>
             )}
           </p>
         </div>
@@ -116,7 +118,7 @@ export default function AdminSettings() {
 
         <Input
           id="sub-email"
-          placeholder="user@example.com"
+          placeholder={t("userPlaceholder")}
           value={subscriptionEmail}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setSubscriptionEmail(e.target.value)
@@ -125,7 +127,7 @@ export default function AdminSettings() {
         />
       <Select value={subscriptionPlan} onValueChange={setSubscriptionPlan}>
         <SelectTrigger>
-          <SelectValue placeholder="Select plan" />
+          <SelectValue placeholder={t("selectPlan")} />
         </SelectTrigger>
         <SelectContent>
           {availablePlans.map((plan) => (
@@ -141,15 +143,15 @@ export default function AdminSettings() {
           onValueChange={setSubscriptionDuration}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select duration" />
+            <SelectValue placeholder={t("selectDuration")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="1">1 month</SelectItem>
-            <SelectItem value="3">3 months</SelectItem>
-            <SelectItem value="6">6 months</SelectItem>
-            <SelectItem value="12">1 year</SelectItem>
-            <SelectItem value="24">2 years</SelectItem>
-            <SelectItem value="1200">100 years</SelectItem>
+            <SelectItem value="1">{t("month1")}</SelectItem>
+            <SelectItem value="3">{t("month3")}</SelectItem>
+            <SelectItem value="6">{t("month6")}</SelectItem>
+            <SelectItem value="12">{t("year1")}</SelectItem>
+            <SelectItem value="24">{t("year2")}</SelectItem>
+            <SelectItem value="1200">{t("year100")}</SelectItem>
           </SelectContent>
         </Select>
       <Button
@@ -164,12 +166,12 @@ export default function AdminSettings() {
         className="w-full"
       >
         {isAssigningSubscription
-          ? "Assigning..."
+          ? t("assigning")
           : buttonStatus === "success"
-            ? "Success"
+            ? t("success")
             : buttonStatus === "error"
-              ? "Error"
-              : `Assign ${subscriptionProduct.toUpperCase()} Subscription`}
+              ? t("error")
+              : t("assignProduct", { product: subscriptionProduct.toUpperCase() })}
       </Button>
     </div>
   );

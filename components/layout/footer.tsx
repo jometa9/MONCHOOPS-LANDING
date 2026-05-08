@@ -1,8 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { MailtoLink } from "@/components/mailto-link";
 
 export function Footer() {
+  const t = useTranslations("footer");
+  const tCommon = useTranslations("common");
+
   return (
     <footer className="w-full p-3 max-w-7xl mx-auto py-16" role="contentinfo">
       <Link href="/" className="flex items-center gap-2 pt-2">
@@ -16,7 +20,7 @@ export function Footer() {
         <span className="text-xl font-bold text-black">MonchoOps</span>
       </Link>
       <p className="text-sm text-gray-400 pt-1">
-        Find leads. Send DMs. Win replies.
+        {t("tagline")}
       </p>
 
       <div className="flex flex-wrap gap-x-2 gap-y-1 text-sm pt-2">
@@ -40,10 +44,10 @@ export function Footer() {
         </Link>
         <MailtoLink label="Mail" className="text-gray-600" />
         <Link href="/legal" aria-label="Legal" className="text-gray-600">
-          Legal
+          {t("legal")}
         </Link>
         <Link href="/documentation" aria-label="Docs" className="text-gray-600">
-          Docs
+          {t("docs")}
         </Link>
         <Link
           href="https://www.linkedin.com/in/joaquinmetayer"
@@ -52,12 +56,11 @@ export function Footer() {
           aria-label="Creator"
           className="text-gray-600"
         >
-          Creator
+          {t("creator")}
         </Link>
       </div>
       <p className="text-sm text-gray-400 pt-2">
-        &copy; {new Date().getFullYear()} IPTRADE COPIER LLC. All rights
-        reserved. Created by{" "}
+        &copy; {new Date().getFullYear()} IPTRADE COPIER LLC. {t("rights")} {t("createdBy")}{" "}
         <Link
           href="https://api2labs.com"
           target="_blank"
@@ -69,17 +72,14 @@ export function Footer() {
         .
       </p>
       <p className="text-sm text-gray-400 pt-2">
-        Support Email:{" "}
+        {t("supportEmail")}{" "}
         <MailtoLink
           label="support@monchoops.com"
-          copiedLabel="Copied to clipboard"
+          copiedLabel={tCommon("copied")}
         />
       </p>
       <p className="text-sm text-gray-400 pt-2 max-w-2xl">
-        MonchoOps is an independent desktop tool. We are not affiliated with,
-        endorsed by, or sponsored by Instagram or Meta Platforms, Inc. You are
-        responsible for using MonchoOps in compliance with Instagram&apos;s
-        Terms of Use and applicable laws in your jurisdiction.
+        {t("disclaimer")}
       </p>
     </footer>
   );

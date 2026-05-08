@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useTranslations } from "next-intl";
 import { useState, useEffect } from "react";
 
 interface EmailSettings {
@@ -14,6 +15,8 @@ interface EmailSettings {
 }
 
 export default function AdminInboxSettings() {
+  const t = useTranslations("admin");
+  const tCommon = useTranslations("common");
   const [settings, setSettings] = useState<EmailSettings>({
     resendApiKey: "",
     emailFrom: "",
@@ -101,7 +104,7 @@ export default function AdminInboxSettings() {
       if (!response.ok) {
         setDailyReportFeedback({
           type: "error",
-          text: data.error || "Could not send the report.",
+          text: data.error || t("reportCouldNotSend"),
         });
         return;
       }
@@ -110,14 +113,12 @@ export default function AdminInboxSettings() {
         const reason = data.reason || "";
         let text = reason;
         if (reason.includes("discordDailyReportWebhookUrl not configured")) {
-          text =
-            "Set the report webhook above and save before running.";
+          text = t("reportWebhookNotConfigured");
         } else if (
           reason.includes("Another instance") ||
           reason.includes("running")
         ) {
-          text =
-            "Another process is running the report; try again in a few seconds.";
+          text = t("reportAlreadyRunning");
         }
         setDailyReportFeedback({ type: "info", text });
         return;
@@ -125,12 +126,12 @@ export default function AdminInboxSettings() {
 
       setDailyReportFeedback({
         type: "success",
-        text: "Report sent to Discord.",
+        text: t("reportSentDiscord"),
       });
     } catch {
       setDailyReportFeedback({
         type: "error",
-        text: "Network error while running the report.",
+        text: t("reportNetworkError"),
       });
     } finally {
       setIsRunningDailyReport(false);
@@ -140,7 +141,7 @@ export default function AdminInboxSettings() {
   return (
     <div className="space-y-3">
       <div className="grid w-full items-center gap-1.5">
-        <Label htmlFor="resend-api-key">Resend API Key</Label>
+        <Label htmlFor="resend-api-key">{t("resendApiKey")}</Label>
         <div className="flex gap-3">
           <Input
             id="resend-api-key"
@@ -161,16 +162,16 @@ export default function AdminInboxSettings() {
             onClick={() => setShowApiKey(!showApiKey)}
             className="shadow-none whitespace-nowrap"
           >
-            {showApiKey ? "Hide" : "Show"}
+            {showApiKey ? tCommon("hide") : tCommon("show")}
           </Button>
         </div>
         <p className="text-xs text-gray-600">
-          Your Resend API key from the Resend dashboard. Required for sending emails.
+          {t("resendApiKeyDesc")}
         </p>
       </div>
 
       <div className="grid w-full items-center gap-1.5">
-        <Label htmlFor="email-from">Default From Address</Label>
+        <Label htmlFor="email-from">{t("defaultFromAddress")}</Label>
         <Input
           id="email-from"
           type="email"
@@ -185,12 +186,12 @@ export default function AdminInboxSettings() {
           className="bg-white shadow-none"
         />
         <p className="text-xs text-gray-600">
-          The default &quot;from&quot; email address for outgoing emails.
+          {t("defaultFromAddressDesc")}
         </p>
       </div>
 
       <div className="grid w-full items-center gap-1.5">
-        <Label htmlFor="webhook-secret">Inbound Webhook Secret</Label>
+        <Label htmlFor="webhook-secret">{t("inboundWebhookSecret")}</Label>
         <div className="flex gap-3">
           <Input
             id="webhook-secret"
@@ -211,16 +212,16 @@ export default function AdminInboxSettings() {
             onClick={() => setShowWebhookSecret(!showWebhookSecret)}
             className="shadow-none whitespace-nowrap"
           >
-            {showWebhookSecret ? "Hide" : "Show"}
+            {showWebhookSecret ? tCommon("hide") : tCommon("show")}
           </Button>
         </div>
         <p className="text-xs text-gray-600">
-          The Svix signing secret from Resend dashboard (Webhooks section). Required for receiving inbound emails.
+          {t("inboundWebhookSecretDesc")}
         </p>
       </div>
 
       <div className="grid w-full items-center gap-1.5">
-        <Label htmlFor="discord-webhook">Discord Webhook URL</Label>
+        <Label htmlFor="discord-webhook">{t("discordWebhookUrl")}</Label>
         <Input
           id="discord-webhook"
           type="url"
@@ -235,13 +236,13 @@ export default function AdminInboxSettings() {
           className="bg-white shadow-none font-mono text-sm"
         />
         <p className="text-xs text-gray-600">
-          Optional: Discord webhook URL to receive notifications when new emails arrive. Get this from Discord Server Settings → Integrations → Webhooks.
+          {t("discordWebhookUrlDesc")}
         </p>
       </div>
 
       <div className="grid w-full items-center gap-1.5">
         <Label htmlFor="discord-daily-report-webhook">
-          Discord daily report
+          {t("discordDailyReport")}
         </Label>
         <div className="flex gap-2 w-full items-center">
           <Input
@@ -264,13 +265,11 @@ export default function AdminInboxSettings() {
             disabled={isRunningDailyReport}
             className="shrink-0 shadow-none whitespace-nowrap"
           >
-            {isRunningDailyReport ? "…" : "Run"}
+            {isRunningDailyReport ? "…" : t("runReport")}
           </Button>
         </div>
         <p className="text-xs text-gray-600">
-          Separate from the inbox webhook above. The automatic report uses the
-          same ~24h in-process scheduler as subscription checks (runs while the
-          Node server is up).
+          {t("discordDailyReportDesc")}
         </p>
       </div>
 
@@ -280,12 +279,12 @@ export default function AdminInboxSettings() {
         className="w-full"
       >
         {isSaving
-          ? "Saving..."
+          ? tCommon("saving")
           : saveStatus === "success"
-            ? "Saved!"
+            ? t("saved")
             : saveStatus === "error"
-              ? "Error"
-              : "Save Settings"}
+              ? t("error")
+              : t("saveSettings")}
       </Button>
     </div>
   );

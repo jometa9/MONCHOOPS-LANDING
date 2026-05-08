@@ -6,12 +6,14 @@ import { Label } from "@/components/ui/label";
 import { ActionState } from "@/lib/auth/middleware";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useActionState, useEffect, useState } from "react";
 import { resetPasswordAction } from "../actions";
 
 function ResetPasswordForm() {
+  const t = useTranslations("auth");
   const searchParams = useSearchParams();
   const token = searchParams.get("token") || "";
   const { data: session, status } = useSession();
@@ -60,18 +62,21 @@ function ResetPasswordForm() {
       <div className="space-y-3 pb-20">
         <div>
           <h2 className="text-2xl font-semibold text-gray-900">
-            You're Already Signed In
+            {t("alreadySignedInTitle")}
           </h2>
           <p className="text-xl text-gray-400">
-            You can update your password here or use account settings.
+            {t("alreadySignedInSubtitle")}
           </p>
         </div>
 
         {token ? (
           <div className="space-y-3">
-            <p className="text-sm text-gray-600 text-center">
-              You're signed in as <strong>{session.user?.email}</strong>
-            </p>
+            <p
+              className="text-sm text-gray-600 text-center"
+              dangerouslySetInnerHTML={{
+                __html: t.raw("signedInAs").replace("{email}", session.user?.email || ""),
+              }}
+            />
 
             <form
               action={async (formData) => {
@@ -84,14 +89,14 @@ function ResetPasswordForm() {
               <div className="space-y-1">
                 <div>
                   <Label htmlFor="password" className="text-sm text-gray-700">
-                    New Password
+                    {t("newPassword")}
                   </Label>
                 </div>
                 <Input
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder={t("passwordPlaceholder")}
                   required
                   minLength={8}
                   maxLength={100}
@@ -102,7 +107,7 @@ function ResetPasswordForm() {
                   }
                 />
                 <p className="text-xs text-gray-600">
-                  Password must be at least 8 characters long.
+                  {t("passwordHelp")}
                 </p>
               </div>
 
@@ -112,14 +117,14 @@ function ResetPasswordForm() {
                     htmlFor="confirmPassword"
                     className="text-sm text-gray-700"
                   >
-                    Confirm Password
+                    {t("confirmPassword")}
                   </Label>
                 </div>
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder={t("passwordPlaceholder")}
                   required
                   minLength={8}
                   maxLength={100}
@@ -141,10 +146,10 @@ function ResetPasswordForm() {
                 <div className="text-sm text-gray-600">
                   <p>{state.success}</p>
                   <p className="text-sm opacity-75 mt-1">
-                    Your password has been updated successfully.
+                    {t("passwordUpdatedNote")}
                   </p>
                   <p className="text-sm opacity-75">
-                    Redirecting to dashboard in 2 seconds...
+                    {t("redirectingDashboard")}
                   </p>
                 </div>
               )}
@@ -157,14 +162,14 @@ function ResetPasswordForm() {
                 }
               >
                 {state.success ? (
-                  "Password Updated Successfully"
+                  t("passwordUpdatedSuccessfully")
                 ) : isPending || (hasSubmitted && !state.error) ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Updating Password...
+                    {t("updatingPassword")}
                   </>
                 ) : (
-                  "Update Password"
+                  t("updatePassword")
                 )}
               </Button>
             </form>
@@ -183,10 +188,10 @@ function ResetPasswordForm() {
                 {isRedirecting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin inline" />
-                    Redirecting to Dashboard...
+                    {t("redirectingToDashboard")}
                   </>
                 ) : (
-                  "Go to Dashboard"
+                  t("goToDashboard")
                 )}
               </Link>
             </div>
@@ -194,7 +199,7 @@ function ResetPasswordForm() {
         ) : (
           <div className="space-y-3">
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-blue-800 text-sm">
-              <p>You don't have a valid reset token. Please return to your dashboard.</p>
+              <p>{t("noValidToken")}</p>
             </div>
 
             <div className="space-y-3">
@@ -213,10 +218,10 @@ function ResetPasswordForm() {
                   {isRedirecting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Redirecting to Dashboard...
+                      {t("redirectingToDashboard")}
                     </>
                   ) : (
-                    "Go to Dashboard"
+                    t("goToDashboard")
                   )}
                 </Button>
               </Link>
@@ -232,20 +237,20 @@ function ResetPasswordForm() {
       <div className="space-y-3 pb-20">
         <div>
           <h2 className="text-2xl font-semibold text-gray-900">
-            Invalid Reset Link
+            {t("invalidResetTitle")}
           </h2>
           <p className="text-xl text-gray-400">
-            The password reset link is invalid or has expired.
+            {t("invalidResetSubtitle")}
           </p>
         </div>
 
         <div className="space-y-3">
           <p className="text-sm text-gray-600">
-            Please request a new password reset link.
+            {t("invalidResetBody")}
           </p>
           <Link href="/forgot-password" className="w-full block">
             <Button className="w-full justify-center rounded-lg bg-gray-900 py-3 text-md text-white hover:bg-gray-600">
-              Request New Reset Link
+              {t("requestNewResetLink")}
             </Button>
           </Link>
         </div>
@@ -257,7 +262,7 @@ function ResetPasswordForm() {
     return (
       <div className="flex flex-col items-center gap-3 text-center py-12">
         <Loader2 className="h-8 w-8 animate-spin text-gray-600" />
-        <p className="text-sm text-gray-600">Loading...</p>
+        <p className="text-sm text-gray-600">{t("loading")}</p>
       </div>
     );
   }
@@ -266,18 +271,21 @@ function ResetPasswordForm() {
     <div className="space-y-3 pb-20" id="reset-form">
       <div>
         <h2 className="text-2xl font-semibold text-gray-900">
-          {session ? "Update Your Password" : "Reset Your Password"}
+          {session ? t("updateYourPassword") : t("resetPasswordTitle")}
         </h2>
         <p className="text-xl text-gray-400">
           {session
-            ? "Set a new password for your account"
-            : "Create a new password for your MonchoOps account"}
+            ? t("updateYourPasswordSub")
+            : t("resetPasswordSubtitle")}
         </p>
 
         {session && (
-          <div className="mt-2 text-sm text-gray-600">
-            You're already signed in as <strong>{session.user?.email}</strong>
-          </div>
+          <div
+            className="mt-2 text-sm text-gray-600"
+            dangerouslySetInnerHTML={{
+              __html: t.raw("signedInAs").replace("{email}", session.user?.email || ""),
+            }}
+          />
         )}
       </div>
 
@@ -292,14 +300,14 @@ function ResetPasswordForm() {
         <div className="space-y-1">
           <div>
             <Label htmlFor="password" className="text-sm text-gray-700">
-              New Password
+              {t("newPassword")}
             </Label>
           </div>
           <Input
             id="password"
             name="password"
             type="password"
-            placeholder="••••••••"
+            placeholder={t("passwordPlaceholder")}
             required
             minLength={8}
             maxLength={100}
@@ -308,21 +316,21 @@ function ResetPasswordForm() {
             }
           />
           <p className="text-xs text-gray-600">
-            Password must be at least 8 characters long.
+            {t("passwordHelp")}
           </p>
         </div>
 
         <div className="space-y-1">
           <div>
             <Label htmlFor="confirmPassword" className="text-sm text-gray-700">
-              Confirm Password
+              {t("confirmPassword")}
             </Label>
           </div>
           <Input
             id="confirmPassword"
             name="confirmPassword"
             type="password"
-            placeholder="••••••••"
+            placeholder={t("passwordPlaceholder")}
             required
             minLength={8}
             maxLength={100}
@@ -343,13 +351,13 @@ function ResetPasswordForm() {
             <p>{state.success}</p>
             {session && (
               <p className="text-sm opacity-75 mt-1">
-                Your password has been updated successfully.
+                {t("passwordUpdatedNote")}
               </p>
             )}
             <p className="text-sm opacity-75">
               {state.autoLogin || session
-                ? "Redirecting to dashboard in 2 seconds..."
-                : "Redirecting to sign in page in 2 seconds..."}
+                ? t("redirectingDashboard")
+                : t("redirectingSignin")}
             </p>
           </div>
         )}
@@ -362,16 +370,16 @@ function ResetPasswordForm() {
           }
         >
           {state.success ? (
-            "Password Updated Successfully"
+            t("passwordUpdatedSuccessfully")
           ) : isPending || (hasSubmitted && !state.error) ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {session ? "Updating Password..." : "Resetting Password..."}
+              {session ? t("updatingPassword") : t("resettingPassword")}
             </>
           ) : session ? (
-            "Update Password"
+            t("updatePassword")
           ) : (
-            "Reset Password"
+            t("resetPasswordBtn")
           )}
         </Button>
       </form>
@@ -382,7 +390,7 @@ function ResetPasswordForm() {
             href={state.autoLogin || session ? "/dashboard" : "/sign-in"}
             className="font-semibold text-gray-900 hover:underline"
           >
-            {state.autoLogin || session ? "Go to Dashboard" : "Go to Sign In"}
+            {state.autoLogin || session ? t("goToDashboard") : t("goToSignIn")}
           </Link>
         ) : (
           <Link
@@ -393,7 +401,7 @@ function ResetPasswordForm() {
                 : ""
             }`}
           >
-            {session ? "Back to Dashboard" : "Back to Sign In"}
+            {session ? t("backToDashboard") : t("backToSignIn")}
           </Link>
         )}
       </div>
@@ -402,10 +410,11 @@ function ResetPasswordForm() {
 }
 
 function LoadingState() {
+  const t = useTranslations("auth");
   return (
     <div className="flex flex-col items-center gap-3 text-center py-12">
       <Loader2 className="h-8 w-8 animate-spin text-gray-600" />
-      <p className="text-sm text-gray-600">Loading...</p>
+      <p className="text-sm text-gray-600">{t("loading")}</p>
     </div>
   );
 }

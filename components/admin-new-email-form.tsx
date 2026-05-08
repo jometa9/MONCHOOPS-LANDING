@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Mail, Paperclip, Send, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -15,6 +16,8 @@ interface PendingAttachment {
 }
 
 export function AdminNewEmailForm() {
+  const t = useTranslations("admin");
+  const tCommon = useTranslations("common");
   const searchParams = useSearchParams();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [newEmailFromLocal, setNewEmailFromLocal] = useState("");
@@ -56,7 +59,7 @@ export function AdminNewEmailForm() {
       .then((data) => {
         if (data?.email) {
           setOriginalEmail({
-            subject: data.email.subject || "(No Subject)",
+            subject: data.email.subject || t("noSubject"),
             mailFrom: data.email.mailFrom || "",
             receivedAt: data.email.receivedAt || "",
             textBody: data.email.textBody ?? null,
@@ -230,7 +233,7 @@ export function AdminNewEmailForm() {
                 onCheckedChange={setSendToAllUsers}
               />
               <span className="text-sm text-gray-700 whitespace-nowrap">
-                Send to all users
+                {t("sendToAllUsers")}
               </span>
             </div>
           )}
@@ -239,14 +242,14 @@ export function AdminNewEmailForm() {
               <Link href={`/dashboard/admin/inbox/${replyToEmailId}`}>
                 <Button variant="outline" size="sm" className="shadow-none">
                   <Mail className="h-4 w-4 mr-2" />
-                  Back to Email
+                  {t("backToEmail")}
                 </Button>
               </Link>
             )}
             <Link href="/dashboard/admin/inbox">
               <Button variant="outline" className="shadow-none">
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to inbox
+                {t("backToInbox")}
               </Button>
             </Link>
           </div>
@@ -257,7 +260,7 @@ export function AdminNewEmailForm() {
             <div className="flex items-center rounded-md border border-input bg-white overflow-hidden focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1">
               <input
                 type="text"
-                placeholder="From (e.g. support)"
+                placeholder={t("fromPlaceholder")}
                 value={newEmailFromLocal}
                 onChange={(e) => {
                   const v = e.target.value;
@@ -274,7 +277,7 @@ export function AdminNewEmailForm() {
           {!replyToEmailId && !sendToAllUsers && (
             <Input
               type="text"
-              placeholder="recipient@example.com, other@example.com (multiple = one email per recipient)"
+              placeholder={t("recipientsPlaceholder")}
               value={newEmailTo}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setNewEmailTo(e.target.value)
@@ -285,7 +288,7 @@ export function AdminNewEmailForm() {
           {replyToEmailId && (
             <Input
               type="text"
-              placeholder="recipient@example.com"
+              placeholder={t("recipientPlaceholder")}
               value={newEmailTo}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setNewEmailTo(e.target.value)
@@ -296,7 +299,7 @@ export function AdminNewEmailForm() {
         </div>
 
         <Input type="text"
-          placeholder="Email subject"
+          placeholder={t("emailSubjectPlaceholder")}
           value={newEmailSubject}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setNewEmailSubject(e.target.value)
@@ -308,7 +311,7 @@ export function AdminNewEmailForm() {
           <div className="rounded-lg bg-white border overflow-hidden">
             <div className="p-3 bg-gray-50 border-b flex items-center justify-between">
               <div className="text-sm text-gray-600">
-                <span className="font-medium text-gray-800">Original message</span>
+                <span className="font-medium text-gray-800">{t("originalMessage")}</span>
                 {" · "}
                 <span>{originalEmail.mailFrom}</span>
                 {" · "}
@@ -318,7 +321,7 @@ export function AdminNewEmailForm() {
               </div>
               <Link href={`/dashboard/admin/inbox/${replyToEmailId}`}>
                 <Button variant="ghost" size="sm" className="shadow-none text-gray-600 hover:text-gray-800">
-                  View full email
+                  {t("viewFullEmail")}
                 </Button>
               </Link>
             </div>
@@ -337,14 +340,14 @@ export function AdminNewEmailForm() {
                   }}
                 />
               ) : (
-                <p className="text-gray-400 italic">No content</p>
+                <p className="text-gray-400 italic">{t("noContent")}</p>
               )}
             </div>
           </div>
         )}
 
         <Textarea
-          placeholder="Type your message here..."
+          placeholder={t("messagePlaceholder")}
           value={newEmailContent}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
             setNewEmailContent(e.target.value)
@@ -378,10 +381,10 @@ export function AdminNewEmailForm() {
               onClick={() => fileInputRef.current?.click()}
             >
               <Paperclip className="h-4 w-4 mr-2" />
-              Attach files
+              {t("attachFiles")}
             </Button>
             <span className="text-xs text-gray-500">
-              or drag and drop files here
+              {t("dragDropHere")}
             </span>
           </div>
           {attachments.length > 0 && (
@@ -413,9 +416,9 @@ export function AdminNewEmailForm() {
         {sendEmailStatus === "success" && (
           <div className="rounded-lg bg-white border border-gray-200 p-3">
             <p className="text-sm text-gray-600">
-              {lastSentCount === 1 && lastFailedCount === 0 && "Email sent successfully"}
-              {lastSentCount > 1 && lastFailedCount === 0 && `${lastSentCount} emails sent successfully (one per recipient)`}
-              {lastFailedCount > 0 && `${lastSentCount} sent, ${lastFailedCount} failed`}
+              {lastSentCount === 1 && lastFailedCount === 0 && t("emailSentOk")}
+              {lastSentCount > 1 && lastFailedCount === 0 && t("emailsSentOk", { count: lastSentCount })}
+              {lastFailedCount > 0 && t("emailsSentMixed", { sent: lastSentCount, failed: lastFailedCount })}
             </p>
           </div>
         )}
@@ -423,7 +426,7 @@ export function AdminNewEmailForm() {
         {sendEmailStatus === "error" && (
           <div className="rounded-lg bg-white border border-gray-200 p-3">
             <p className="text-sm text-gray-600">
-              Failed to send email. Please check all fields are filled correctly.
+              {t("emailSendError")}
             </p>
           </div>
         )}
@@ -431,7 +434,7 @@ export function AdminNewEmailForm() {
         <div className="flex gap-3 justify-end ">
           <Link href="/dashboard/admin/inbox">
             <Button variant="outline" disabled={isSendingEmail}>
-              Cancel
+              {tCommon("cancel")}
             </Button>
           </Link>
           <Button
@@ -445,11 +448,11 @@ export function AdminNewEmailForm() {
             className="flex items-center gap-2"
           >
             {isSendingEmail ? (
-              "Sending..."
+              t("sending")
             ) : (
               <>
                 <Send className="h-4 w-4" />
-                Send Email
+                {t("sendEmail")}
               </>
             )}
           </Button>

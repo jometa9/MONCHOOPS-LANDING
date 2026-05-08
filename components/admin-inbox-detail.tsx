@@ -14,6 +14,7 @@ import {
   MailOpen,
   Trash2,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -62,6 +63,8 @@ function sanitizeHtml(html: string): string {
 }
 
 export function AdminInboxDetail({ emailId }: Props) {
+  const t = useTranslations("admin");
+  const tCommon = useTranslations("common");
   const [email, setEmail] = useState<EmailDetail | null>(null);
   const [attachments, setAttachments] = useState<EmailAttachment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -127,11 +130,11 @@ export function AdminInboxDetail({ emailId }: Props) {
         window.location.href = "/dashboard/admin/inbox";
       } else {
         const data = await response.json();
-        alert(`Failed to delete email: ${data.error || 'Unknown error'}`);
+        alert(t("failedDelete", { error: data.error || "Unknown error" }));
       }
     } catch (error) {
       console.error("Error deleting email:", error);
-      alert("Failed to delete email");
+      alert(t("failedDeleteShort"));
     } finally {
       setIsDeleting(false);
       setIsConfirmingDelete(false);
@@ -200,7 +203,7 @@ export function AdminInboxDetail({ emailId }: Props) {
   if (isLoading) {
     return (
       <div className="rounded-lg flex items-center justify-center min-h-[25vh] text-center">
-        <p className="text-gray-400">Loading email...</p>
+        <p className="text-gray-400">{t("loadingEmail")}</p>
       </div>
     );
   }
@@ -225,10 +228,10 @@ export function AdminInboxDetail({ emailId }: Props) {
                 <Button
                   variant="outline"
                   className="shadow-none"
-                  title="Back to inbox"
+                  title={t("backToInbox")}
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to inbox
+                  {t("backToInbox")}
                 </Button>
               </Link>
               {isConfirmingDelete ? (
@@ -240,7 +243,7 @@ export function AdminInboxDetail({ emailId }: Props) {
                     size="sm"
                     className="shadow-none"
                   >
-                    Cancel
+                    {tCommon("cancel")}
                   </Button>
                   <Button
                     onClick={handleDeleteEmail}
@@ -248,7 +251,7 @@ export function AdminInboxDetail({ emailId }: Props) {
                     size="sm"
                     className="shadow-none"
                   >
-                    {isDeleting ? "Deleting..." : "Confirm"}
+                    {isDeleting ? t("deletingShort") : t("confirm")}
                   </Button>
                 </>
               ) : (
@@ -260,7 +263,7 @@ export function AdminInboxDetail({ emailId }: Props) {
                       variant="outline"
                       size="sm"
                       className="shadow-none"
-                      title="Reply"
+                      title={t("reply")}
                     >
                       <CornerDownLeft className="h-4 w-4" />
                     </Button>
@@ -323,15 +326,15 @@ export function AdminInboxDetail({ emailId }: Props) {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
             <div>
-              <span className="text-gray-600">Subject:</span>{" "}
+              <span className="text-gray-600">{t("subjectLabel")}</span>{" "}
               <span className="font-medium">{email.subject || "(No Subject)"}</span>
             </div>
             <div>
-              <span className="text-gray-600">From:</span>{" "}
+              <span className="text-gray-600">{t("fromLabel")}</span>{" "}
               <span className="font-medium">{email.mailFrom}</span>
             </div>
             <div>
-              <span className="text-gray-600">To:</span>{" "}
+              <span className="text-gray-600">{t("toLabel")}</span>{" "}
               <span className="font-medium">
                 {Array.isArray(email.rcptTo)
                   ? email.rcptTo.join(", ")
@@ -339,7 +342,7 @@ export function AdminInboxDetail({ emailId }: Props) {
               </span>
             </div>
             <div>
-              <span className="text-gray-600">Received:</span>{" "}
+              <span className="text-gray-600">{t("receivedLabel")}</span>{" "}
               <span>{formatDate(email.receivedAt)}</span>
             </div>
           </div>
@@ -436,14 +439,14 @@ export function AdminInboxDetail({ emailId }: Props) {
               </pre>
             ) : (
               <div className="text-center py-8">
-                <p className="text-gray-400 italic">No content available</p>
+                <p className="text-gray-400 italic">{t("noContentAvailable")}</p>
               </div>
             )}
           </div>
 
           {previewedImages.size > 0 && (
             <div className="space-y-3 border-t pt-4">
-              <h3 className="text-sm font-medium text-gray-600">Image Previews</h3>
+              <h3 className="text-sm font-medium text-gray-600">{t("imagePreviews")}</h3>
               <div className="space-y-3">
                 {attachments
                   .filter((att) => previewedImages.has(att.id))

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { MonchoOpsWindowDemo } from "@/components/landing/monchoops-window-demo";
 import {
   CONNECT_SCRIPT,
@@ -20,39 +21,6 @@ interface StepCard {
   glow?: "top-left" | "top-right";
 }
 
-const STEPS: StepCard[] = [
-  {
-    index: 1,
-    eyebrow: "Step 1",
-    title: "Connect your account",
-    description:
-      "Link as many Instagram accounts as your plan allows. Sign in with credentials or open a real browser window — MonchoOps stores the session locally and reuses it from then on. Each account runs in its own isolated Chromium profile, with an optional dedicated proxy.",
-    script: CONNECT_SCRIPT,
-    theme: "light",
-    glow: "top-left",
-  },
-  {
-    index: 2,
-    eyebrow: "Step 2",
-    title: "Scrape the leads",
-    description:
-      "Pull qualified usernames from any profile, post, hashtag or location. Scraping runs locally on your machine, deduped against everything you've already collected, and saved into a categorized lead database.",
-    script: SCRAPE_SCRIPT,
-    reverse: true,
-    theme: "dark",
-  },
-  {
-    index: 3,
-    eyebrow: "Step 3",
-    title: "Send the DMs",
-    description:
-      "Pick a lead group, write up to 20 message variants, optionally have MonchoOps follow + like + watch a story before each DM, and start the job. Sending runs across all your accounts in parallel — the same prospect never gets DM'd twice.",
-    script: COLD_DM_SCRIPT,
-    theme: "light",
-    glow: "top-right",
-  },
-];
-
 // Mount the embedded demo only when the card is near the viewport. Three full
 // MonchoOps demo trees on the page are heavy — gating each one behind a
 // scroll observer keeps the initial load fast and avoids running three
@@ -66,6 +34,7 @@ function LazyDemoFrame({
   startDelay?: number;
   initialPath?: string;
 }) {
+  const t = useTranslations("steps");
   const ref = useRef<HTMLDivElement | null>(null);
   const [shouldMount, setShouldMount] = useState(false);
 
@@ -101,7 +70,7 @@ function LazyDemoFrame({
         />
       ) : (
         <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
-          Loading MonchoOps…
+          {t("loading")}
         </div>
       )}
     </div>
@@ -175,12 +144,44 @@ function StepBlock({ step }: { step: StepCard }) {
 }
 
 export function StepsSection() {
+  const t = useTranslations("steps");
+
+  const STEPS: StepCard[] = [
+    {
+      index: 1,
+      eyebrow: `${t("step")} 1`,
+      title: t("step1Title"),
+      description: t("step1Description"),
+      script: CONNECT_SCRIPT,
+      theme: "light",
+      glow: "top-left",
+    },
+    {
+      index: 2,
+      eyebrow: `${t("step")} 2`,
+      title: t("step2Title"),
+      description: t("step2Description"),
+      script: SCRAPE_SCRIPT,
+      reverse: true,
+      theme: "dark",
+    },
+    {
+      index: 3,
+      eyebrow: `${t("step")} 3`,
+      title: t("step3Title"),
+      description: t("step3Description"),
+      script: COLD_DM_SCRIPT,
+      theme: "light",
+      glow: "top-right",
+    },
+  ];
+
   return (
     <section id="how-it-works" className="overflow-x-hidden scroll-mt-24">
       <div className="px-3 max-w-7xl mx-auto">
-        <p className="text-gray-600 text-xl mb-1">How it works</p>
+        <p className="text-gray-600 text-xl mb-1">{t("eyebrow")}</p>
         <h2 className="text-4xl md:text-6xl text-gray-900 mb-6">
-          Setup in three steps
+          {t("heading")}
         </h2>
 
         {STEPS.map((step) => (

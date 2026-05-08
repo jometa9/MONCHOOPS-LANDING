@@ -5,7 +5,7 @@ import { WindowsIcon } from "@/components/icons/windows-icon";
 import { MacOSIcon } from "@/components/icons/macos-icon";
 import { useUserData } from "@/contexts/user-data-context";
 import {
-  fetchAllDownloads,
+  fetchAppVersion,
   handleDownload as doDownload,
   type DownloadOS,
 } from "@/lib/download-handler";
@@ -22,6 +22,7 @@ import {
   PartyPopper,
   Youtube,
 } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -29,19 +30,20 @@ import { useMailtoCopy } from "@/hooks/use-mailto-copy";
 
 const SUPPORT_EMAIL = "support@monchoops.com";
 
-interface AllDownloads {
-  monchoops?: {
-    windows?: { version?: string; downloadUrl?: string | null };
-    mac?: { version?: string; downloadUrl?: string | null };
-  };
+interface AppVersionInfo {
+  version: string;
+  downloadUrls: { mac: string; windows: string };
 }
 
 export function DashboardProductsOverview() {
+  const t = useTranslations("dashboard");
+  const tCommon = useTranslations("common");
+  const locale = useLocale();
   const router = useRouter();
   const { data, user, isLoading } = useUserData();
   const { copied, handleClick } = useMailtoCopy(SUPPORT_EMAIL);
   const [isPortalLoading, setIsPortalLoading] = useState<"monchoops" | null>(null);
-  const [downloads, setDownloads] = useState<AllDownloads | null>(null);
+  const [downloads, setDownloads] = useState<AppVersionInfo | null>(null);
   const windowsDemoUrl = "https://www.youtube.com/watch?v=lpPXse5LJSg";
 
   const isAdmin = user?.role === "admin" || data?.isAdmin || false;
@@ -49,7 +51,7 @@ export function DashboardProductsOverview() {
 
   useEffect(() => {
     const loadDownloads = async () => {
-      const d = await fetchAllDownloads();
+      const d = await fetchAppVersion();
       setDownloads(d);
     };
     loadDownloads();
@@ -58,31 +60,31 @@ export function DashboardProductsOverview() {
   const getStatusLabel = (status: string) => {
     switch (status) {
       case "active":
-        return "Active";
+        return t("statusActive");
       case "trialing":
-        return "Trial";
+        return t("statusTrial");
       case "canceled":
       case "canceling":
-        return "Canceled";
+        return t("statusCanceled");
       case "past_due":
-        return "Past due";
+        return t("statusPastDue");
       case "admin_assigned":
-        return "Admin assigned";
+        return t("statusAdminAssigned");
       case "expired":
-        return "Expired";
+        return t("statusExpired");
       default:
-        return "No subscription";
+        return t("statusNone");
     }
   };
 
   const getTierLabel = (tier: string) => {
     switch (tier) {
       case "unlimited":
-        return "Unlimited";
+        return t("tierUnlimited");
       case "pro":
-        return "Pro";
+        return t("tierPro");
       default:
-        return "Free";
+        return t("tierFree");
     }
   };
 
@@ -109,8 +111,8 @@ export function DashboardProductsOverview() {
     (productKey: ProductKey, os: DownloadOS): boolean => {
       if (!downloads || productKey !== "monchoops") return false;
       return os === "mac"
-        ? !!downloads.monchoops?.mac?.downloadUrl
-        : !!downloads.monchoops?.windows?.downloadUrl;
+        ? !!downloads.downloadUrls?.mac
+        : !!downloads.downloadUrls?.windows;
     },
     [downloads]
   );
@@ -122,6 +124,14 @@ export function DashboardProductsOverview() {
     },
     [hasDownloadUrl]
   );
+
+  const intlLocale = locale === "es" ? "es-ES" : "en-US";
+  const formatDate = (date: Date) =>
+    date.toLocaleDateString(intlLocale, {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
 
   if (isLoading) {
     return (
@@ -140,8 +150,8 @@ export function DashboardProductsOverview() {
   const planLimits = subscription?.limits;
   const planUsage = subscription?.usage;
   const formatLimit = (used: number, limit: number | null | undefined) => {
-    if (isAdmin || limit == null) return `${used.toLocaleString()} / Unlimited`;
-    return `${used.toLocaleString()} / ${limit.toLocaleString()}`;
+    if (isAdmin || limit == null) return `${used.toLocaleString(intlLocale)}${t("unlimitedSlash")}`;
+    return `${used.toLocaleString(intlLocale)} / ${limit.toLocaleString(intlLocale)}`;
   };
   const hasActiveSubscription = subscription?.active || isAdmin;
   const hasSubscription = subscription !== null;
@@ -151,12 +161,12 @@ export function DashboardProductsOverview() {
   const isCanceling = subscription?.status === "canceling";
 
   const displayLabel = isAdmin
-    ? "Unlimited"
+    ? t("unlimited")
     : hasActiveSubscription
       ? getTierLabel(subscription?.tier || "free")
       : hasSubscription || hasExpirationDate
         ? getStatusLabel(subscription?.status || "none")
-        : "Free";
+        : t("tierFree");
 
   const cardWrapper = "rounded-lg bg-gray-100 p-3";
   const cardInner = "rounded-lg bg-white p-3 border border-gray-200";
@@ -169,16 +179,16 @@ export function DashboardProductsOverview() {
             <div className="flex flex-col mb-1">
               <div className="flex gap-2 items-center pb-1">
                 <PartyPopper className="h-5 w-5 text-yellow-700" />
-                <p className="text-lg text-yellow-700">We’re in Open Beta</p>
+                <p className="text-lg text-yellow-700">{t("openBeta")}</p>
               </div>
               <p className="text-xs mb-1 text-yellow-700">
-                We’re actively improving the infrastructure and adding new features.
+                {t("openBeta1")}
               </p>
               <p className="text-xs mb-1 text-yellow-700">
-                During this phase, you have full access at no cost.
+                {t("openBeta2")}
               </p>
               <p className="text-xs text-yellow-700">
-                Payments will be enabled once the beta period ends.
+                {t("openBeta3")}
               </p>
             </div>
           </div>
@@ -192,18 +202,18 @@ export function DashboardProductsOverview() {
               <p className="text-lg text-gray-700">MonchoOps</p>
             </div>
             <p className="text-xs text-muted-foreground mb-1">
-              Runs locally on your machine — Windows & macOS, isolated Chromium per account
+              {t("platforms")}
             </p>
             <p className="text-xl font-semibold">{displayLabel}</p>
             {!isAdmin && (
               <>
                 <p className="text-xs text-muted-foreground">
-                  Status: {getStatusLabel(subscription?.status || "none")}
+                  {t("status")} {getStatusLabel(subscription?.status || "none")}
                 </p>
                 {subscription?.billingPeriod && (
                   <p className="text-xs text-muted-foreground">
-                    Billing:{" "}
-                    {subscription.billingPeriod === "annual" ? "Annual" : "Monthly"}
+                    {t("billing")}{" "}
+                    {subscription.billingPeriod === "annual" ? t("billingAnnual") : t("billingMonthly")}
                   </p>
                 )}
                 {subscription?.expiresAt && (
@@ -211,41 +221,37 @@ export function DashboardProductsOverview() {
                     {(subscription.status === "canceling" ||
                       (subscription.status === "canceled" &&
                         new Date(subscription.expiresAt) > new Date()))
-                      ? "Valid until: "
+                      ? t("validUntil")
                       : hasActiveSubscription
-                        ? "Renews: "
-                        : "Expires: "}
-                    {new Date(subscription.expiresAt).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
+                        ? t("renews")
+                        : t("expires")}
+                    {formatDate(new Date(subscription.expiresAt))}
                   </p>
                 )}
               </>
             )}
             {isAdmin && (
-              <p className="text-xs text-muted-foreground">Admin access</p>
+              <p className="text-xs text-muted-foreground">{t("adminAccess")}</p>
             )}
           </div>
 
           {planUsage && (
             <div className="rounded-lg bg-gray-50 border border-gray-200 p-3 mb-3">
               <p className="text-xs text-muted-foreground mb-2">
-                Plan usage{" "}
+                {t("planUsage")}{" "}
                 {planLimits?.dmMonthlyLimit != null && !isAdmin
-                  ? "(resets monthly)"
+                  ? t("resetsMonthly")
                   : ""}
               </p>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <p className="text-xs text-gray-500">Instagram accounts</p>
+                  <p className="text-xs text-gray-500">{t("instagramAccounts")}</p>
                   <p className="text-sm font-medium text-gray-800">
                     {formatLimit(planUsage.accounts, planLimits?.accountLimit)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">DMs this month</p>
+                  <p className="text-xs text-gray-500">{t("dmsThisMonth")}</p>
                   <p className="text-sm font-medium text-gray-800">
                     {formatLimit(
                       planUsage.dmsThisMonth,
@@ -263,7 +269,7 @@ export function DashboardProductsOverview() {
               disabled
               className="mt-1 rounded-full border border-gray-300 bg-gray-100 py-1 px-3 text-sm text-gray-500 cursor-default text-center"
             >
-              Payments disabled
+              {t("paymentsDisabled")}
             </button>
           ) : isAdmin ? (
             <button
@@ -271,27 +277,20 @@ export function DashboardProductsOverview() {
               disabled
               className="mt-1 rounded-full border border-gray-300 bg-gray-100 py-1 px-3 text-sm text-gray-500 cursor-default text-center"
             >
-              You are the boss
+              {t("youAreTheBoss")}
             </button>
           ) : isAdminAssigned ? (
             <div className="bg-gray-100 rounded-lg p-3 border border-gray-200 mt-1">
               <p className="text-sm text-gray-600">
-                Plan assigned by administrator.
+                {t("planAssignedByAdmin")}
                 {subscription?.expiresAt && (
                   <span>
-                    {" "}
-                    Valid until{" "}
-                    {new Date(subscription.expiresAt).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                    .
+                    {t("planAssignedValid", { date: formatDate(new Date(subscription.expiresAt)) })}
                   </span>
                 )}
               </p>
               <p className="text-xs text-gray-400 mt-1">
-                Contact an administrator if you need to modify your subscription.
+                {t("contactAdmin")}
               </p>
             </div>
           ) : hasActiveSubscription ? (
@@ -303,14 +302,14 @@ export function DashboardProductsOverview() {
                     onClick={() => handlePortalRedirect("monchoops")}
                     className="cursor-pointer rounded-full text-white bg-black py-1 px-3 text-sm hover:bg-gray-600 text-center"
                   >
-                    {isPortalLoading === "monchoops" ? "Opening..." : "Reactivate"}
+                    {isPortalLoading === "monchoops" ? t("openingDots") : t("reactivate")}
                   </button>
                   <button
                     type="button"
                     className="cursor-pointer rounded-full border bg-white py-1 px-3 text-sm hover:bg-gray-100 text-center"
                     onClick={handleSubscribe}
                   >
-                    Change plan
+                    {t("changePlan")}
                   </button>
                 </>
               ) : (
@@ -320,14 +319,14 @@ export function DashboardProductsOverview() {
                     className="cursor-pointer rounded-full text-white bg-black py-1 px-3 text-sm hover:bg-gray-600 text-center"
                     onClick={handleSubscribe}
                   >
-                    Change plan
+                    {t("changePlan")}
                   </button>
                   <button
                     type="button"
                     onClick={() => handlePortalRedirect("monchoops")}
                     className="cursor-pointer rounded-full border bg-white py-1 px-3 text-sm hover:bg-gray-100 text-center"
                   >
-                    {isPortalLoading === "monchoops" ? "Opening..." : "Manage"}
+                    {isPortalLoading === "monchoops" ? t("openingDots") : t("manage")}
                   </button>
                 </>
               )}
@@ -338,7 +337,7 @@ export function DashboardProductsOverview() {
               className="cursor-pointer rounded-full text-white bg-black py-1 px-3 text-sm hover:bg-gray-600 text-center inline-block mt-1"
               onClick={handleSubscribe}
             >
-              Resubscribe
+              {t("resubscribe")}
             </button>
           ) : (
             <button
@@ -346,7 +345,7 @@ export function DashboardProductsOverview() {
               className="cursor-pointer rounded-full text-white bg-black py-1 px-3 text-sm hover:bg-gray-600 text-center inline-block mt-1"
               onClick={handleSubscribe}
             >
-              Subscribe
+              {t("subscribe")}
             </button>
           )}
         </div>
@@ -356,10 +355,10 @@ export function DashboardProductsOverview() {
           <div className="flex flex-col mb-2">
             <div className="flex gap-2 items-center pb-1">
               <Download className="h-5 w-5 text-gray-700" />
-              <p className="text-lg text-gray-700">Download</p>
+              <p className="text-lg text-gray-700">{t("downloadTitle")}</p>
             </div>
             <p className="text-xs text-muted-foreground mb-2">
-              Available for Windows and macOS
+              {t("availableForOs")}
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -375,15 +374,15 @@ export function DashboardProductsOverview() {
                   <div className="flex gap-2 items-center">
                     <WindowsIcon className="h-5 w-5 text-gray-800" />
                     <p className="text-lg text-gray-700">
-                      Windows 64-bit
+                      {t("windows64")}
                     </p>
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">
-                      Version {downloads?.monchoops?.windows?.version || "—"}
+                      {t("version", { version: downloads?.version || "—" })}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Multi-account Instagram automation
+                      {t("multiAccountAutomation")}
                     </p>
                   </div>
                 </div>
@@ -403,16 +402,16 @@ export function DashboardProductsOverview() {
                   <div className="flex gap-2 items-center">
                     <MacOSIcon className="h-5 w-5 text-gray-800" />
                     <p className="text-lg text-gray-700">
-                      macOS ARM64
+                      {t("macArm64")}
                     </p>
 
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">
-                      Version {downloads?.monchoops?.mac?.version || "—"}
+                      {t("version", { version: downloads?.version || "—" })}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Multi-account Instagram automation
+                      {t("multiAccountAutomation")}
                     </p>
                   </div>
                 </div>
@@ -431,9 +430,9 @@ export function DashboardProductsOverview() {
             >
               <BookOpen className="h-4 w-4 shrink-0" />
               <span>
-                First time? View setup guide
+                {t("firstTimeSetup")}
                 {` `}
-                <span className="underline">here</span>
+                <span className="underline">{t("here")}</span>
               </span>
             </Link>
             <a
@@ -443,7 +442,7 @@ export function DashboardProductsOverview() {
               className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-black transition-colors w-fit"
             >
               <Youtube className="h-4 w-4 shrink-0 text-muted-foreground group-hover:text-black transition-colors sm:order-2" />
-              <span className="sm:order-1">Watch demo</span>
+              <span className="sm:order-1">{t("watchDemo")}</span>
             </a>
           </div>
         </div>
@@ -465,10 +464,10 @@ export function DashboardProductsOverview() {
               <div className="flex gap-1 flex-col">
                 <div className="flex items-center justify-center gap-2">
                   <Book className="w-5 h-5  text-gray-700" />
-                  <p className="text-lg">Documentation</p>
+                  <p className="text-lg">{t("documentation")}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Help and setup guides</p>
+                  <p className="text-xs text-muted-foreground">{t("documentationDesc")}</p>
                 </div>
               </div>
             </div>
@@ -483,11 +482,11 @@ export function DashboardProductsOverview() {
               <div className="flex gap-1 flex-col">
                 <div className="flex items-center justify-center gap-2">
                   <Mail className="w-5 h-5 text-gray-700" />
-                  <p className="text-lg">Email Support</p>
+                  <p className="text-lg">{t("emailSupport")}</p>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">
-                    {copied ? "Copied to clipboard" : "Get in touch"}
+                    {copied ? tCommon("copied") : t("getInTouch")}
                   </p>
                 </div>
               </div>

@@ -9,6 +9,7 @@ import {
   Mail,
   Trash2,
 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -24,6 +25,8 @@ export default async function AdminSettingsPage() {
     redirect("/dashboard");
   }
 
+  const t = await getTranslations("admin");
+
   return (
     <div className="px-3 w-full pb-20 pt-1">
       <div className="w-full space-y-3">
@@ -35,7 +38,7 @@ export default async function AdminSettingsPage() {
                   <div className="p-3 bg-white rounded-lg border border-gray-200">
                     <Gift className="h-5 w-5 text-gray-700" />
                   </div>
-                  <p className="text-lg">Assign Product Subscription</p>
+                  <p className="text-lg">{t("assignSubscription")}</p>
                 </div>
                 <AdminSettings />
               </div>
@@ -44,7 +47,7 @@ export default async function AdminSettingsPage() {
                   <div className="p-3 bg-white rounded-lg border border-gray-200">
                     <Trash2 className="h-5 w-5 text-gray-700" />
                   </div>
-                  <p className="text-lg">Delete User</p>
+                  <p className="text-lg">{t("deleteUser")}</p>
                 </div>
                 <AdminDeleteUser />
               </div>
@@ -57,7 +60,7 @@ export default async function AdminSettingsPage() {
                 <div className="p-3 bg-white rounded-lg border border-gray-200">
                   <Download className="h-5 w-5 text-gray-700" />
                 </div>
-                <p className="text-lg">App Versions & Downloads</p>
+                <p className="text-lg">{t("appVersionsDownloads")}</p>
               </div>
               <AdminAppVersion />
             </div>
@@ -69,7 +72,7 @@ export default async function AdminSettingsPage() {
                 <div className="p-3 bg-white rounded-lg border border-gray-200">
                   <Mail className="h-5 w-5 text-gray-700" />
                 </div>
-                <p className="text-lg">Email & Inbox Configuration</p>
+                <p className="text-lg">{t("emailInboxConfig")}</p>
               </div>
               <AdminInboxSettings />
             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { detectOS } from "@/lib/download-handler";
+import { detectOS, fetchAppVersion } from "@/lib/download-handler";
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
@@ -12,12 +12,22 @@ function DownloadLink({
   children,
   ...props
 }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string; children?: React.ReactNode }) {
-  const [resolvedHref, setResolvedHref] = useState(href);
+  const [resolvedHref, setResolvedHref] = useState<string>(href);
   useEffect(() => {
+    let cancelled = false;
     const url = new URL(href, window.location.origin);
-    if (!url.searchParams.has("os")) {
-      setResolvedHref(`/api/download?os=${detectOS()}`);
-    }
+    const explicitOs = url.searchParams.get("os");
+    const os = explicitOs === "mac" || explicitOs === "windows"
+      ? explicitOs
+      : detectOS();
+    fetchAppVersion().then((data) => {
+      if (cancelled) return;
+      const target = data?.downloadUrls?.[os];
+      if (target) setResolvedHref(target);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [href]);
   return (
     <a

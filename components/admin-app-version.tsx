@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 interface AppSettingsState {
@@ -14,6 +15,7 @@ interface AppSettingsState {
 }
 
 export default function AdminAppVersion() {
+  const t = useTranslations("admin");
   const [settings, setSettings] = useState<AppSettingsState>({
     monchoops: {
       version: "",
@@ -101,7 +103,7 @@ export default function AdminAppVersion() {
     <div className="space-y-3">
         <div className="grid grid-cols-1 gap-3">
           <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="multi-version" className="text-xs">MonchoOps Version</Label>
+            <Label htmlFor="multi-version" className="text-xs">{t("monchoopsVersion")}</Label>
             <Input
               id="multi-version"
               placeholder="1.0.0"
@@ -111,7 +113,7 @@ export default function AdminAppVersion() {
             />
           </div>
           <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="monchoops-win-url" className="text-xs">MonchoOps Windows Download URL</Label>
+            <Label htmlFor="monchoops-win-url" className="text-xs">{t("monchoopsWinUrl")}</Label>
             <Input
               id="monchoops-win-url"
               placeholder="https://..."
@@ -121,7 +123,7 @@ export default function AdminAppVersion() {
             />
           </div>
           <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="monchoops-mac-url" className="text-xs">MonchoOps macOS Download URL</Label>
+            <Label htmlFor="monchoops-mac-url" className="text-xs">{t("monchoopsMacUrl")}</Label>
             <Input
               id="monchoops-mac-url"
               placeholder="https://..."
@@ -138,12 +140,12 @@ export default function AdminAppVersion() {
         className="w-full"
       >
         {isLoading
-          ? "Updating..."
+          ? t("updating")
           : buttonStatus === "success"
-            ? "Success"
+            ? t("success")
             : buttonStatus === "error"
-              ? "Error"
-              : "Update App Settings"}
+              ? t("error")
+              : t("updateAppSettings")}
       </Button>
     </div>
   );

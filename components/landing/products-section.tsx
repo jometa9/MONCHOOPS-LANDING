@@ -5,33 +5,29 @@ import { WindowsIcon } from "@/components/icons/windows-icon";
 import { MonchoOpsWindowDemo } from "@/components/landing/monchoops-window-demo";
 import { ArrowDownToLine, Check } from "lucide-react";
 import Image from "next/image";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { ProductKey } from "@/lib/db/schema";
 import {
   DownloadOS,
-  fetchAllDownloads,
+  fetchAppVersion,
   handleDownload,
 } from "@/lib/download-handler";
 
-interface DownloadInfo {
+interface AppVersionInfo {
   version: string;
-  downloadUrl: string;
-}
-
-interface AllDownloads {
-  monchoops: {
-    windows: DownloadInfo;
-    mac: DownloadInfo;
-  };
+  downloadUrls: { mac: string; windows: string };
 }
 
 export function ProductsSection() {
-  const [downloads, setDownloads] = useState<AllDownloads | null>(null);
+  const t = useTranslations("products");
+  const locale = useLocale();
+  const [downloads, setDownloads] = useState<AppVersionInfo | null>(null);
   const [menuBarClock, setMenuBarClock] = useState("");
 
   useEffect(() => {
     const loadDownloads = async () => {
-      const data = await fetchAllDownloads();
+      const data = await fetchAppVersion();
       setDownloads(data);
     };
     loadDownloads();
@@ -40,8 +36,9 @@ export function ProductsSection() {
   useEffect(() => {
     const update = () => {
       const now = new Date();
-      const day = now.toLocaleDateString("en-US", { weekday: "short" });
-      const time = now.toLocaleTimeString("en-US", {
+      const intlLocale = locale === "es" ? "es-ES" : "en-US";
+      const day = now.toLocaleDateString(intlLocale, { weekday: "short" });
+      const time = now.toLocaleTimeString(intlLocale, {
         hour: "numeric",
         minute: "2-digit",
         hour12: true,
@@ -51,14 +48,14 @@ export function ProductsSection() {
     update();
     const id = setInterval(update, 30_000);
     return () => clearInterval(id);
-  }, []);
+  }, [locale]);
 
   const hasDownloadUrl = (productKey: ProductKey, os: DownloadOS): boolean => {
     if (!downloads) return true;
     if (productKey !== "monchoops") return false;
     return os === "mac"
-      ? !!downloads.monchoops?.mac?.downloadUrl
-      : !!downloads.monchoops?.windows?.downloadUrl;
+      ? !!downloads.downloadUrls?.mac
+      : !!downloads.downloadUrls?.windows;
   };
 
   const handleDownloadClick = async (
@@ -70,20 +67,20 @@ export function ProductsSection() {
   };
 
   const bullets = [
-    "Connect multiple Instagram accounts and run them in parallel",
-    "Scrape usernames from any profile, post, hashtag or location to build your lead list",
-    "Send mass DMs with up to 20 message variants so every message feels unique",
-    "Warm up each lead with a follow, story view and likes before the DM",
-    "Never message the same prospect twice — duplicates are skipped automatically",
-    "Track every campaign live with progress, sent count and one-click cancel",
+    t("bullet1"),
+    t("bullet2"),
+    t("bullet3"),
+    t("bullet4"),
+    t("bullet5"),
+    t("bullet6"),
   ];
 
   return (
     <section className="pt-24" id="products">
       <div className="px-3 max-w-7xl mx-auto">
-        <p className="text-gray-600 text-xl mb-1">The desktop app</p>
+        <p className="text-gray-600 text-xl mb-1">{t("eyebrow")}</p>
         <h2 className="text-3xl text-gray-900 mb-6">
-          One installer.<br className="sm:hidden" /> Scrape, send, track.<br className="sm:hidden" /> Done.
+          {t("headingP1")}<br className="sm:hidden" /> {t("headingP2")}<br className="sm:hidden" /> {t("headingP3")}
         </h2>
 
         <div className="bg-gray-100 rounded-lg p-5 md:p-6">
@@ -101,15 +98,12 @@ export function ProductsSection() {
 
                   <div>
                     <h3 className="text-2xl font-semibold">MonchoOps</h3>
-                    <p className="text text-gray-500">Windows and macOS</p>
+                    <p className="text text-gray-500">{t("platforms")}</p>
                   </div>
                 </div>
 
                 <p className="text-sm text-gray-600 mb-4 max-w-2xl">
-                  The desktop app to scrape Instagram leads, run multiple
-                  accounts at once and send mass DMs that actually land.
-                  Build your lead list, warm up prospects and track every
-                  campaign — all from one place.
+                  {t("description")}
                 </p>
                 <ul className="space-y-1.5 text-xs text-gray-600 mb-4">
                   {bullets.map((text) => (
@@ -135,7 +129,7 @@ export function ProductsSection() {
                       <div className="flex items-center gap-3">
                         <WindowsIcon className="h-4 w-4 text-gray-700" />
                         <p className="font-semibold text-gray-700">
-                          Download for Windows<span className="hidden sm:inline"> 64-bit</span>
+                          {t("downloadWindows")}<span className="hidden sm:inline">{t("downloadWindowsArch")}</span>
                         </p>
                       </div>
                       <ArrowDownToLine className="h-4 w-4 text-gray-700" />
@@ -154,7 +148,7 @@ export function ProductsSection() {
                       <div className="flex items-center gap-3">
                         <MacOSIcon className="h-4 w-4 text-gray-700" />
                         <p className="font-semibold text-gray-700">
-                          Download for macOS<span className="hidden sm:inline"> Apple Silicon</span>
+                          {t("downloadMac")}<span className="hidden sm:inline">{t("downloadMacArch")}</span>
                         </p>
                       </div>
                       <ArrowDownToLine className="h-4 w-4 text-gray-700" />

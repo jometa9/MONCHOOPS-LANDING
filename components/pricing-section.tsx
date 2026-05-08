@@ -12,6 +12,7 @@ import { formatPrice } from "@/lib/utils";
 import {
   Check,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -61,6 +62,7 @@ export function PricingSection({
   isCompact = false,
   variant = "dashboard",
 }: PricingSectionProps) {
+  const t = useTranslations("pricing");
   const isLanding = variant === "landing";
   const { trackInitiateCheckout } = useMetaPixel();
   const searchParams = useSearchParams();
@@ -279,7 +281,7 @@ export function PricingSection({
       const isSameBillingPeriod = currentBillingPeriod === selectedBillingPeriod;
 
       if (isSameTier && isSameBillingPeriod) {
-        alert("You are already on this plan.");
+        alert(t("alreadyOnPlan"));
         return;
       }
       
@@ -317,11 +319,11 @@ export function PricingSection({
       
       const isUpgrade = newTierValue > currentTierValue || newMonthlyValue > currentMonthlyValue;
       
-      const tierDisplayNames: Record<string, string> = { free: "Free", pro: "Pro", unlimited: "Unlimited" };
-      
+      const tierDisplayNames: Record<string, string> = { free: t("free.name"), pro: t("pro.name"), unlimited: t("unlimited.name") };
+
       setPendingChange({
         product: "monchoops",
-        currentTier: tierDisplayNames[currentTier] || "Free",
+        currentTier: tierDisplayNames[currentTier] || t("free.name"),
         newTier: tierDisplayNames[newTier] || newTier,
         currentPeriod: currentBillingPeriod || "monthly",
         newPeriod: selectedBillingPeriod,
@@ -374,9 +376,9 @@ export function PricingSection({
 
         if (result.error) {
           if (result.error === "same-plan") {
-            alert("You are already on this plan.");
+            alert(t("alreadyOnPlan"));
           } else {
-            alert(`Error changing plan: ${result.error}`);
+            alert(t("errorChangingPlan", { error: result.error }));
           }
           setIsCheckoutLoading(false);
           return;
@@ -443,13 +445,13 @@ export function PricingSection({
       }
       
       if (result.error) {
-        alert(`Error changing plan: ${result.error}`);
+        alert(t("errorChangingPlan", { error: result.error }));
         setIsUpdatingSubscription(false);
         setShowConfirmInCard(false);
         setPendingChange(null);
       }
     } catch (error) {
-      alert("An error occurred while changing your plan.");
+      alert(t("errorChangingPlanGeneric"));
       setIsUpdatingSubscription(false);
       setShowConfirmInCard(false);
       setPendingChange(null);
@@ -542,21 +544,15 @@ export function PricingSection({
 
   const getCanceledMessage = (options: { tier?: "pro" | "unlimited" }): string | null => {
     if (!isCanceledButStillValid()) return null;
-    
+
     const originalTier = currentSubscription?.originalTier || currentSubscription?.tier || "free";
     if (originalTier !== options.tier) return null;
-    
+
     const expiresAt = currentSubscription?.expiresAt;
     if (!expiresAt) return null;
-    
+
     const expirationDate = new Date(expiresAt);
-    const formattedDate = expirationDate.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-    
-    return `Canceled - Valid until ${formattedDate}`;
+    return expirationDate.toISOString();
   };
 
   const shouldShowChangeButton = (options?: {
@@ -582,7 +578,7 @@ export function PricingSection({
 
     if (isLoadingEntitlements && user) {
       return {
-        text: planType === "free" ? "Current plan" : "Subscribe",
+        text: planType === "free" ? t("currentPlan") : t("subscribe"),
         onClick: () => {},
         disabled: true,
         className: disabledStyle,
@@ -592,7 +588,7 @@ export function PricingSection({
     if (!user) {
       if (planType === "free") {
         return {
-          text: "Download",
+          text: t("download"),
           onClick: handleDownloadClick,
           disabled: false,
           className: actionStyle,
@@ -600,7 +596,7 @@ export function PricingSection({
       }
       const displayName = planType === "pro" ? "Pro" : "Unlimited";
       return {
-        text: `Get ${displayName}`,
+        text: planType === "pro" ? t("getPro") : t("getUnlimited"),
         onClick: () => {
           const period = isAnnual ? "annual" : "monthly";
           const base = isLanding ? "/dashboard/pricing" : "/pricing";
@@ -614,14 +610,14 @@ export function PricingSection({
     if (planType === "free") {
       if (isCardCurrent({ tier: "free" })) {
         return {
-          text: "Current plan",
+          text: t("currentPlan"),
           onClick: () => {},
           disabled: true,
           className: disabledStyle,
         };
       }
       return {
-        text: "Free",
+        text: t("free.tag"),
         onClick: () => {},
         disabled: true,
         className: fadedStyle,
@@ -631,7 +627,7 @@ export function PricingSection({
     if (planType === "pro" || planType === "unlimited") {
       if (!currentPrices) {
         return {
-          text: "Subscribe",
+          text: t("subscribe"),
           onClick: () => {},
           disabled: true,
           className: disabledStyle,
@@ -646,11 +642,11 @@ export function PricingSection({
       const displayName = planType === "pro" ? "Pro" : "Unlimited";
 
       const isCurrentPlan = isPlanMatching({ tier: planType, billingPeriod: isAnnual ? "annual" : "monthly" });
-      
+
       if (isCurrentPlan && hasActiveSubscription) {
         if (isAdminAssigned || isUserAdmin) {
           return {
-            text: isAdminAssigned ? "Assigned by admin" : "Admin access",
+            text: isAdminAssigned ? t("assignedByAdmin") : t("adminAccess"),
             onClick: () => {},
             disabled: true,
             className: disabledStyle,
@@ -658,23 +654,23 @@ export function PricingSection({
         }
         if (isCanceling) {
           return {
-            text: isPortalLoading ? "Opening..." : "Reactivate",
+            text: isPortalLoading ? t("processing") : t("reactivate"),
             onClick: handleManageSubscription,
             disabled: isPortalLoading,
             className: actionStyle,
           };
         }
         return {
-          text: isPortalLoading ? "Opening..." : "Manage",
+          text: isPortalLoading ? t("processing") : t("manage"),
           onClick: handleManageSubscription,
           disabled: isPortalLoading,
           className: actionStyle,
         };
       }
-      
+
       if (shouldShowResubscribe({ tier: planType, billingPeriod: isAnnual ? "annual" : "monthly" })) {
         return {
-          text: "Resubscribe",
+          text: t("resubscribe"),
           onClick: () => {
             if (!isPriceIdMissing) {
               handleCheckout(displayName, priceId);
@@ -710,23 +706,23 @@ export function PricingSection({
         currentTierValue === planTierValue && 
         currentBillingPeriod === selectedBillingPeriod;
 
-      let buttonText = "Subscribe";
+      let buttonText = t("subscribe");
       if (hasSubscriptionToCompare) {
         if (isSamePlan && isCanceledButStillValid()) {
-          buttonText = "Resubscribe";
+          buttonText = t("resubscribe");
         }
         else if (isBillingPeriodChange) {
-          buttonText = currentBillingPeriod === "monthly" ? "Switch to Annual" : "Switch to Monthly";
+          buttonText = currentBillingPeriod === "monthly" ? t("switchToAnnual") : t("switchToMonthly");
         }
         else if (isTierDowngrade) {
-          buttonText = "Downgrade";
+          buttonText = t("downgrade");
         }
         else if (isTierUpgrade || isValueUpgrade) {
-          buttonText = "Upgrade";
+          buttonText = t("upgrade");
         }
       }
       return {
-        text: isLoading ? "Processing..." : buttonText,
+        text: isLoading ? t("processing") : buttonText,
         onClick: () => {
           if (!isPriceIdMissing) {
             handleCheckout(displayName, priceId);
@@ -738,7 +734,7 @@ export function PricingSection({
     }
 
     return {
-      text: "Subscribe",
+      text: t("subscribe"),
       onClick: () => {},
       disabled: true,
       className: disabledStyle,
@@ -794,12 +790,16 @@ export function PricingSection({
   );
 
   const renderCanceledMessage = (tier: "pro" | "unlimited", isDark: boolean) => {
-    const message = getCanceledMessage({ tier });
-    if (!message || !user) return null;
-    const datePart = message.replace("Canceled - Valid until ", "");
+    const iso = getCanceledMessage({ tier });
+    if (!iso || !user) return null;
+    const datePart = new Date(iso).toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
     return (
       <div className={`text-sm ${isDark ? "text-gray-300" : "text-gray-600"}`}>
-        Canceled - Valid until {datePart}
+        {t("canceledValidUntil", { date: datePart })}
       </div>
     );
   };
@@ -811,14 +811,14 @@ export function PricingSection({
     >
       <div className={`max-w-7xl mx-auto ${isLanding ? "px-4" : ""}`}>
         {!isCompact && (
-          <h2 className="text-6xl text-gray-900 mb-6 text-center">Pricing</h2>
+          <h2 className="text-6xl text-gray-900 mb-6 text-center">{t("title")}</h2>
         )}
 
         {!isLanding && (
           <>
-            <p className="text-xl mb-1 mt-3">Billing period</p>
+            <p className="text-xl mb-1 mt-3">{t("billingPeriod")}</p>
             <p className="text-sm text-gray-600 mb-3">
-              Choose your billing cycle
+              {t("billingDescription")}
             </p>
           </>
         )}
@@ -829,7 +829,7 @@ export function PricingSection({
             isCompact={isCompact}
             isAnnual={isAnnual}
             onPeriodChange={handlePeriodChange}
-            annualSavingsLabel="Save 20% annually"
+            annualSavingsLabel={t("saveAnnually")}
           />
         </div>
 
@@ -840,47 +840,47 @@ export function PricingSection({
             {isCardCurrent({ tier: "free" }) && user && (
               <div className="absolute top-3 right-3">
                 <span className="text-xs px-2 py-1 rounded-full border border-gray-200 bg-gray-600 text-white">
-                  Current
+                  {t("current")}
                 </span>
               </div>
             )}
 
-            <p className="text-xs font-medium  text-gray-400 mb-1">Free</p>
-            <h3 className="text-2xl text-gray-900 mb-3">Starter</h3>
+            <p className="text-xs font-medium  text-gray-400 mb-1">{t("free.tag")}</p>
+            <h3 className="text-2xl text-gray-900 mb-3">{t("free.name")}</h3>
 
             <div className="mb-4">
               <div className={`${!isAnnual ? "" : "hidden"}`}>
                 <span className="text-4xl text-gray-900">$0</span>
-                <span className="text-xl text-gray-500">/mo</span>
+                <span className="text-xl text-gray-500">{t("perMonth")}</span>
               </div>
               <div className={`${isAnnual ? "" : "hidden"}`}>
                 <span className="text-4xl text-gray-900">$0</span>
-                <span className="text-xl text-gray-500">/mo</span>
+                <span className="text-xl text-gray-500">{t("perMonth")}</span>
               </div>
             </div>
 
             <div className="flex flex-wrap gap-2 mb-6">
-              <span className={pillLight}>1 account</span>
-              <span className={pillLight}>100 DMs / month</span>
+              <span className={pillLight}>{t("free.pillAccounts")}</span>
+              <span className={pillLight}>{t("free.pillDms")}</span>
             </div>
 
             <div className="grow mb-6">
               <ul className="space-y-3">
                 <li className="flex items-start">
                   <Check className={checkLight} strokeWidth={2.5} />
-                  <p className={featureTextLight}>Windows &amp; macOS desktop app</p>
+                  <p className={featureTextLight}>{t("free.f1")}</p>
                 </li>
                 <li className="flex items-start">
                   <Check className={checkLight} strokeWidth={2.5} />
-                  <p className={featureTextLight}>Local-only data, encrypted at rest</p>
+                  <p className={featureTextLight}>{t("free.f2")}</p>
                 </li>
                 <li className="flex items-start">
                   <Check className={checkLight} strokeWidth={2.5} />
-                  <p className={featureTextLight}>Basic scraping (500 leads / scrape)</p>
+                  <p className={featureTextLight}>{t("free.f3")}</p>
                 </li>
                 <li className="flex items-start">
                   <Check className={checkLight} strokeWidth={2.5} />
-                  <p className={featureTextLight}>Limited warmup</p>
+                  <p className={featureTextLight}>{t("free.f4")}</p>
                 </li>
               </ul>
             </div>
@@ -897,66 +897,66 @@ export function PricingSection({
             {isCardCurrent({ tier: "pro" }) && user ? (
               <div className="absolute top-4 right-6">
                 <span className="text-xs px-2 py-1 rounded-full border border-gray-400 bg-gray-600 text-white">
-                  Current
+                  {t("current")}
                 </span>
               </div>
             ) : (
               <div className="absolute top-4 right-6">
                 <span className="text-xs font-medium px-2 py-1 rounded-full bg-green-800 text-white border-green-800">
-                  Most popular
+                  {t("mostPopular")}
                 </span>
               </div>
             )}
 
-            <p className="text-xs font-medium text-gray-200 mb-1">For operators</p>
-            <h3 className="text-2xl text-white mb-3">Pro</h3>
+            <p className="text-xs font-medium text-gray-200 mb-1">{t("pro.tag")}</p>
+            <h3 className="text-2xl text-white mb-3">{t("pro.name")}</h3>
 
             <div className="mb-4">
               <div className={`${!isAnnual ? "" : "hidden"}`}>
                 <span className="text-4xl text-white">
                   ${formatPrice(proMonthlyPrice)}
                 </span>
-                <span className="text-xl text-gray-200">/mo</span>
+                <span className="text-xl text-gray-200">{t("perMonth")}</span>
               </div>
               <div className={`${isAnnual ? "" : "hidden"}`}>
                 <span className="text-4xl text-white">
                   ${formatPrice(proAnnualPrice)}
                 </span>
-                <span className="text-xl text-gray-200">/year</span>
-                <span className="text-xl text-white pl-2">${Math.round(proMonthlyPrice * 12 - proAnnualPrice)} saved</span>
+                <span className="text-xl text-gray-200">{t("perYear")}</span>
+                <span className="text-xl text-white pl-2">${Math.round(proMonthlyPrice * 12 - proAnnualPrice)} {t("saved")}</span>
               </div>
             </div>
 
             <div className="flex flex-wrap gap-2 mb-6">
-              <span className={pillDark}>5 accounts</span>
-              <span className={pillDark}>5,000 DMs / month</span>
+              <span className={pillDark}>{t("pro.pillAccounts")}</span>
+              <span className={pillDark}>{t("pro.pillDms")}</span>
             </div>
 
             <div className="grow mb-6">
               <ul className="space-y-3 ">
                 <li className="flex items-start">
                   <Check className={checkDark} strokeWidth={2.5} />
-                  <p className={featureTextDark}>Windows &amp; macOS desktop app</p>
+                  <p className={featureTextDark}>{t("pro.f1")}</p>
                 </li>
                 <li className="flex items-start">
                   <Check className={checkDark} strokeWidth={2.5} />
-                  <p className={featureTextDark}>Local-only data, encrypted at rest</p>
+                  <p className={featureTextDark}>{t("pro.f2")}</p>
                 </li>
                 <li className="flex items-start">
                   <Check className={checkDark} strokeWidth={2.5} />
-                  <p className={featureTextDark}>Proxy per account (HTTP / SOCKS5)</p>
+                  <p className={featureTextDark}>{t("pro.f3")}</p>
                 </li>
                 <li className="flex items-start">
                   <Check className={checkDark} strokeWidth={2.5} />
-                  <p className={featureTextDark}>Full warmup &amp; scraping (4 modes)</p>
+                  <p className={featureTextDark}>{t("pro.f4")}</p>
                 </li>
                 <li className="flex items-start">
                   <Check className={checkDark} strokeWidth={2.5} />
-                  <p className={featureTextDark}>20 message variants per group</p>
+                  <p className={featureTextDark}>{t("pro.f5")}</p>
                 </li>
                 <li className="flex items-start">
                   <Check className={checkDark} strokeWidth={2.5} />
-                  <p className={featureTextDark}>Categories &amp; CSV export</p>
+                  <p className={featureTextDark}>{t("pro.f6")}</p>
                 </li>
               </ul>
             </div>
@@ -969,52 +969,52 @@ export function PricingSection({
             {isCardCurrent({ tier: "unlimited" }) && user && (
               <div className="absolute top-3 right-3">
                 <span className="text-xs px-2 py-1 rounded-full font-medium border border-gray-600 bg-white text-gray-900">
-                  Current
+                  {t("current")}
                 </span>
               </div>
             )}
 
-            <p className="text-xs font-medium  text-gray-400 mb-1">For agencies</p>
-            <h3 className="text-2xl text-white mb-3">Unlimited</h3>
+            <p className="text-xs font-medium  text-gray-400 mb-1">{t("unlimited.tag")}</p>
+            <h3 className="text-2xl text-white mb-3">{t("unlimited.name")}</h3>
 
             <div className="mb-4">
               <div className={`${!isAnnual ? "" : "hidden"}`}>
                 <span className="text-4xl text-white">
                   ${formatPrice(unlimitedMonthlyPrice)}
                 </span>
-                <span className="text-xl text-gray-400">/mo</span>
+                <span className="text-xl text-gray-400">{t("perMonth")}</span>
               </div>
               <div className={`${isAnnual ? "" : "hidden"}`}>
                 <span className="text-4xl text-white">
                   ${formatPrice(unlimitedAnnualPrice)}
                 </span>
-                <span className="text-xl text-gray-400">/year</span>
-                <span className="text-xl text-white pl-2">${Math.round(unlimitedMonthlyPrice * 12 - unlimitedAnnualPrice)} saved</span>
+                <span className="text-xl text-gray-400">{t("perYear")}</span>
+                <span className="text-xl text-white pl-2">${Math.round(unlimitedMonthlyPrice * 12 - unlimitedAnnualPrice)} {t("saved")}</span>
               </div>
             </div>
 
             <div className="flex flex-wrap gap-2 mb-6">
-              <span className={pillDark}>Unlimited accounts</span>
-              <span className={pillDark}>Unlimited DMs</span>
+              <span className={pillDark}>{t("unlimited.pillAccounts")}</span>
+              <span className={pillDark}>{t("unlimited.pillDms")}</span>
             </div>
 
             <div className="grow mb-6">
               <ul className="space-y-3">
                 <li className="flex items-start">
                   <Check className={checkDark} strokeWidth={2.5} />
-                  <p className={featureTextDark}>Everything in Pro</p>
+                  <p className={featureTextDark}>{t("unlimited.f1")}</p>
                 </li>
                 <li className="flex items-start">
                   <Check className={checkDark} strokeWidth={2.5} />
-                  <p className={featureTextDark}>Unlimited Instagram accounts</p>
+                  <p className={featureTextDark}>{t("unlimited.f2")}</p>
                 </li>
                 <li className="flex items-start">
                   <Check className={checkDark} strokeWidth={2.5} />
-                  <p className={featureTextDark}>Unlimited DMs &amp; scrapes / month</p>
+                  <p className={featureTextDark}>{t("unlimited.f3")}</p>
                 </li>
                 <li className="flex items-start">
                   <Check className={checkDark} strokeWidth={2.5} />
-                  <p className={featureTextDark}>Priority support</p>
+                  <p className={featureTextDark}>{t("unlimited.f4")}</p>
                 </li>
               </ul>
             </div>

@@ -2,6 +2,7 @@
 
 import { Fragment, useState } from "react";
 import { Check, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type CellValue = "yes" | "no" | "varies" | string;
 
@@ -15,162 +16,9 @@ const COMPETITORS = [
 type CompetitorId = (typeof COMPETITORS)[number]["id"];
 
 interface ComparisonRow {
-  feature: string;
+  featureKey: string;
   monchoops: CellValue;
   competitors: Record<CompetitorId, CellValue>;
-}
-
-const comparisonData: ComparisonRow[] = [
-  {
-    feature: "Multi-account",
-    monchoops: "yes",
-    competitors: {
-      autoreacher: "yes",
-      instadm: "yes",
-      manychat: "Per workspace",
-      phantombuster: "yes",
-    },
-  },
-  {
-    feature: "Proxy per account",
-    monchoops: "yes",
-    competitors: {
-      autoreacher: "yes",
-      instadm: "yes",
-      manychat: "no",
-      phantombuster: "varies",
-    },
-  },
-  {
-    feature: "Isolated browser per account",
-    monchoops: "yes",
-    competitors: {
-      autoreacher: "no",
-      instadm: "no",
-      manychat: "no",
-      phantombuster: "no",
-    },
-  },
-  {
-    feature: "Pre-DM interactions",
-    monchoops: "yes",
-    competitors: {
-      autoreacher: "no",
-      instadm: "no",
-      manychat: "no",
-      phantombuster: "no",
-    },
-  },
-  {
-    feature: "Lead scraping (4 modes)",
-    monchoops: "yes",
-    competitors: {
-      autoreacher: "yes",
-      instadm: "varies",
-      manychat: "no",
-      phantombuster: "yes",
-    },
-  },
-  {
-    feature: "Cold DM with variants",
-    monchoops: "yes",
-    competitors: {
-      autoreacher: "yes",
-      instadm: "Templates",
-      manychat: "Templates",
-      phantombuster: "Templates",
-    },
-  },
-  {
-    feature: "Auto-skip already-DMed",
-    monchoops: "yes",
-    competitors: {
-      autoreacher: "varies",
-      instadm: "no",
-      manychat: "no",
-      phantombuster: "no",
-    },
-  },
-  {
-    feature: "Per-recipient DM log",
-    monchoops: "yes",
-    competitors: {
-      autoreacher: "yes",
-      instadm: "Limited",
-      manychat: "Limited",
-      phantombuster: "no",
-    },
-  },
-  {
-    feature: "Data stored locally only",
-    monchoops: "yes",
-    competitors: {
-      autoreacher: "no",
-      instadm: "no",
-      manychat: "no",
-      phantombuster: "no",
-    },
-  },
-  {
-    feature: "Where it runs",
-    monchoops: "Your machine",
-    competitors: {
-      autoreacher: "Cloud",
-      instadm: "Cloud",
-      manychat: "Cloud",
-      phantombuster: "Cloud",
-    },
-  },
-  {
-    feature: "Pricing model",
-    monchoops: "Flat rate",
-    competitors: {
-      autoreacher: "Per account",
-      instadm: "Subscription",
-      manychat: "Per contact",
-      phantombuster: "Per slot/hour",
-    },
-  },
-  {
-    feature: "Upfront engineering",
-    monchoops: "None",
-    competitors: {
-      autoreacher: "None",
-      instadm: "None",
-      manychat: "None",
-      phantombuster: "Some",
-    },
-  },
-];
-
-function MonchoOpsCellValue({ value }: { value: string }) {
-  if (value === "yes") {
-    return <Check className="h-4 w-4 text-white mx-auto" strokeWidth={2.5} />;
-  }
-  if (value === "no") {
-    return <X className="h-4 w-4 text-red-300 mx-auto" strokeWidth={2.5} />;
-  }
-  if (value === "varies") {
-    return <span className="text-sm text-white font-semibold">Varies</span>;
-  }
-  return (
-    <span className="text-xs font-medium text-white bg-white/15 border border-white/30 rounded-full px-2.5 py-0.5">
-      {value}
-    </span>
-  );
-}
-
-function CompetitorCellValue({ value }: { value: string }) {
-  if (value === "yes") {
-    return <Check className="h-4 w-4 text-emerald-600 mx-auto" />;
-  }
-  if (value === "no") {
-    return <X className="h-4 w-4 text-red-500 mx-auto" />;
-  }
-  if (value === "varies" || value === "Varies") {
-    return <span className="text-xs text-gray-600 leading-snug">Varies</span>;
-  }
-  return <span className="text-xs text-gray-600 leading-snug">{value}</span>;
 }
 
 const GRID_COLS =
@@ -190,28 +38,181 @@ function rowLeaveHandler(
 }
 
 export function ComparisonTable() {
+  const t = useTranslations("comparison");
+  const tCommon = useTranslations("common");
+  const variesText = tCommon("varies");
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
+
+  const comparisonData: ComparisonRow[] = [
+    {
+      featureKey: "multiAccount",
+      monchoops: "yes",
+      competitors: {
+        autoreacher: "yes",
+        instadm: "yes",
+        manychat: t("values.perWorkspace"),
+        phantombuster: "yes",
+      },
+    },
+    {
+      featureKey: "proxyPerAccount",
+      monchoops: "yes",
+      competitors: {
+        autoreacher: "yes",
+        instadm: "yes",
+        manychat: "no",
+        phantombuster: "varies",
+      },
+    },
+    {
+      featureKey: "isolatedBrowser",
+      monchoops: "yes",
+      competitors: {
+        autoreacher: "no",
+        instadm: "no",
+        manychat: "no",
+        phantombuster: "no",
+      },
+    },
+    {
+      featureKey: "preDm",
+      monchoops: "yes",
+      competitors: {
+        autoreacher: "no",
+        instadm: "no",
+        manychat: "no",
+        phantombuster: "no",
+      },
+    },
+    {
+      featureKey: "scraping4modes",
+      monchoops: "yes",
+      competitors: {
+        autoreacher: "yes",
+        instadm: "varies",
+        manychat: "no",
+        phantombuster: "yes",
+      },
+    },
+    {
+      featureKey: "variants",
+      monchoops: "yes",
+      competitors: {
+        autoreacher: "yes",
+        instadm: t("values.templates"),
+        manychat: t("values.templates"),
+        phantombuster: t("values.templates"),
+      },
+    },
+    {
+      featureKey: "autoSkip",
+      monchoops: "yes",
+      competitors: {
+        autoreacher: "varies",
+        instadm: "no",
+        manychat: "no",
+        phantombuster: "no",
+      },
+    },
+    {
+      featureKey: "perRecipientLog",
+      monchoops: "yes",
+      competitors: {
+        autoreacher: "yes",
+        instadm: t("values.limited"),
+        manychat: t("values.limited"),
+        phantombuster: "no",
+      },
+    },
+    {
+      featureKey: "localOnly",
+      monchoops: "yes",
+      competitors: {
+        autoreacher: "no",
+        instadm: "no",
+        manychat: "no",
+        phantombuster: "no",
+      },
+    },
+    {
+      featureKey: "whereItRuns",
+      monchoops: t("values.yourMachine"),
+      competitors: {
+        autoreacher: t("values.cloud"),
+        instadm: t("values.cloud"),
+        manychat: t("values.cloud"),
+        phantombuster: t("values.cloud"),
+      },
+    },
+    {
+      featureKey: "pricingModel",
+      monchoops: t("values.flatRate"),
+      competitors: {
+        autoreacher: t("values.perAccount"),
+        instadm: t("values.subscription"),
+        manychat: t("values.perContact"),
+        phantombuster: t("values.perSlotHour"),
+      },
+    },
+    {
+      featureKey: "engineering",
+      monchoops: t("values.noneVal"),
+      competitors: {
+        autoreacher: t("values.noneVal"),
+        instadm: t("values.noneVal"),
+        manychat: t("values.noneVal"),
+        phantombuster: t("values.someVal"),
+      },
+    },
+  ];
+
+  function MonchoOpsCellValue({ value }: { value: string }) {
+    if (value === "yes") {
+      return <Check className="h-4 w-4 text-white mx-auto" strokeWidth={2.5} />;
+    }
+    if (value === "no") {
+      return <X className="h-4 w-4 text-red-300 mx-auto" strokeWidth={2.5} />;
+    }
+    if (value === "varies") {
+      return <span className="text-sm text-white font-semibold">{variesText}</span>;
+    }
+    return (
+      <span className="text-xs font-medium text-white bg-white/15 border border-white/30 rounded-full px-2.5 py-0.5">
+        {value}
+      </span>
+    );
+  }
+
+  function CompetitorCellValue({ value }: { value: string }) {
+    if (value === "yes") {
+      return <Check className="h-4 w-4 text-emerald-600 mx-auto" />;
+    }
+    if (value === "no") {
+      return <X className="h-4 w-4 text-red-500 mx-auto" />;
+    }
+    if (value === "varies") {
+      return <span className="text-xs text-gray-600 leading-snug">{variesText}</span>;
+    }
+    return <span className="text-xs text-gray-600 leading-snug">{value}</span>;
+  }
 
   return (
     <section className="pt-24 max-w-7xl mx-auto px-3">
       <div className="mb-10 text-left">
-        <p className="text-xl text-gray-600 mb-1">How we compare</p>
+        <p className="text-xl text-gray-600 mb-1">{t("eyebrow")}</p>
         <h2 className="flex flex-col items-start gap-1 text-3xl text-gray-900 md:flex-row md:flex-wrap md:gap-x-2 md:gap-y-0 md:text-5xl">
-          <span>MonchoOps vs.</span>
-          <span>other Instagram tools</span>
+          <span>{t("headingP1")}</span>
+          <span>{t("headingP2")}</span>
         </h2>
         <p className="mt-3 text-sm text-gray-500 max-w-2xl">
-          Most Instagram tools cap you at one account, hide your DM history,
-          and charge per contact or per slot. MonchoOps gives you multi-account,
-          a per-recipient log, auto-skip on already-DM&apos;d prospects, and a
-          flat rate.
+          {t("intro")}
         </p>
       </div>
 
       <div className="w-full overflow-x-auto rounded-lg border border-gray-200 bg-white">
         <div className={`grid w-full gap-0 ${GRID_COLS}`}>
           <div className="min-w-0 px-3 py-4 text-sm font-medium text-gray-500 border-b border-gray-200 bg-gray-50 flex items-center justify-center text-center">
-            Feature
+            {t("feature")}
           </div>
           <div className="px-3 py-4 flex items-center justify-center text-center bg-indigo-950 border-x border-indigo-950 border-b border-white/20">
             <span className="text-sm font-medium text-white mx-1">MonchoOps</span>
@@ -249,12 +250,12 @@ export function ComparisonTable() {
             } as const;
 
             return (
-              <Fragment key={row.feature}>
+              <Fragment key={row.featureKey}>
                 <div
                   {...rowProps}
                   className={`min-w-0 px-4 py-3.5 text-sm font-medium text-gray-700 transition-colors duration-150 ${bottomRule} ${featureBg} flex items-center justify-center text-center`}
                 >
-                  {row.feature}
+                  {t(`rows.${row.featureKey}`)}
                 </div>
                 <div
                   {...rowProps}
@@ -281,8 +282,7 @@ export function ComparisonTable() {
         </div>
       </div>
       <p className="mt-3 text-xs text-gray-400">
-        Comparison reflects publicly stated features at time of writing. We are
-        not affiliated with any of the products listed.
+        {t("footnote")}
       </p>
     </section>
   );

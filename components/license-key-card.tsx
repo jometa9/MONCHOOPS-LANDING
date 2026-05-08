@@ -4,12 +4,15 @@ import { useEffect, useState } from "react";
 
 import { User } from "@/lib/db/schema";
 import { Check, Copy, Eye, EyeOff, KeyRound } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface LicenseKeyCardProps {
   user: User;
 }
 
 export function LicenseKeyCard({ user }: LicenseKeyCardProps) {
+  const t = useTranslations("dashboard");
+  const tCommon = useTranslations("common");
   const [isLicenseVisible, setIsLicenseVisible] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -42,7 +45,7 @@ export function LicenseKeyCard({ user }: LicenseKeyCardProps) {
   };
 
   const getDisplayLicense = () => {
-    if (!user.apiKey) return "No License key generated";
+    if (!user.apiKey) return t("noLicenseKey");
 
     if (!isLicenseVisible) {
       const masked = "•".repeat(user.apiKey.length);
@@ -64,10 +67,10 @@ export function LicenseKeyCard({ user }: LicenseKeyCardProps) {
     <div className="rounded-lg ">
       <div className="flex items-center gap-2 mb-1">
         <KeyRound className="h-5 w-5 " />
-        <p className="text-xl ">License</p>
+        <p className="text-xl ">{t("license")}</p>
       </div>
       <p className="text-xs text-muted-foreground mb-3">
-        Use this key to login to your local copier desktop app
+        {t("licenseHelp")}
       </p>
       <div className="flex items-center gap-3 w-full  bg-gray-50 py-2 px-3 rounded-lg font-mono text-sm cursor-pointer select-text border border-gray-200">
         <div
@@ -84,7 +87,7 @@ export function LicenseKeyCard({ user }: LicenseKeyCardProps) {
         </div>
         <div
           onClick={toggleLicenseVisibility}
-          title={isLicenseVisible ? "Hide" : "Show"}
+          title={isLicenseVisible ? tCommon("hide") : tCommon("show")}
           className="flex-shrink-0 cursor-pointer text-gray-600 hover:text-gray-800"
         >
           {isLicenseVisible ? (
@@ -95,8 +98,7 @@ export function LicenseKeyCard({ user }: LicenseKeyCardProps) {
         </div>
         <div
           onClick={copyToClipboard}
-          disabled={!user.apiKey}
-          title="Copy"
+          title={tCommon("copy")}
           className="flex-shrink-0 cursor-pointer text-gray-600 hover:text-gray-800"
         >
           {isCopied ? (

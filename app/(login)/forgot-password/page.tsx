@@ -4,11 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ActionState } from "@/lib/auth/middleware";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import React, { useActionState, useState } from "react";
 import { forgotPassword } from "../actions";
 
 export default function ForgotPasswordPage() {
+  const t = useTranslations("auth");
   const [state, formAction, isPending] = useActionState<ActionState, FormData>(
     forgotPassword,
     {
@@ -55,10 +57,10 @@ export default function ForgotPasswordPage() {
     <div className="space-y-3 pb-20">
       <div>
         <h2 className="text-2xl font-semibold text-gray-900">
-          Reset your password
+          {t("resetTitle")}
         </h2>
         <p className="text-xl text-gray-400">
-          We'll send you a link to reset your password
+          {t("resetSubtitle")}
         </p>
       </div>
 
@@ -66,21 +68,21 @@ export default function ForgotPasswordPage() {
         <div className="space-y-1">
           <div>
             <Label htmlFor="email" className="text-sm text-gray-700">
-              Email
+              {t("email")}
             </Label>
           </div>
           <Input
             id="email"
             name="email"
             type="email"
-            placeholder="you@example.com"
+            placeholder={t("emailPlaceholder")}
             required
             autoComplete="email"
             maxLength={50}
             disabled={isPending || hasSubmitted || showSuccess}
           />
           <p className="text-xs text-gray-600">
-            Enter the email address associated with your account
+            {t("resetEmailHelp")}
           </p>
         </div>
 
@@ -96,14 +98,14 @@ export default function ForgotPasswordPage() {
             {state.resetLink && (
               <div className="mt-2">
                 <Link
-                  href={state.resetLink}
+                  href={state.resetLink as string}
                   className={`text-blue-500 underline ${
                     isPending || hasSubmitted || showSuccess
                       ? "pointer-events-none opacity-50"
                       : ""
                   }`}
                 >
-                  Reset Password Link (Development Only)
+                  {t("resetLinkDevOnly")}
                 </Link>
               </div>
             )}
@@ -118,20 +120,20 @@ export default function ForgotPasswordPage() {
           }
         >
           {showSuccess ? (
-            "Reset Link Sent"
+            t("resetLinkSent")
           ) : isPending || (hasSubmitted && !state.error) ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Sending...
+              {t("loading")}
             </>
           ) : (
-            "Send Reset Link"
+            t("sendResetLink")
           )}
         </Button>
       </form>
 
       <div className="text-sm text-gray-600">
-        Remember your password?{" "}
+        {t("rememberPassword")}{" "}
         <Link
           href="/sign-in"
           className={`font-semibold text-gray-900 hover:underline ${
@@ -140,7 +142,7 @@ export default function ForgotPasswordPage() {
               : ""
           }`}
         >
-          Sign in
+          {t("signIn")}
         </Link>
       </div>
     </div>

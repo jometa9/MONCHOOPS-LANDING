@@ -165,7 +165,7 @@ The **Settings** screen exposes:
 
 ## Updates
 
-MonchoOps checks `monchoops.com/api/version` on startup. When a new version is available, you&apos;ll see a banner with a download link. Updates are manual — you choose when to install them.
+MonchoOps checks `monchoops.com/api/app-version` periodically. When a new version is available, you&apos;ll see a banner with a download link. Updates are manual — you choose when to install them.
 
 ---
 

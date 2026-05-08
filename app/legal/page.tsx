@@ -4,6 +4,7 @@ import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { StructuredData } from "@/components/structured-data";
 import type { Metadata } from "next";
 import { readFileSync } from "fs";
+import { getTranslations } from "next-intl/server";
 import { join } from "path";
 
 export const metadata: Metadata = {
@@ -32,15 +33,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function LegalPage() {
+export default async function LegalPage() {
+  const t = await getTranslations("legal");
+  const tCommon = await getTranslations("common");
+
   const documents = [
-    { id: "cookies", title: "Cookies Policy", filename: "cookies.md" },
-    { id: "privacy", title: "Privacy Policy", filename: "privacy.md" },
-    { id: "terms", title: "Terms of Use", filename: "terms.md" },
-    { id: "billing", title: "Billing Policy", filename: "billing.md" },
-    { id: "complaints", title: "Complaints Policy", filename: "complaints.md" },
-    { id: "refunds", title: "Refund Policy", filename: "refunds.md" },
-    { id: "disclaimer", title: "Disclaimer", filename: "disclaimer.md" },
+    { id: "cookies", title: t("docs.cookies"), filename: "cookies.md" },
+    { id: "privacy", title: t("docs.privacy"), filename: "privacy.md" },
+    { id: "terms", title: t("docs.terms"), filename: "terms.md" },
+    { id: "billing", title: t("docs.billing"), filename: "billing.md" },
+    { id: "complaints", title: t("docs.complaints"), filename: "complaints.md" },
+    { id: "refunds", title: t("docs.refunds"), filename: "refunds.md" },
+    { id: "disclaimer", title: t("docs.disclaimer"), filename: "disclaimer.md" },
   ];
 
   const contents: Record<string, string> = {};
@@ -87,19 +91,18 @@ export default function LegalPage() {
           <div className="w-full space-y-4 pb-8">
             <div className="max-w-4xl pb-0">
               <h1 className="text-4xl font-semibold text-gray-900 tracking-tight">
-                Legal Information
+                {t("title")}
               </h1>
               <p className="mt-3 text-gray-600 text-2xl max-w-2xl">
-                Our terms, privacy policy, and other legal documentation —
-                everything you need to know about using MonchoOps.
+                {t("subtitle")}
               </p>
               <p className="mt-2 text-gray-600 text-sm">
-                Documents last updated: {legalDocsUpdated}
+                {t("lastUpdated", { date: legalDocsUpdated })}
               </p>
             </div>
 
             <div className="max-w-4xl my-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Table of Contents</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">{t("tableOfContents")}</h2>
               <ul className="space-y-2 pl-3">
                 {documents.map((doc) => (
                   <li key={doc.id}>
@@ -126,20 +129,20 @@ export default function LegalPage() {
 
             <hr className="border-gray-200 my-8 max-w-4xl" />
             <div className="max-w-4xl">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Contact Us</h2>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-4">{t("contactUs")}</h2>
               <p className="text-gray-600 mb-4">
-                Questions about our legal policies?
+                {t("contactBody")}
               </p>
               <div className="space-y-2 text-gray-700">
                 <p>
-                  <strong>Email:</strong>{" "}
+                  <strong>{t("emailLabel")}</strong>{" "}
                   <MailtoLink
                     label="support@monchoops.com"
-                    copiedLabel="Copied to clipboard"
+                    copiedLabel={tCommon("copied")}
                   />
                 </p>
                 <p>
-                  <strong>Website:</strong> https://monchoops.com
+                  <strong>{t("websiteLabel")}</strong> https://monchoops.com
                 </p>
               </div>
             </div>

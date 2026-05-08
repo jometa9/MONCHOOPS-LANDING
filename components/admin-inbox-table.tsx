@@ -29,6 +29,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 interface InboundEmail {
@@ -67,6 +68,7 @@ type SortColumn = "from" | "subject" | "receivedAt" | null;
 type FilterStatus = "all" | "unread" | "read" | "archived";
 
 export function AdminInboxTable() {
+  const t = useTranslations("admin");
   const [data, setData] = useState<InboxResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -298,7 +300,7 @@ export function AdminInboxTable() {
         <div className="p-3 bg-gray-50 border-b border-gray-200">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
             <Button className="flex items-center shadow-none gap-1 text-sm bg-white rounded-lg px-3 py-2 border border-gray-200 pointer-events-none cursor-default">
-              <span className="text-gray-400">Unread:</span>
+              <span className="text-gray-400">{t("unread")}</span>
               <span className="text-gray-400 font-medium">
                 {data?.stats.unread || 0}
               </span>
@@ -307,7 +309,7 @@ export function AdminInboxTable() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
                 type="text"
-                placeholder="Search by sender or subject..."
+                placeholder={t("searchPlaceholder")}
                 value={searchQuery}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setSearchQuery(e.target.value)
@@ -322,7 +324,7 @@ export function AdminInboxTable() {
                   type="button"
                   onClick={() => setSearchQuery("")}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
-                  aria-label="Clear search"
+                  aria-label={t("clearSearch")}
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -332,23 +334,33 @@ export function AdminInboxTable() {
             <div className="flex items-center">
               <div className="flex gap-1 text-sm bg-white rounded-lg p-1 border border-gray-200">
                 {(["all", "unread", "read", "archived"] as FilterStatus[]).map(
-                  (status) => (
-                    <button
-                      key={status}
-                      onClick={() => {
-                        setFilterStatus(status);
-                        setCurrentPage(1);
-                      }}
-                      className={cn(
-                        "px-3 py-1 rounded-lg transition-colors cursor-pointer capitalize",
-                        filterStatus === status
-                          ? "bg-gray-100 text-gray-600"
-                          : "text-gray-400 hover:text-gray-600"
-                      )}
-                    >
-                      {status}
-                    </button>
-                  )
+                  (status) => {
+                    const label =
+                      status === "all"
+                        ? t("all")
+                        : status === "unread"
+                        ? t("unreadFilter")
+                        : status === "read"
+                        ? t("read")
+                        : t("archived");
+                    return (
+                      <button
+                        key={status}
+                        onClick={() => {
+                          setFilterStatus(status);
+                          setCurrentPage(1);
+                        }}
+                        className={cn(
+                          "px-3 py-1 rounded-lg transition-colors cursor-pointer",
+                          filterStatus === status
+                            ? "bg-gray-100 text-gray-600"
+                            : "text-gray-400 hover:text-gray-600"
+                        )}
+                      >
+                        {label}
+                      </button>
+                    );
+                  }
                 )}
               </div>
             </div>
@@ -370,7 +382,7 @@ export function AdminInboxTable() {
               <Link href="/dashboard/admin/inbox/new">
                 <Button className="flex items-center gap-2 text-sm h-9">
                   <Plus className="h-4 w-4" />
-                  New Email
+                  {t("newEmail")}
                 </Button>
               </Link>
             </div>
@@ -386,7 +398,7 @@ export function AdminInboxTable() {
                   onClick={() => handleSort("subject")}
                 >
                   <div className="flex items-center gap-3">
-                    Subject
+                    {t("subject")}
                     {sortColumn === "subject" &&
                       (sortDirection === "asc" ? (
                         <ArrowUp className="h-3 w-3" />
@@ -400,7 +412,7 @@ export function AdminInboxTable() {
                   onClick={() => handleSort("from")}
                 >
                   <div className="flex items-center gap-3">
-                    From
+                    {t("from")}
                     {sortColumn === "from" &&
                       (sortDirection === "asc" ? (
                         <ArrowUp className="h-3 w-3" />
@@ -409,13 +421,13 @@ export function AdminInboxTable() {
                       ))}
                   </div>
                 </TableHead>
-                <TableHead className="whitespace-nowrap hidden md:table-cell px-3">To</TableHead>
+                <TableHead className="whitespace-nowrap hidden md:table-cell px-3">{t("to")}</TableHead>
                 <TableHead
                   className="whitespace-nowrap cursor-pointer hover:bg-gray-50 select-none hidden md:table-cell px-3"
                   onClick={() => handleSort("receivedAt")}
                 >
                   <div className="flex items-center gap-3">
-                    Received
+                    {t("received")}
                     {sortColumn === "receivedAt" &&
                       (sortDirection === "asc" ? (
                         <ArrowUp className="h-3 w-3" />
@@ -443,8 +455,8 @@ export function AdminInboxTable() {
                     className="text-center text-muted-foreground py-8 bg-white rounded-b-md"
                   >
                     {searchQuery
-                      ? "No emails found matching your search"
-                      : "No emails in inbox"}
+                      ? t("noEmailsSearch")
+                      : t("noEmailsInbox")}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -514,7 +526,7 @@ export function AdminInboxTable() {
                                 }
                                 disabled={isUpdating}
                                 className="cursor-pointer text-gray-600 hover:text-gray-400 disabled:opacity-50"
-                                title="Mark as read"
+                                title={t("markAsRead")}
                               >
                                 <MailOpen className="h-4 w-4" />
                               </button>
@@ -525,7 +537,7 @@ export function AdminInboxTable() {
                                 }
                                 disabled={isUpdating}
                                 className="cursor-pointer text-gray-600 hover:text-gray-400 disabled:opacity-50"
-                                title="Mark as unread"
+                                title={t("markAsUnread")}
                               >
                                 <Mail className="h-4 w-4" />
                               </button>
@@ -537,7 +549,7 @@ export function AdminInboxTable() {
                                 }
                                 disabled={isUpdating}
                                 className="cursor-pointer text-gray-600 hover:text-gray-400 disabled:opacity-50"
-                                title="Unarchive"
+                                title={t("unarchive")}
                               >
                                 <ArchiveRestore className="h-4 w-4" />
                               </button>
@@ -548,7 +560,7 @@ export function AdminInboxTable() {
                                 }
                                 disabled={isUpdating}
                                 className="cursor-pointer text-gray-600 hover:text-gray-400 disabled:opacity-50"
-                                title="Archive"
+                                title={t("archive")}
                               >
                                 <Archive className="h-4 w-4" />
                               </button>
@@ -557,7 +569,7 @@ export function AdminInboxTable() {
                               onClick={() => setDeletingEmailId(email.id)}
                               disabled={isUpdating}
                               className="cursor-pointer text-gray-600 hover:text-gray-400 disabled:opacity-50"
-                              title="Delete email"
+                              title={t("deleteEmail")}
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
@@ -612,7 +624,7 @@ export function AdminInboxTable() {
                                     className="flex items-center justify-center rounded-lg bg-black px-3 py-2 text-sm font-medium h-9 cursor-pointer hover:bg-gray-600 text-white w-full"
                                     onClick={() => handleDeleteEmail(email.id)}
                                   >
-                                    {isUpdating ? "Deleting..." : "Delete"}
+                                    {isUpdating ? t("deletingShort") : t("deleteShort")}
                                   </div>
                                 </div>
                               </div>

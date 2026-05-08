@@ -38,16 +38,14 @@ export const handleDownload = async (
     const detectedOS = os || detectOS();
     const eventId = getDownloadEventId();
 
-    const response = await fetch(
-      `/api/download-url?productKey=${productKey}&os=${detectedOS}&metaEventId=${encodeURIComponent(eventId)}`
-    );
+    const response = await fetch("/api/app-version");
 
     if (!response.ok) {
-      throw new Error("Failed to fetch download URL");
+      throw new Error("Failed to fetch app version");
     }
 
     const data = await response.json();
-    const downloadUrl = data.downloadUrl;
+    const downloadUrl: string = data?.downloadUrls?.[detectedOS] || "";
 
     if (!downloadUrl) {
       alert("Download link is not configured. Please contact support.");
@@ -55,6 +53,11 @@ export const handleDownload = async (
     }
 
     trackDownloadEvent(productKey, detectedOS, eventId);
+    void fetch("/api/track-download", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ os: detectedOS, metaEventId: eventId }),
+    }).catch(() => {});
 
     const link = document.createElement("a");
     link.href = downloadUrl;
@@ -76,15 +79,18 @@ export const handleDownload = async (
   }
 };
 
-export const fetchAllDownloads = async () => {
+export const fetchAppVersion = async () => {
   try {
-    const response = await fetch("/api/download-url");
+    const response = await fetch("/api/app-version");
 
     if (!response.ok) {
-      throw new Error("Failed to fetch download URLs");
+      throw new Error("Failed to fetch app version");
     }
 
-    return await response.json();
+    return (await response.json()) as {
+      version: string;
+      downloadUrls: { mac: string; windows: string };
+    };
   } catch {
     return null;
   }

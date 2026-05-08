@@ -3,6 +3,7 @@ import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { StructuredData } from "@/components/structured-data";
 import type { Metadata } from "next";
 import { readFileSync } from "fs";
+import { getLocale, getTranslations } from "next-intl/server";
 import { join } from "path";
 
 export const metadata: Metadata = {
@@ -33,7 +34,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function DocumentationPage() {
+export default async function DocumentationPage() {
+  const t = await getTranslations("documentation");
+  const locale = await getLocale();
+
   let markdownContent = "";
 
   try {
@@ -44,7 +48,8 @@ export default function DocumentationPage() {
       "# Documentation\n\nThe `docs.md` file was not found.";
   }
 
-  const lastUpdated = new Date().toLocaleDateString("en-US", {
+  const intlLocale = locale === "es" ? "es-ES" : "en-US";
+  const lastUpdated = new Date().toLocaleDateString(intlLocale, {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -80,14 +85,13 @@ export default function DocumentationPage() {
           <div className="w-full space-y-4 pb-8">
             <div className="max-w-7xl mx-auto pb-0">
               <h1 className="text-4xl font-semibold text-gray-900 tracking-tight">
-                Documentation
+                {t("title")}
               </h1>
               <p className="mt-3 text-gray-600 text-2xl max-w-2xl">
-                Complete guides and documentation for MonchoOps software - everything you
-                need to get started and make the most of your Instagram outreach campaigns.
+                {t("subtitle")}
               </p>
               <p className="mt-2 text-gray-600 text-sm">
-                Updated to latest version on {lastUpdated}
+                {t("updated", { date: lastUpdated })}
               </p>
             </div>
             <hr className="border-gray-200 my-8 max-w-4xl" />
@@ -101,4 +105,3 @@ export default function DocumentationPage() {
     </>
   );
 }
-

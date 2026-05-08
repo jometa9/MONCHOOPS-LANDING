@@ -12,6 +12,7 @@ import {
   Settings,
   X,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useEffect } from "react";
@@ -29,49 +30,52 @@ interface SidebarProps {
   variant?: "desktop" | "mobile";
 }
 
-const defaultItems: SidebarItem[] = [
-  {
-    label: "Home",
-    href: "/dashboard",
-    icon: <Home className="h-4 w-4" />,
-  },
-  {
-    label: "Docs",
-    href: "/dashboard/documentation",
-    icon: <Book className="h-4 w-4" />,
-  },
-  {
-    label: "Pricing",
-    href: "/dashboard/pricing",
-    icon: <CreditCard className="h-4 w-4" />,
-  },
-  {
-    label: "Inbox",
-    href: "/dashboard/admin/inbox",
-    icon: <Inbox className="h-4 w-4" />,
-    adminOnly: true,
-  },
-  {
-    label: "Settings",
-    href: "/dashboard/admin/settings",
-    icon: <Settings className="h-4 w-4" />,
-    adminOnly: true,
-  },
-];
-
 export function Sidebar({
   user,
-  items = defaultItems,
+  items,
   variant = "desktop",
 }: SidebarProps) {
+  const t = useTranslations("sidebar");
   const pathname = usePathname();
   const isAdmin = user?.role === "admin" || user?.role === "superadmin";
   const { isSidebarOpen, setIsSidebarOpen } = useSidebar();
   const isMobileVariant = variant === "mobile";
 
+  const defaultItems: SidebarItem[] = [
+    {
+      label: t("home"),
+      href: "/dashboard",
+      icon: <Home className="h-4 w-4" />,
+    },
+    {
+      label: t("docs"),
+      href: "/dashboard/documentation",
+      icon: <Book className="h-4 w-4" />,
+    },
+    {
+      label: t("pricing"),
+      href: "/dashboard/pricing",
+      icon: <CreditCard className="h-4 w-4" />,
+    },
+    {
+      label: t("inbox"),
+      href: "/dashboard/admin/inbox",
+      icon: <Inbox className="h-4 w-4" />,
+      adminOnly: true,
+    },
+    {
+      label: t("settings"),
+      href: "/dashboard/admin/settings",
+      icon: <Settings className="h-4 w-4" />,
+      adminOnly: true,
+    },
+  ];
+
+  const sourceItems = items ?? defaultItems;
+
   const allItems = paymentsEnabled
-    ? items
-    : items.filter((item) => item.href !== "/dashboard/pricing");
+    ? sourceItems
+    : sourceItems.filter((item) => item.href !== "/dashboard/pricing");
 
   const visibleItems = allItems.filter((item) => {
     if (item.adminOnly && !isAdmin) {
@@ -125,7 +129,7 @@ export function Sidebar({
             <button
               onClick={() => setIsSidebarOpen(false)}
               className="pl-1 text-gray-400 hover:text-gray-800 transition-colors"
-              aria-label="Close menu"
+              aria-label={t("closeMenu")}
             >
               <X className="h-5 w-5" />
             </button>

@@ -1,21 +1,24 @@
 "use client";
 
+import { LanguageSwitcher } from "@/components/language-switcher";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useState, type MouseEvent } from "react";
 
-const navigationLinks = [
-  { href: "/#features", label: "Features" },
-  { href: "/#how-it-works", label: "How it works" },
-  { href: "/#prices", label: "Pricing" },
-  { href: "/documentation", label: "Docs" },
-];
-
 export function LandingHeader() {
+  const t = useTranslations("header");
   const router = useRouter();
   const pathname = usePathname();
   const [showDropdown, setShowDropdown] = useState(false);
+
+  const navigationLinks = [
+    { href: "/#features", label: t("features") },
+    { href: "/#how-it-works", label: t("howItWorks") },
+    { href: "/#prices", label: t("pricing") },
+    { href: "/documentation", label: t("docs") },
+  ];
 
   const handleNavClick = useCallback(
     async (event: MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -116,9 +119,10 @@ export function LandingHeader() {
         </nav>
 
         <div className="flex items-center gap-3">
+          <LanguageSwitcher />
           <div className="rounded-full border border-transparent bg-gray-900 px-2 py-0.5 text-sm text-white shadow-none hover:bg-gray-600 cursor-pointer md:border md:border-gray-300 md:bg-white md:text-gray-900 md:hover:bg-gray-100">
             <Link href="/sign-up" target="_blank" rel="noopener noreferrer">
-              Sign up
+              {t("signUp")}
             </Link>
           </div>
 
@@ -129,7 +133,7 @@ export function LandingHeader() {
               rel="noopener noreferrer"
               className="rounded-full border border-transparent bg-indigo-600 px-2 py-0.5 text-sm cursor-pointer text-white shadow-none hover:bg-indigo-700 block"
             >
-              Get started
+              {t("getStarted")}
             </a>
           </div>
         </div>

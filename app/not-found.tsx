@@ -2,6 +2,7 @@ import { AuthHeader } from "@/components/layout/auth-header";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
   description:
@@ -9,7 +10,8 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-export default function NotFound() {
+export default async function NotFound() {
+  const t = await getTranslations("notFound");
   return (
     <div className="min-h-screen bg-white text-neutral-900">
       <AuthHeader />
@@ -18,23 +20,23 @@ export default function NotFound() {
           <div className="space-y-3 pb-20">
             <div>
               <h2 className="text-2xl font-semibold text-gray-900">
-                Page not found
+                {t("title")}
               </h2>
               <p className="text-xl text-gray-400">
-                The page you are looking for does not exist or has been moved.
+                {t("subtitle")}
               </p>
             </div>
             <p className="text-sm text-gray-600">
-              Please return to the home page.
+              {t("body")}
             </p>
             <Button
               asChild
               className="w-full justify-center rounded-lg bg-gray-900 py-3 text-md text-white hover:bg-gray-600"
             >
-              <Link href="/">Go to home</Link>
+              <Link href="/">{t("button")}</Link>
             </Button>
             <p className="text-sm text-gray-600">
-              Click the button above to return to the home page.
+              {t("footer")}
             </p>
           </div>
         </div>

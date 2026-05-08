@@ -3,9 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 export default function AdminDeleteUser() {
+  const t = useTranslations("admin");
   const [isDeleting, setIsDeleting] = useState(false);
   const [email, setEmail] = useState("");
   const [buttonStatus, setButtonStatus] = useState<"success" | "error" | null>(
@@ -50,7 +52,7 @@ export default function AdminDeleteUser() {
     <div className="space-y-3">
         <Input
           id="delete-email"
-          placeholder="user@example.com"
+          placeholder={t("userPlaceholder")}
           value={email}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setEmail(e.target.value)
@@ -65,12 +67,12 @@ export default function AdminDeleteUser() {
         className="w-full"
       >
         {isDeleting
-          ? "Deleting..."
+          ? t("deleting")
           : buttonStatus === "success"
-            ? "Success"
+            ? t("success")
             : buttonStatus === "error"
-              ? "Error"
-              : "Delete User"}
+              ? t("error")
+              : t("deleteUserBtn")}
       </Button>
     </div>
   );

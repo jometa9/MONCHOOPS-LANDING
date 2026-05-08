@@ -5,6 +5,8 @@ import { Providers } from "@/components/providers";
 import { getAppUrl } from "@/lib/app-url";
 import { getUser } from "@/lib/db/queries";
 import type { Metadata, Viewport } from "next";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import React from "react";
 
 const metadataBaseUrl = getAppUrl();
@@ -121,8 +123,11 @@ export default async function RootLayout({
 
   const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID || "";
 
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="en" className="text-neutral-900">
+    <html lang={locale} className="text-neutral-900">
       <body
         className="min-h-screen font-sans text-neutral-900 antialiased"
         suppressHydrationWarning={true}
@@ -134,11 +139,13 @@ export default async function RootLayout({
               <MetaPixel pixelId={pixelId} />
             </>
           ) : null}
-          <Providers userPromise={userPromise}>
-            <div className="flex min-h-screen flex-col">
-              <main className="flex-1 w-full bg-white">{children}</main>
-            </div>
-          </Providers>
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            <Providers userPromise={userPromise}>
+              <div className="flex min-h-screen flex-col">
+                <main className="flex-1 w-full bg-white">{children}</main>
+              </div>
+            </Providers>
+          </NextIntlClientProvider>
         </>
       </body>
     </html>

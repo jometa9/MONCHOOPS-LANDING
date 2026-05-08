@@ -6,12 +6,14 @@ import { Label } from "@/components/ui/label";
 import { ActionState } from "@/lib/auth/middleware";
 import { Loader2 } from "lucide-react";
 import { signIn as nextAuthSignIn, useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useActionState } from "react";
 import { signIn, signUp } from "./actions";
 
 export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
+  const t = useTranslations("auth");
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
   const priceId = searchParams.get("priceId");
@@ -51,10 +53,8 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
     }`;
 
   const heading = isFromApp
-    ? `Access your ${appName} account`
-    : mode === "signin"
-      ? "Welcome back to MonchoOps"
-      : "Welcome back to MonchoOps";
+    ? t("accessAccount", { appName })
+    : t("welcomeBack");
 
   const handleGoogleSignIn = async () => {
     if (isGoogleLoading) return;
@@ -151,14 +151,14 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
       <div className="space-y-3 pb-20">
         <div>
           <h2 className="text-2xl font-semibold text-gray-900">
-            Login Successful!
+            {t("loginSuccessful")}
           </h2>
           <p className="text-xl text-gray-400">
-            We'll take you back to {appName}
+            {t("wellTakeYouBack", { appName })}
           </p>
         </div>
         <div className="flex text-sm items-center space-x-2 text-gray-600">
-          Opening {appName}...
+          {t("openingApp", { appName })}
         </div>
         <Button
           onClick={() => {
@@ -171,10 +171,10 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
           }}
           className="w-full justify-center rounded-lg bg-gray-900 py-3 text-md text-white hover:bg-gray-600"
         >
-          Open {appName}
+          {t("openApp", { appName })}
         </Button>
         <p className="text-sm text-gray-600 ">
-          Opening automatically, or click the button above
+          {t("openingAutomatically")}
         </p>
       </div>
     );
@@ -183,7 +183,7 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
   if (!isMounted || status === "loading") {
     return (
       <div className="flex flex-col items-center text-center py-12">
-        <p className="text-sm text-gray-600">Loading...</p>
+        <p className="text-sm text-gray-600">{t("loading")}</p>
       </div>
     );
   }
@@ -192,7 +192,7 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
     <div className="space-y-3 pb-20">
       <div>
         <h2 className="text-2xl font-semibold text-gray-900">{heading}</h2>
-        <p className="text-xl text-gray-400">Instagram cold DM automation, on your machine</p>
+        <p className="text-xl text-gray-400">{t("tagline")}</p>
       </div>
 
       <Button
@@ -204,7 +204,7 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
         {isGoogleLoading ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            {mode === "signin" ? "Connecting..." : "Creating account..."}
+            {mode === "signin" ? t("connecting") : t("creatingAccount")}
           </>
         ) : (
           <>
@@ -233,7 +233,7 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
                 />
               </g>
             </svg>
-            Continue with Google
+            {t("continueWithGoogle")}
           </>
         )}
       </Button>
@@ -246,7 +246,7 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
         <div className="space-y-1">
           <div>
             <Label htmlFor="email" className="text-sm text-gray-700">
-              Email
+              {t("email")}
             </Label>
           </div>
           <Input
@@ -257,7 +257,7 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
             defaultValue={state.email}
             required
             maxLength={50}
-            placeholder="you@example.com"
+            placeholder={t("emailPlaceholder")}
             disabled={pending || isGoogleLoading}
           />
         </div>
@@ -265,7 +265,7 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
         <div className="space-y-1">
           <div className="flex items-center justify-between">
             <Label htmlFor="password" className="text-sm text-gray-700">
-              Password
+              {t("password")}
             </Label>
             {mode === "signin" && (
               <Link
@@ -275,7 +275,7 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
                     : ""
                   }`}
               >
-                Forgot password?
+                {t("forgotPassword")}
               </Link>
             )}
           </div>
@@ -291,12 +291,12 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
             required
             minLength={8}
             maxLength={100}
-            placeholder="••••••••"
+            placeholder={t("passwordPlaceholder")}
             disabled={pending || isGoogleLoading}
           />
           {mode === "signup" && (
             <p className="text-xs text-gray-600">
-              Password must be at least 8 characters long.
+              {t("passwordHelp")}
             </p>
           )}
         </div>
@@ -319,12 +319,12 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
           {pending ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {mode === "signin" ? "Signing in..." : "Creating account..."}
+              {mode === "signin" ? t("signingIn") : t("creatingAccount")}
             </>
           ) : mode === "signin" ? (
-            "Sign in"
+            t("signIn")
           ) : (
-            "Create account"
+            t("createAccount")
           )}
         </Button>
       </form>
@@ -332,7 +332,7 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
       <div className="text-sm text-gray-600">
         {mode === "signin" ? (
           <>
-            Don&apos;t have an account?{" "}
+            {t("noAccount")}{" "}
             <Link
               href={alternateAuthHref}
               className={`font-semibold text-gray-900 hover:underline ${pending || isGoogleLoading
@@ -340,12 +340,12 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
                   : ""
                 }`}
             >
-              Sign up
+              {t("signUp")}
             </Link>
           </>
         ) : (
           <>
-            Already have an account?{" "}
+            {t("haveAccount")}{" "}
             <Link
               href={alternateAuthHref}
               className={`font-semibold text-gray-900 hover:underline ${pending || isGoogleLoading
@@ -353,7 +353,7 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
                   : ""
                 }`}
             >
-              Sign in
+              {t("signIn")}
             </Link>
           </>
         )}
@@ -361,12 +361,10 @@ export function Login({ mode = "signin" }: { mode?: "signin" | "signup" }) {
 
       {isFromApp && (
         <p
-          type="button"
           onClick={() => window.history.back()}
           className="mx-auto block text-sm text-gray-600 transition hover:text-gray-800 cursor-pointer"
-          disabled={pending || isGoogleLoading}
         >
-          Back to application
+          {t("backToApplication")}
         </p>
       )}
     </div>
