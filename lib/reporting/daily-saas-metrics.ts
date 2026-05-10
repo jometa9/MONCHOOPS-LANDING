@@ -1,6 +1,11 @@
 import { db } from "@/lib/db/drizzle";
 import { inboundEmail, user, userProductSubscription } from "@/lib/db/schema";
-import { getStripe } from "@/lib/payments/stripe";
+import {
+  getMonchoopsStripePriceIds,
+  getMonchoopsStripeProductIds,
+  getStripe,
+} from "@/lib/payments/stripe";
+import type Stripe from "stripe";
 import {
   and,
   count,
@@ -75,9 +80,14 @@ async function countTotalUsers(): Promise<number> {
   return Number(row?.n ?? 0);
 }
 
-function paidSubscriptionActiveClause(now: Date) {
+function monchoopsProductClause(productIds: string[]) {
+  return inArray(userProductSubscription.stripeProductId, productIds);
+}
+
+function paidSubscriptionActiveClause(now: Date, productIds: string[]) {
   return and(
     eq(userProductSubscription.productKey, "monchoops"),
+    monchoopsProductClause(productIds),
     inArray(userProductSubscription.tier, PAID_TIERS as unknown as string[]),
     or(
       inArray(
@@ -93,30 +103,40 @@ function paidSubscriptionActiveClause(now: Date) {
   );
 }
 
-async function countPaidSubscribersNow(now: Date): Promise<number> {
+async function countPaidSubscribersNow(
+  now: Date,
+  productIds: string[]
+): Promise<number> {
+  if (productIds.length === 0) return 0;
   const [row] = await db
     .select({
       n: sql<number>`cast(count(distinct ${userProductSubscription.userId}) as int)`,
     })
     .from(userProductSubscription)
-    .where(paidSubscriptionActiveClause(now));
+    .where(paidSubscriptionActiveClause(now, productIds));
   return Number(row?.n ?? 0);
 }
 
-async function countTrialingNow(now: Date): Promise<number> {
+async function countTrialingNow(productIds: string[]): Promise<number> {
+  if (productIds.length === 0) return 0;
   const [row] = await db
     .select({ n: count() })
     .from(userProductSubscription)
     .where(
       and(
         eq(userProductSubscription.productKey, "monchoops"),
+        monchoopsProductClause(productIds),
         eq(userProductSubscription.status, "trialing")
       )
     );
   return Number(row?.n ?? 0);
 }
 
-async function countNewPaidSubscriptionUsers24h(since: Date): Promise<number> {
+async function countNewPaidSubscriptionUsers24h(
+  since: Date,
+  productIds: string[]
+): Promise<number> {
+  if (productIds.length === 0) return 0;
   const [row] = await db
     .select({
       n: sql<number>`cast(count(distinct ${userProductSubscription.userId}) as int)`,
@@ -125,6 +145,7 @@ async function countNewPaidSubscriptionUsers24h(since: Date): Promise<number> {
     .where(
       and(
         eq(userProductSubscription.productKey, "monchoops"),
+        monchoopsProductClause(productIds),
         inArray(userProductSubscription.tier, PAID_TIERS as unknown as string[]),
         isNotNull(userProductSubscription.stripeSubscriptionId),
         gte(userProductSubscription.createdAt, since)
@@ -133,13 +154,18 @@ async function countNewPaidSubscriptionUsers24h(since: Date): Promise<number> {
   return Number(row?.n ?? 0);
 }
 
-async function userIdsNewPaidSubs24h(since: Date): Promise<string[]> {
+async function userIdsNewPaidSubs24h(
+  since: Date,
+  productIds: string[]
+): Promise<string[]> {
+  if (productIds.length === 0) return [];
   const rows = await db
     .select({ userId: userProductSubscription.userId })
     .from(userProductSubscription)
     .where(
       and(
         eq(userProductSubscription.productKey, "monchoops"),
+        monchoopsProductClause(productIds),
         inArray(userProductSubscription.tier, PAID_TIERS as unknown as string[]),
         isNotNull(userProductSubscription.stripeSubscriptionId),
         gte(userProductSubscription.createdAt, since)
@@ -149,13 +175,18 @@ async function userIdsNewPaidSubs24h(since: Date): Promise<string[]> {
   return rows.map((r) => r.userId);
 }
 
-async function countCanceledSubsUpdated24h(since: Date): Promise<number> {
+async function countCanceledSubsUpdated24h(
+  since: Date,
+  productIds: string[]
+): Promise<number> {
+  if (productIds.length === 0) return 0;
   const [row] = await db
     .select({ n: count() })
     .from(userProductSubscription)
     .where(
       and(
         eq(userProductSubscription.productKey, "monchoops"),
+        monchoopsProductClause(productIds),
         eq(userProductSubscription.status, "canceled"),
         gte(userProductSubscription.updatedAt, since)
       )
@@ -165,8 +196,10 @@ async function countCanceledSubsUpdated24h(since: Date): Promise<number> {
 
 async function countPaidExpiringWithin7Days(
   now: Date,
-  in7Days: Date
+  in7Days: Date,
+  productIds: string[]
 ): Promise<number> {
+  if (productIds.length === 0) return 0;
   const [row] = await db
     .select({
       n: sql<number>`cast(count(distinct ${userProductSubscription.userId}) as int)`,
@@ -175,6 +208,7 @@ async function countPaidExpiringWithin7Days(
     .where(
       and(
         eq(userProductSubscription.productKey, "monchoops"),
+        monchoopsProductClause(productIds),
         inArray(userProductSubscription.tier, PAID_TIERS as unknown as string[]),
         inArray(
           userProductSubscription.status,
@@ -198,6 +232,42 @@ async function countUnopenedInbox(): Promise<number> {
   return Number(row?.n ?? 0);
 }
 
+function linePriceId(line: Stripe.InvoiceLineItem): string | null {
+  const legacy = (line as unknown as { price?: { id?: string } }).price;
+  if (legacy?.id) return legacy.id;
+  const pricing = (line as unknown as {
+    pricing?: { price_details?: { price?: string } };
+  }).pricing;
+  return pricing?.price_details?.price ?? null;
+}
+
+function invoiceMonchoopsAmount(
+  inv: Stripe.Invoice,
+  priceIds: Set<string>
+): number {
+  const lines = inv.lines?.data ?? [];
+  let sum = 0;
+  for (const line of lines) {
+    const pid = linePriceId(line);
+    if (pid && priceIds.has(pid)) {
+      sum += line.amount ?? 0;
+    }
+  }
+  return sum;
+}
+
+function invoiceMatchesMonchoops(
+  inv: Stripe.Invoice,
+  priceIds: Set<string>
+): boolean {
+  const lines = inv.lines?.data ?? [];
+  for (const line of lines) {
+    const pid = linePriceId(line);
+    if (pid && priceIds.has(pid)) return true;
+  }
+  return false;
+}
+
 async function stripeRenewalStats24h(
   sinceUnix: number
 ): Promise<{
@@ -213,6 +283,14 @@ async function stripeRenewalStats24h(
   let invoiceCount = 0;
   let startingAfter: string | undefined;
   try {
+    const monchoopsPriceIds = new Set(getMonchoopsStripePriceIds());
+    if (monchoopsPriceIds.size === 0) {
+      return {
+        invoiceCount: 0,
+        customerIds: [],
+        error: "No MONCHOOPS Stripe prices configured",
+      };
+    }
     for (;;) {
       const page = await stripe.invoices.list({
         status: "paid",
@@ -223,6 +301,7 @@ async function stripeRenewalStats24h(
       for (const inv of page.data) {
         if (inv.billing_reason !== "subscription_cycle") continue;
         if (!inv.subscription) continue;
+        if (!invoiceMatchesMonchoops(inv, monchoopsPriceIds)) continue;
         const c = inv.customer;
         if (typeof c === "string") {
           customerIds.add(c);
@@ -253,6 +332,13 @@ async function stripeSubscriptionRevenueMonth(
   const byCurrency: Record<string, number> = {};
   let startingAfter: string | undefined;
   try {
+    const monchoopsPriceIds = new Set(getMonchoopsStripePriceIds());
+    if (monchoopsPriceIds.size === 0) {
+      return {
+        byCurrency: {},
+        error: "No MONCHOOPS Stripe prices configured",
+      };
+    }
     for (;;) {
       const page = await stripe.invoices.list({
         status: "paid",
@@ -262,10 +348,10 @@ async function stripeSubscriptionRevenueMonth(
       });
       for (const inv of page.data) {
         if (!inv.subscription) continue;
-        const paid = inv.amount_paid ?? 0;
-        if (paid <= 0) continue;
+        const amount = invoiceMonchoopsAmount(inv, monchoopsPriceIds);
+        if (amount <= 0) continue;
         const cur = (inv.currency || "usd").toLowerCase();
-        byCurrency[cur] = (byCurrency[cur] || 0) + paid;
+        byCurrency[cur] = (byCurrency[cur] || 0) + amount;
       }
       if (!page.has_more || page.data.length === 0) break;
       startingAfter = page.data[page.data.length - 1].id;
@@ -306,6 +392,14 @@ export async function collectDailySaasMetrics(): Promise<DailySaasMetrics> {
 
   const monthStartUnix = await getArgentinaMonthStartUnix();
 
+  let monchoopsProductIds: string[] = [];
+  let productIdsError: string | undefined;
+  try {
+    monchoopsProductIds = await getMonchoopsStripeProductIds();
+  } catch (e) {
+    productIdsError = e instanceof Error ? e.message : String(e);
+  }
+
   const [
     newUsers24h,
     registrationsMonthArgentina,
@@ -323,15 +417,15 @@ export async function collectDailySaasMetrics(): Promise<DailySaasMetrics> {
     countNewUsers24h(since24h),
     countRegistrationsMonthAr(),
     countTotalUsers(),
-    countPaidSubscribersNow(now),
-    countTrialingNow(now),
-    countNewPaidSubscriptionUsers24h(since24h),
-    countCanceledSubsUpdated24h(since24h),
-    countPaidExpiringWithin7Days(now, in7Days),
+    countPaidSubscribersNow(now, monchoopsProductIds),
+    countTrialingNow(monchoopsProductIds),
+    countNewPaidSubscriptionUsers24h(since24h, monchoopsProductIds),
+    countCanceledSubsUpdated24h(since24h, monchoopsProductIds),
+    countPaidExpiringWithin7Days(now, in7Days, monchoopsProductIds),
     countUnopenedInbox(),
     stripeRenewalStats24h(since24hUnix),
     stripeSubscriptionRevenueMonth(monthStartUnix, nowUnix),
-    userIdsNewPaidSubs24h(since24h),
+    userIdsNewPaidSubs24h(since24h, monchoopsProductIds),
   ]);
 
   const renewalUsersFromStripe = await mapStripeCustomersToUserIds(
@@ -343,7 +437,7 @@ export async function collectDailySaasMetrics(): Promise<DailySaasMetrics> {
     distinctUsers.add(id);
   }
 
-  const stripeError = [renewalStripe.error, revenueMonth.error]
+  const stripeError = [productIdsError, renewalStripe.error, revenueMonth.error]
     .filter(Boolean)
     .join(" - ");
 

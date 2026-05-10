@@ -731,3 +731,23 @@ export function isTestMode(): boolean {
   const apiKey = process.env.STRIPE_SECRET_KEY;
   return !!apiKey && apiKey.startsWith("sk_test_");
 }
+
+export function getMonchoopsStripePriceIds(): string[] {
+  return [
+    process.env.STRIPE_MONCHOOPS_PRO_MONTHLY_PRICE_ID,
+    process.env.STRIPE_MONCHOOPS_PRO_ANNUAL_PRICE_ID,
+    process.env.STRIPE_MONCHOOPS_UNLIMITED_MONTHLY_PRICE_ID,
+    process.env.STRIPE_MONCHOOPS_UNLIMITED_ANNUAL_PRICE_ID,
+  ].filter((p): p is string => !!p);
+}
+
+let monchoopsProductIdsCache: { ids: string[]; at: number } | null = null;
+
+export async function getMonchoopsStripeProductIds(): Promise<string[]> {
+  if (monchoopsProductIdsCache && Date.now() - monchoopsProductIdsCache.at < 10 * 60 * 1000) {
+    return monchoopsProductIdsCache.ids;
+  }
+  const ids = await getStripeProductIdsForProduct(getMonchoopsStripePriceIds());
+  monchoopsProductIdsCache = { ids, at: Date.now() };
+  return ids;
+}
