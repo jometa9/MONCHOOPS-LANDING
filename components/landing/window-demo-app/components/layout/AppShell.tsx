@@ -4,7 +4,7 @@ import { TitleBar } from './TitleBar';
 
 export function AppShell() {
   return (
-    <div className="flex h-full flex-col">
+    <div className="relative flex h-full flex-col" data-demo-modal-root>
       <TitleBar />
       <div className="flex min-h-0 flex-1">
         <Sidebar />
