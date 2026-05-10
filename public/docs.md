@@ -1,53 +1,77 @@
 ### Table of Contents
 
 1. [Introduction](#introduction)
-2. [System requirements](#system-requirements)
-3. [Installation](#installation)
-4. [Adding your first Instagram account](#adding-your-first-instagram-account)
-5. [Proxies](#proxies)
-6. [Account warmup](#account-warmup)
-7. [Scraping leads](#scraping-leads)
-8. [Lead categories](#lead-categories)
-9. [Message variants](#message-variants)
-10. [Cold DM campaigns](#cold-dm-campaigns)
-11. [The job queue](#the-job-queue)
-12. [DM history](#dm-history)
-13. [Settings](#settings)
-14. [Updates](#updates)
-15. [FAQ](#faq)
+2. [What MonchoOps gives you](#what-monchoops-gives-you)
+3. [Desktop app](#desktop-app)
+   1. [System requirements](#system-requirements)
+   2. [Installation](#installation)
+   3. [Adding Instagram accounts](#adding-instagram-accounts)
+   4. [Bulk account import](#bulk-account-import)
+   5. [Proxies](#proxies)
+   6. [Scraping leads](#scraping-leads)
+   7. [Categories](#categories)
+   8. [Data](#data)
+   9. [Message variants](#message-variants)
+   10. [Cold DM campaigns](#cold-dm-campaigns)
+   11. [Queue](#queue)
+   12. [DM history](#dm-history)
+   13. [Settings](#settings)
+4. [Chrome extension](#chrome-extension)
+   1. [What it does](#what-it-does)
+   2. [Installation](#extension-installation)
+   3. [Sending DMs from the extension](#sending-dms-from-the-extension)
+   4. [Desktop bridge](#desktop-bridge)
+   5. [Limits to keep in mind](#limits-to-keep-in-mind)
+5. [Updates](#updates)
+6. [FAQ](#faq)
 
 ---
 
 ## Introduction
 
-MonchoOps is a desktop application for Instagram outreach. Everything runs on your computer: account sessions, scrapers, warmup workers, and DM senders. There is no shared cloud bot. Your data lives in an encrypted SQLite database on your machine.
+MonchoOps is the Instagram outreach toolkit from IPTRADE COPIER LLC. It is built for founders, agencies and creators who run cold outreach on Instagram and don't want to share their accounts, sessions or leads with a third party.
 
-Built by IPTRADE COPIER LLC for founders, agencies and creators who run cold outreach on Instagram and don't want to share their accounts, sessions or leads with a third party.
+There are two products you can use, together or separately:
+
+- A **desktop app** (Windows and macOS) that runs many Instagram accounts in parallel, scrapes leads, and sends cold DM campaigns end-to-end on your machine.
+- A **Chrome extension** that sends cold DMs from the Instagram account you are already logged into in your browser — lighter setup, single account, no proxies needed.
+
+Everything runs locally. Your accounts, sessions and leads stay on your computer.
 
 ---
 
-## System requirements
+## What MonchoOps gives you
+
+- Multi-account Instagram management (desktop only).
+- Lead scraping by username, post, hashtag or location (desktop only).
+- Lead categories with auto-dedup and CSV export.
+- Reusable message variant groups, with rotation per send to avoid templated-looking DMs.
+- Cold DM campaigns with optional pre-DM engagement (follow, like recent posts, watch stories).
+- A live job queue with progress and per-message history.
+- A Chrome extension that mirrors the cold DM flow and can read leads straight from your desktop app.
+
+---
+
+## Desktop app
+
+### System requirements
 
 - **Windows 10 or 11 (x64)** or **macOS Apple Silicon (arm64)**.
 - 8 GB RAM minimum, 4 GB free disk.
-- A reliable internet connection (the proxies you use will determine the IP your accounts present).
+- A reliable internet connection. The proxies you assign decide the IP your accounts present.
 - Chromium is bundled with the installer — no extra runtime required.
 
----
+### Installation
 
-## Installation
-
-1. Download the appropriate installer from your dashboard at [monchoops.com/dashboard](https://monchoops.com/dashboard).
+1. Download the installer for your operating system from your dashboard at [monchoops.com/dashboard](https://monchoops.com/dashboard).
 2. Run the installer.
-3. Open MonchoOps. Sign in with the same email address you used to subscribe (email + password or Google OAuth).
+3. Open MonchoOps and sign in with the same email you used to subscribe (email + password or Google OAuth).
 
 The first launch creates a local user-data folder under your OS application data directory. Everything MonchoOps stores lives there.
 
----
+### Adding Instagram accounts
 
-## Adding your first Instagram account
-
-1. Open the **Accounts** screen and click **Add account**.
+1. Open the **Instagram accounts** screen and click **Add account**.
 2. A window opens hosting a real Instagram login flow inside an isolated Chromium profile.
 3. Enter the credentials for the Instagram account.
 4. Solve any verification (SMS, email, captcha) Instagram presents.
@@ -57,115 +81,147 @@ You can repeat this for as many accounts as your plan allows.
 
 > **Tip:** Sign in once and let the account sit idle for a day or two before doing anything else. Instagram&apos;s heuristics like to see a session "live" for a bit before you start automating.
 
----
+### Bulk account import
 
-## Proxies
+If you have many accounts to add, use the **Import from CSV** option in the Instagram accounts screen. Upload a CSV with usernames and passwords and MonchoOps will queue the logins and run them one after another. Each account is logged in inside its own isolated profile, just like a manual sign-in.
 
-For any account you actually care about, **assign a proxy** from the account&apos;s detail panel.
+You can monitor progress from the **Queue** screen and retry any failed login from the accounts list.
+
+### Proxies
+
+For any account you actually care about, **assign a proxy** from the account&apos;s row in the accounts list.
 
 - Supported: HTTP and SOCKS5.
 - Format: `protocol://user:pass@host:port`.
 - We recommend residential or mobile proxies. Datacenter proxies often fail Instagram&apos;s checks.
 - One proxy per account. MonchoOps does not rotate.
+- A proxy can be temporarily disabled per account without removing it.
 
-Once a proxy is assigned, the account&apos;s isolated Chromium profile uses it for every request — login, scraping, warmup, DMs.
+Once a proxy is assigned, the account&apos;s isolated Chromium profile uses it for every request — login, scraping, DMs.
 
----
+### Scraping leads
 
-## Account warmup
-
-Brand-new accounts (and accounts you haven&apos;t logged into via MonchoOps before) should be warmed before you DM anyone.
-
-In the **Warmup** screen you can schedule per-account activities:
-
-- Browse feed
-- Watch stories
-- Watch reels
-- Like by hashtag
-- Like by location
-- Follow by hashtag
-- Follow by location
-
-Configure a daily session window, the number of actions per category, and the interval between them. MonchoOps tracks the **distinct days** an account has been actively warmed. We mark an account as **Warmed** only after:
-
-- The account is at least 7 days old, AND
-- It has at least 2 distinct active warmup days.
-
-You can run warmups in parallel with other jobs.
-
----
-
-## Scraping leads
-
-The **Scrape Leads** screen has four modes:
+The **Scrape** screen has four modes:
 
 - **By username** — pulls the followers of a target account.
 - **By post** — pulls the likers and commenters of a single post.
 - **By hashtag** — pulls users who recently used a hashtag.
 - **By location** — pulls recent posters at a location.
 
-Pick the source account that should run the scrape (yes, it uses one of your accounts), the target, and a category to drop the results into. The scrape runs in the queue; results land in **Leads** when it finishes.
+Pick one of your Instagram accounts to run the scrape, the target, and a category to drop the results into. The job moves into the queue; results land in **Data** when it finishes.
 
----
-
-## Lead categories
+### Categories
 
 Categories let you pool scrapes for the same audience. Two important behaviors:
 
-- **Auto-dedupe** — usernames already in a category aren&apos;t added twice when you run a new scrape into the same category.
-- **CSV export** — every category exports as a single CSV with the columns you&apos;d expect (username, source, scraped_at).
+- **Auto-dedupe** — usernames already in a category are not added twice when you run a new scrape into the same category.
+- **CSV export** — every category exports as a single CSV with the columns you would expect (username, source, scraped_at).
 
----
+You can create, rename and delete categories from the **Categories** screen, and tap into one to see every lead inside it.
 
-## Message variants
+### Data
 
-A **variant group** is a named set of up to 20 DM message texts that MonchoOps will rotate during a campaign. This keeps your sends from looking templated.
+The **Data** screen lists every scrape job you have ever run, with its source, target, account used, lead count, and status. Open any row to inspect the raw lead list, retry a failed scrape, or download the results as CSV.
 
-In the editor you can use plain text. Future versions will add light spintax / handle injection.
+### Message variants
 
----
+A **variant group** is a named set of up to 20 DM message texts that MonchoOps rotates during a campaign. Rotating variants keeps your sends from looking templated.
 
-## Cold DM campaigns
+Use plain text and the `{{username}}` placeholder to personalize messages with the recipient&apos;s handle.
 
-Open **Cold DM**, then:
+### Cold DM campaigns
 
-1. Pick the account that will send the messages (must be warmed).
-2. Pick the leads — a category, a CSV import, or hand-typed usernames.
+Open **Cold DM**, then walk through the steps:
+
+1. Pick the account that will send the messages.
+2. Pick the leads — a category, a saved scrape job, a CSV import, or hand-typed usernames.
 3. Pick a message variant group.
-4. Optionally toggle **Follow before send** and **Like recent post** to add lightweight engagement before each DM.
-5. Set the interval between sends (in seconds).
-6. Review and start.
+4. Optionally enable **Pre-DM interactions**: follow the lead, like up to 5 of their recent posts, and/or watch their stories. These warm up the conversation before the DM lands.
+5. Set the interval between sends.
+6. Review the summary and start.
 
-The campaign moves into the queue. You&apos;ll see live progress, and the **DM History** screen will record every send with its status.
+The campaign moves into the queue. You will see live progress, and the **DM history** screen will record every send with its status.
 
----
+### Queue
 
-## The job queue
+Every long-running task — scrape, bulk login, cold DM — becomes a job in the queue. The **Queue** screen shows running and pending jobs, with live progress and a cancel button. Closing the app pauses jobs gracefully and they resume the next time you open MonchoOps.
 
-Every long-running task (scrape, warmup, cold DM) becomes a job in the queue. The **Queue** screen shows running and pending jobs, with live progress bars and a cancel button. Closing the app pauses jobs gracefully.
+### DM history
 
----
+The **DM history** screen lists every cold DM campaign and lets you drill into a per-message log: which variant was used, sent or failed status, and any error reported by Instagram.
 
-## DM history
-
-The **DM History** screen lists every Cold DM campaign and lets you drill into a per-message log: which variant was used, sent/failed status, and any error reported by Instagram.
-
----
-
-## Settings
+### Settings
 
 The **Settings** screen exposes:
 
-- **Headless mode** — run automation without showing the Chromium window.
-- **Sound alerts** — notification sound when a job completes.
-- **Refresh session** — re-login an account if it expired.
-- **Delete data** — wipe accounts, leads, or everything from the local database.
+- **Account info** — name, email, current plan, and app version, plus a **Refresh subscription** button if you just changed plans.
+- **Language** — System, English, or Spanish.
+- **Headless mode** — run automation without showing the Chromium window. When off, you can also toggle **Full window** to show the automated browser at full size.
+- **Dark theme** — toggle light/dark UI.
+- **Sounds on completion** — play a notification sound when a job finishes.
+- **Data controls** — delete all Instagram accounts, delete all scrapes, or wipe everything from the local database.
+
+---
+
+## Chrome extension
+
+The MonchoOps Chrome extension is a lighter way to run cold DMs. It uses the Instagram account you are already logged into in Chrome, so there are no credentials, no proxies, and no separate Chromium to install. Same UX as the desktop app for the cold DM flow.
+
+### What it does
+
+- License-key login (use your MonchoOps license).
+- Build a campaign with manual usernames, a CSV import, **or leads pulled straight from your desktop app** (categories and past scrape results — see [Desktop bridge](#desktop-bridge)).
+- Reusable message variant groups with the `{{username}}` placeholder.
+- Optional pre-DM interactions: follow, watch stories, like up to a few recent posts.
+- Configurable interval between sends.
+- Background scheduler that keeps running even with the dashboard tab closed, as long as Chrome is open.
+- Per-lead status, full DM history, and total counters.
+
+> The extension only sends DMs. It does not scrape leads — scraping is desktop-only.
+
+### Extension installation
+
+1. Install the extension from the link on your dashboard at [monchoops.com/dashboard](https://monchoops.com/dashboard).
+2. Pin the MonchoOps icon next to your address bar for quick access.
+3. Make sure you are logged into [instagram.com](https://www.instagram.com/) in the same Chrome profile.
+4. Click the icon, enter your license key, then click **Open dashboard** to land in the full UI.
+
+### Sending DMs from the extension
+
+1. Open the extension dashboard and go to **New campaign**.
+2. Add leads — paste usernames, upload a CSV, or click **Import from desktop** to pull a category or past scrape from your desktop app (see below).
+3. Pick or create a message variant group.
+4. Optionally enable pre-DM interactions.
+5. Set the interval between sends and start the campaign.
+
+You can monitor progress from the **Campaigns** screen, see every send in **History**, and pause or cancel at any time.
+
+### Desktop bridge
+
+If the MonchoOps desktop app is running on the same machine, the extension can read your saved lead categories and past scrape results — no CSV export step needed.
+
+How to pair them:
+
+1. Open the desktop app and keep it running in the background.
+2. In the extension&apos;s **New campaign** flow, click **Import from desktop**.
+3. The extension shows a 4-digit code; the desktop app simultaneously pops up an "Allow this extension?" prompt with the same code.
+4. Confirm in the desktop app and the two are paired.
+
+After pairing, you can browse and import any category or scrape result from the desktop directly into the campaign you are building. You can revoke a paired extension at any time from the desktop&apos;s Settings, or unpair from the extension&apos;s Settings.
+
+The bridge only listens on your local machine — it is invisible to other devices on the network and to other applications.
+
+### Limits to keep in mind
+
+- The extension works only with the Instagram account currently logged into Chrome. To switch accounts, log out of Instagram and log into a different one in the same Chrome profile.
+- Chrome must be running for campaigns to make progress. If Chrome is closed, the campaign pauses and resumes when Chrome restarts.
+- The extension dashboard tab itself can be closed; the background scheduler keeps running.
 
 ---
 
 ## Updates
 
-MonchoOps checks `monchoops.com/api/app-version` periodically. When a new version is available, you&apos;ll see a banner with a download link. Updates are manual — you choose when to install them.
+MonchoOps checks for new versions automatically. When one is available, you will see a banner in the app with a download link. Updates are manual — you choose when to install them.
 
 ---
 
