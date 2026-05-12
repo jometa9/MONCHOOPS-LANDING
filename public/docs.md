@@ -110,6 +110,8 @@ The **Scrape** screen has four modes:
 
 Pick one of your Instagram accounts to run the scrape, the target, and a category to drop the results into. The job moves into the queue; results land in **Data** when it finishes.
 
+Every scrape counts toward your plan's monthly leads quota (Free: 100, Pro: 5,000, Unlimited: no cap). The counter resets on the 1st of each month (UTC). If the scrape would exceed your remaining quota for the month, MonchoOps automatically stops it at the cap.
+
 ### Categories
 
 Categories let you pool scrapes for the same audience. Two important behaviors:

@@ -11,6 +11,7 @@ This policy explains how IPTRADE COPIER LLC bills and charges for our software a
 **Free Plan:** $0
 - 1 Instagram account
 - 100 DMs / month
+- 100 scraped leads / month
 - No payment required
 
 **Pro Plan:**
@@ -18,12 +19,14 @@ This policy explains how IPTRADE COPIER LLC bills and charges for our software a
 - Annual: $278/year (20% discount)
 - Up to 5 Instagram accounts
 - 5,000 DMs / month
+- 5,000 scraped leads / month
 
 **Unlimited Plan:**
 - Monthly: $79/month
 - Annual: $758/year (20% discount)
 - Unlimited Instagram accounts
 - Unlimited DMs
+- Unlimited scraped leads
 
 ---
 

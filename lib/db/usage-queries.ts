@@ -3,6 +3,7 @@ import { db } from "./drizzle";
 import {
   dmEvent,
   instagramAccount,
+  scrapeEvent,
   type InstagramAccount,
 } from "./schema";
 import { startOfCurrentMonthUTC } from "@/lib/subscriptions/plan-limits";
@@ -152,4 +153,44 @@ export async function recordDmEvents(
   if (rows.length === 0) return 0;
   await db.insert(dmEvent).values(rows);
   return rows.length;
+}
+
+export async function countLeadsThisMonth(userId: string): Promise<number> {
+  const since = startOfCurrentMonthUTC();
+  const rows = await db
+    .select({ c: sql<number>`COALESCE(SUM(${scrapeEvent.leadCount}), 0)::int` })
+    .from(scrapeEvent)
+    .where(and(eq(scrapeEvent.userId, userId), gte(scrapeEvent.scrapedAt, since)));
+  return rows[0]?.c ?? 0;
+}
+
+export interface RecordScrapeInput {
+  jobId: string;
+  kind: string;
+  leadCount: number;
+  deviceId?: string | null;
+  scrapedAt?: Date;
+}
+
+export async function recordScrapeEvent(
+  userId: string,
+  input: RecordScrapeInput
+): Promise<number> {
+  const jobId = input.jobId.trim();
+  const kind = input.kind.trim();
+  const leadCount = Math.max(0, Math.floor(input.leadCount));
+  if (!jobId || !kind || leadCount === 0) return 0;
+  const result = await db
+    .insert(scrapeEvent)
+    .values({
+      userId,
+      jobId,
+      kind,
+      leadCount,
+      deviceId: input.deviceId ?? null,
+      scrapedAt: input.scrapedAt ?? new Date(),
+    })
+    .onConflictDoNothing({ target: [scrapeEvent.userId, scrapeEvent.jobId] })
+    .returning({ leadCount: scrapeEvent.leadCount });
+  return result.length > 0 ? result[0].leadCount : 0;
 }

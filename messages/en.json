@@ -209,7 +209,7 @@
       "pillDms": "100 DMs / month",
       "f1": "Windows & macOS desktop app",
       "f2": "Local-only data, encrypted at rest",
-      "f3": "Basic scraping (500 leads / scrape)",
+      "f3": "Basic scraping (100 leads / month)",
       "f4": "Limited warmup"
     },
     "pro": {
@@ -220,7 +220,7 @@
       "f1": "Windows & macOS desktop app",
       "f2": "Local-only data, encrypted at rest",
       "f3": "Proxy per account (HTTP / SOCKS5)",
-      "f4": "Full warmup & scraping (4 modes)",
+      "f4": "Full warmup & scraping (5,000 leads / month, 4 modes)",
       "f5": "20 message variants per group",
       "f6": "Categories & CSV export"
     },
@@ -235,7 +235,7 @@
       "f4": "Priority support"
     },
     "dashboardTitle": "Pricing plans",
-    "dashboardSubtitle": "Pick the plan that matches your Instagram volume — accounts, monthly DMs and scrape jobs. Upgrade or downgrade at any time."
+    "dashboardSubtitle": "Pick the plan that matches your Instagram volume — accounts, monthly DMs and scraped leads. Upgrade or downgrade at any time."
   },
   "faq": {
     "whatIsMonchoops": {
@@ -252,7 +252,7 @@
     },
     "howManyAccounts": {
       "q": "How many Instagram accounts can I run?",
-      "a": "It depends on your plan — see the Pricing section below for the current limits on accounts, monthly DMs, and scrape jobs. The Free plan exists so you can test the full workflow (add an account, scrape leads, send a small Cold DM run) before paying anything."
+      "a": "It depends on your plan — see the Pricing section below for the current limits on accounts, monthly DMs, and scraped leads. The Free plan exists so you can test the full workflow (add an account, scrape leads, send a small Cold DM run) before paying anything."
     },
     "doINeedProxies": {
       "q": "Do I need proxies?",

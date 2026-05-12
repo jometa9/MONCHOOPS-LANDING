@@ -153,11 +153,31 @@ export const dmEvent = pgTable(
   })
 );
 
+export const scrapeEvent = pgTable(
+  "scrapeEvent",
+  {
+    id: bigserial("id", { mode: "number" }).primaryKey(),
+    userId: uuid("userId")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    jobId: varchar("jobId", { length: 100 }).notNull(),
+    kind: varchar("kind", { length: 40 }).notNull(),
+    leadCount: integer("leadCount").notNull(),
+    deviceId: varchar("deviceId", { length: 100 }),
+    scrapedAt: timestamp("scrapedAt").notNull().defaultNow(),
+  },
+  (t) => ({
+    userScrapedAtIdx: index("scrapeEvent_user_scrapedAt_idx").on(t.userId, t.scrapedAt),
+    userJobIdUnique: uniqueIndex("scrapeEvent_user_jobId_unique").on(t.userId, t.jobId),
+  })
+);
+
 export const userRelations = relations(user, ({ many }) => ({
   accounts: many(accounts),
   productSubscriptions: many(userProductSubscription),
   instagramAccounts: many(instagramAccount),
   dmEvents: many(dmEvent),
+  scrapeEvents: many(scrapeEvent),
 }));
 
 export const instagramAccountRelations = relations(
@@ -173,6 +193,13 @@ export const instagramAccountRelations = relations(
 export const dmEventRelations = relations(dmEvent, ({ one }) => ({
   user: one(user, {
     fields: [dmEvent.userId],
+    references: [user.id],
+  }),
+}));
+
+export const scrapeEventRelations = relations(scrapeEvent, ({ one }) => ({
+  user: one(user, {
+    fields: [scrapeEvent.userId],
     references: [user.id],
   }),
 }));
@@ -203,6 +230,8 @@ export type InstagramAccount = typeof instagramAccount.$inferSelect;
 export type NewInstagramAccount = typeof instagramAccount.$inferInsert;
 export type DmEvent = typeof dmEvent.$inferSelect;
 export type NewDmEvent = typeof dmEvent.$inferInsert;
+export type ScrapeEvent = typeof scrapeEvent.$inferSelect;
+export type NewScrapeEvent = typeof scrapeEvent.$inferInsert;
 
 export type ProductKey = "monchoops";
 export type SubscriptionTier = "free" | "pro" | "unlimited";

@@ -2,6 +2,7 @@ import { authenticateApiKey } from "@/lib/auth/api-key";
 import {
   countActiveInstagramAccounts,
   countDmsThisMonth,
+  countLeadsThisMonth,
 } from "@/lib/db/usage-queries";
 import {
   getSubscriptionTier,
@@ -22,10 +23,18 @@ export async function GET(request: NextRequest) {
       : getSubscriptionTier(entitlements.monchoops);
   const limits = limitsForTier(tier, user.role === "admin");
 
-  const [accountUsage, dmUsage] = await Promise.all([
+  const [accountUsage, dmUsage, leadUsage] = await Promise.all([
     countActiveInstagramAccounts(user.id),
     countDmsThisMonth(user.id),
+    countLeadsThisMonth(user.id),
   ]);
+
+  const windowStart = (() => {
+    const d = new Date();
+    return new Date(
+      Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1)
+    ).toISOString();
+  })();
 
   return NextResponse.json({
     plan: tier,
@@ -44,12 +53,16 @@ export async function GET(request: NextRequest) {
         limits.dmMonthlyLimit == null
           ? null
           : Math.max(0, limits.dmMonthlyLimit - dmUsage),
-      windowStart: (() => {
-        const d = new Date();
-        return new Date(
-          Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1)
-        ).toISOString();
-      })(),
+      windowStart,
+    },
+    leads: {
+      used: leadUsage,
+      limit: limits.leadsMonthlyLimit,
+      remaining:
+        limits.leadsMonthlyLimit == null
+          ? null
+          : Math.max(0, limits.leadsMonthlyLimit - leadUsage),
+      windowStart,
     },
   });
 }
