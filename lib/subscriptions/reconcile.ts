@@ -10,7 +10,6 @@ export interface ReconcileResult {
     status?: boolean;
     expiresAt?: boolean;
     billingPeriod?: boolean;
-    accountLimit?: boolean;
     tier?: boolean;
   };
   error?: string;

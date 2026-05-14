@@ -1,10 +1,12 @@
 import AdminAppVersion from "@/components/admin-app-version";
 import AdminDeleteUser from "@/components/admin-delete-user";
+import AdminPlanLimits from "@/components/admin-plan-limits";
 import AdminSettings from "@/components/admin-settings";
 import AdminInboxSettings from "@/components/admin-inbox-settings";
 import { getCurrentUserFromSession } from "@/lib/db/queries";
 import {
   Download,
+  Gauge,
   Gift,
   Mail,
   Trash2,
@@ -51,6 +53,18 @@ export default async function AdminSettingsPage() {
                 </div>
                 <AdminDeleteUser />
               </div>
+            </div>
+          </section>
+
+          <section>
+            <div className="group rounded-lg bg-gray-100 p-3 transition-all duration-200 w-full">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-3 bg-white rounded-lg border border-gray-200">
+                  <Gauge className="h-5 w-5 text-gray-700" />
+                </div>
+                <p className="text-lg">{t("planLimits")}</p>
+              </div>
+              <AdminPlanLimits />
             </div>
           </section>
 

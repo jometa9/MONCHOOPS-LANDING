@@ -32,7 +32,6 @@ export const userProductSubscription = pgTable("userProductSubscription", {
     .references(() => user.id, { onDelete: "cascade" }),
   productKey: varchar("productKey", { length: 20 }).notNull(),
   tier: varchar("tier", { length: 20 }).notNull().default("free"),
-  accountLimit: integer("accountLimit"),
   status: varchar("status", { length: 20 }).notNull().default("active"),
   billingPeriod: varchar("billingPeriod", { length: 10 }),
   stripeSubscriptionId: text("stripeSubscriptionId").unique(),
@@ -42,6 +41,15 @@ export const userProductSubscription = pgTable("userProductSubscription", {
   metaPurchaseEventId: text("metaPurchaseEventId"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+});
+
+export const planLimits = pgTable("planLimits", {
+  tier: varchar("tier", { length: 20 }).primaryKey(),
+  accountLimit: integer("accountLimit"),
+  dmMonthlyLimit: integer("dmMonthlyLimit"),
+  leadsMonthlyLimit: integer("leadsMonthlyLimit"),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+  updatedBy: uuid("updatedBy").references(() => user.id),
 });
 
 export const appSettings = pgTable("appSettings", {
@@ -218,6 +226,8 @@ export type User = typeof user.$inferSelect;
 export type NewUser = typeof user.$inferInsert;
 export type AppSettings = typeof appSettings.$inferSelect;
 export type NewAppSettings = typeof appSettings.$inferInsert;
+export type PlanLimitsRow = typeof planLimits.$inferSelect;
+export type NewPlanLimitsRow = typeof planLimits.$inferInsert;
 export type UserProductSubscription =
   typeof userProductSubscription.$inferSelect;
 export type NewUserProductSubscription =

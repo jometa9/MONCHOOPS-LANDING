@@ -25,6 +25,7 @@
     "make-admin": "npx tsx scripts/make-admin.ts",
     "db:migrate:subscription-expiry": "psql $DATABASE_URL -f lib/db/migrations/add_subscription_expiry.sql",
     "db:migrate:subscription-limits": "psql $DATABASE_URL -f lib/db/migrations/add_subscription_limits.sql",
+    "db:migrate:plan-limits": "psql $DATABASE_URL -f lib/db/migrations/add_plan_limits.sql",
     "db:setup:prod": "npx tsx scripts/setup-production-db.ts",
     "db:reset:prod": "npx tsx scripts/reset-db.ts"
   },

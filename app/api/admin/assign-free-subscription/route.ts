@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await req.json();
-    const { email, productKey, plan, duration, accountLimit, force } = data;
+    const { email, productKey, plan, duration, force } = data;
 
     if (!email || !productKey || !duration) {
       return NextResponse.json(

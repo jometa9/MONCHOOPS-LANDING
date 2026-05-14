@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     user.role === "admin"
       ? "unlimited"
       : getSubscriptionTier(entitlements.monchoops);
-  const limits = limitsForTier(tier, user.role === "admin");
+  const limits = await limitsForTier(tier, user.role === "admin");
 
   const [accounts, used] = await Promise.all([
     listActiveInstagramAccounts(user.id),

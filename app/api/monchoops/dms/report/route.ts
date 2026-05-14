@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
     user.role === "admin"
       ? "unlimited"
       : getSubscriptionTier(entitlements.monchoops);
-  const limits = limitsForTier(tier, user.role === "admin");
+  const limits = await limitsForTier(tier, user.role === "admin");
 
   const currentUsed = await countDmsThisMonth(user.id);
 

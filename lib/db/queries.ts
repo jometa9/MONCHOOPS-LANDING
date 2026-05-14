@@ -88,7 +88,6 @@ export async function upsertProductSubscription(
   productKey: ProductKey,
   data: {
     tier?: string;
-    accountLimit?: number | null;
     status?: string;
     billingPeriod?: "monthly" | "annual" | null;
     stripeSubscriptionId?: string | null;
@@ -117,7 +116,6 @@ export async function upsertProductSubscription(
         userId,
         productKey,
         tier: data.tier || "free",
-        accountLimit: data.accountLimit ?? null,
         status: data.status || "active",
         billingPeriod: data.billingPeriod ?? null,
         stripeSubscriptionId: data.stripeSubscriptionId,
@@ -315,7 +313,10 @@ export async function getUserDataForDashboard(userId: string) {
     (!sub.expiresAt || sub.expiresAt <= new Date());
   const monchoopsTier =
     userData.role === "admin" ? "unlimited" : getSubscriptionTier(sub);
-  const planLimits = limitsForTier(monchoopsTier, userData.role === "admin");
+  const monchoopsLimits = await limitsForTier(
+    monchoopsTier,
+    userData.role === "admin"
+  );
 
   return {
     userId: userData.id,
@@ -331,7 +332,7 @@ export async function getUserDataForDashboard(userId: string) {
             originalTier: sub?.tier || "free",
             status: sub?.status || "none",
             expiresAt: sub?.expiresAt?.toISOString() || null,
-            limits: planLimits,
+            limits: monchoopsLimits,
             usage: {
               accounts: accountUsage,
               dmsThisMonth: dmUsage,

@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
 
     if (!paymentsEnabled) {
       const appSettings = await getAppSettings();
-      const limits = limitsForTier("unlimited", true);
+      const limits = await limitsForTier("unlimited", true);
       const [accountUsage, dmUsage, leadUsage] = await Promise.all([
         countActiveInstagramAccounts(user.id),
         countDmsThisMonth(user.id),
@@ -227,7 +227,7 @@ export async function GET(request: NextRequest) {
       user.role === "admin"
         ? "unlimited"
         : getSubscriptionTier(entitlements.monchoops);
-    const monchoopsLimits = limitsForTier(monchoopsTier, user.role === "admin");
+    const monchoopsLimits = await limitsForTier(monchoopsTier, user.role === "admin");
 
     const [accountUsage, dmUsage, leadUsage] = await Promise.all([
       countActiveInstagramAccounts(user.id),
