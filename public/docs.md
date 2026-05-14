@@ -1,3 +1,5 @@
+<div class="docs-toc">
+
 ### Table of Contents
 
 1. [Introduction](#introduction)
@@ -24,6 +26,8 @@
    5. [Limits to keep in mind](#limits-to-keep-in-mind)
 5. [Updates](#updates)
 6. [FAQ](#faq)
+
+</div>
 
 ---
 

@@ -13,10 +13,12 @@ interface ProductSubscription {
   limits?: {
     accountLimit: number | null;
     dmMonthlyLimit: number | null;
+    leadsMonthlyLimit: number | null;
   };
   usage?: {
     accounts: number;
     dmsThisMonth: number;
+    leadsThisMonth: number;
   };
   billingPeriod?: "monthly" | "annual" | null;
   accountLimit?: number | null;

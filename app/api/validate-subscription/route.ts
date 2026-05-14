@@ -9,6 +9,7 @@ import {
 import {
   countActiveInstagramAccounts,
   countDmsThisMonth,
+  countLeadsThisMonth,
 } from "@/lib/db/usage-queries";
 import { userProductSubscription } from "@/lib/db/schema";
 import { paymentsEnabled } from "@/lib/payments/feature-flag";
@@ -40,9 +41,10 @@ export async function GET(request: NextRequest) {
     if (!paymentsEnabled) {
       const appSettings = await getAppSettings();
       const limits = limitsForTier("unlimited", true);
-      const [accountUsage, dmUsage] = await Promise.all([
+      const [accountUsage, dmUsage, leadUsage] = await Promise.all([
         countActiveInstagramAccounts(user.id),
         countDmsThisMonth(user.id),
+        countLeadsThisMonth(user.id),
       ]);
       return NextResponse.json({
         email: user.email,
@@ -53,8 +55,10 @@ export async function GET(request: NextRequest) {
         macDownloadUrl: appSettings.monchoopsMacDownloadUrl || null,
         accountLimit: limits.accountLimit,
         dmMonthlyLimit: limits.dmMonthlyLimit,
+        leadsMonthlyLimit: limits.leadsMonthlyLimit,
         accountUsage,
         dmUsage,
+        leadUsage,
       });
     }
 
@@ -225,9 +229,10 @@ export async function GET(request: NextRequest) {
         : getSubscriptionTier(entitlements.monchoops);
     const monchoopsLimits = limitsForTier(monchoopsTier, user.role === "admin");
 
-    const [accountUsage, dmUsage] = await Promise.all([
+    const [accountUsage, dmUsage, leadUsage] = await Promise.all([
       countActiveInstagramAccounts(user.id),
       countDmsThisMonth(user.id),
+      countLeadsThisMonth(user.id),
     ]);
 
     const response = {
@@ -239,8 +244,10 @@ export async function GET(request: NextRequest) {
       macDownloadUrl: appSettings.monchoopsMacDownloadUrl || null,
       accountLimit: monchoopsLimits.accountLimit,
       dmMonthlyLimit: monchoopsLimits.dmMonthlyLimit,
+      leadsMonthlyLimit: monchoopsLimits.leadsMonthlyLimit,
       accountUsage,
       dmUsage,
+      leadUsage,
     };
 
     return NextResponse.json(response);

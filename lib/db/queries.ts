@@ -293,17 +293,17 @@ export const getCurrentUserFromSession = cache(async () => {
 
 export async function getUserDataForDashboard(userId: string) {
   const { limitsForTier } = await import("@/lib/subscriptions/plan-limits");
-  const { countActiveInstagramAccounts, countDmsThisMonth } = await import(
-    "./usage-queries"
-  );
+  const { countActiveInstagramAccounts, countDmsThisMonth, countLeadsThisMonth } =
+    await import("./usage-queries");
 
-  const [userData, entitlements, settings, accountUsage, dmUsage] =
+  const [userData, entitlements, settings, accountUsage, dmUsage, leadUsage] =
     await Promise.all([
       getUserById(userId),
       getUserEntitlements(userId),
       getAppSettings(),
       countActiveInstagramAccounts(userId),
       countDmsThisMonth(userId),
+      countLeadsThisMonth(userId),
     ]);
 
   if (!userData) return null;
@@ -335,6 +335,7 @@ export async function getUserDataForDashboard(userId: string) {
             usage: {
               accounts: accountUsage,
               dmsThisMonth: dmUsage,
+              leadsThisMonth: leadUsage,
             },
             billingPeriod: ((): "monthly" | "annual" | null => {
               const p = sub?.billingPeriod;

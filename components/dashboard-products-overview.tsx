@@ -17,12 +17,10 @@ import {
   ArrowDownToLine,
   Blocks,
   Book,
-  BookOpen,
   Download,
   ExternalLink,
   Mail,
   PartyPopper,
-  Youtube,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
@@ -47,7 +45,6 @@ export function DashboardProductsOverview() {
   const { copied, handleClick } = useMailtoCopy(SUPPORT_EMAIL);
   const [isPortalLoading, setIsPortalLoading] = useState<"monchoops" | null>(null);
   const [downloads, setDownloads] = useState<AppVersionInfo | null>(null);
-  const windowsDemoUrl = "https://www.youtube.com/watch?v=lpPXse5LJSg";
 
   const isAdmin = user?.role === "admin" || data?.isAdmin || false;
   const entitlements = data?.entitlements;
@@ -246,7 +243,7 @@ export function DashboardProductsOverview() {
                   ? t("resetsMonthly")
                   : ""}
               </p>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <div>
                   <p className="text-xs text-gray-500">{t("instagramAccounts")}</p>
                   <p className="text-sm font-medium text-gray-800">
@@ -259,6 +256,15 @@ export function DashboardProductsOverview() {
                     {formatLimit(
                       planUsage.dmsThisMonth,
                       planLimits?.dmMonthlyLimit
+                    )}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">{t("leadsThisMonth")}</p>
+                  <p className="text-sm font-medium text-gray-800">
+                    {formatLimit(
+                      planUsage.leadsThisMonth,
+                      planLimits?.leadsMonthlyLimit
                     )}
                   </p>
                 </div>
@@ -447,32 +453,26 @@ export function DashboardProductsOverview() {
                 <ExternalLink className="h-5 w-5 text-gray-700 shrink-0" />
               </div>
             </a>
-          ) : null}
-          <div className="mt-4 px-1 flex flex-col items-start sm:flex-row sm:items-center sm:justify-between gap-3">
-            <Link
-              href="/dashboard/documentation#installation-and-demo"
-              target="_blank"
-              rel="noopener noreferrer"
-              prefetch={true}
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-black transition-colors w-fit"
-            >
-              <BookOpen className="h-4 w-4 shrink-0" />
-              <span>
-                {t("firstTimeSetup")}
-                {` `}
-                <span className="underline">{t("here")}</span>
-              </span>
-            </Link>
-            <a
-              href={windowsDemoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-black transition-colors w-fit"
-            >
-              <Youtube className="h-4 w-4 shrink-0 text-muted-foreground group-hover:text-black transition-colors sm:order-2" />
-              <span className="sm:order-1">{t("watchDemo")}</span>
-            </a>
-          </div>
+          ) : (
+            <div className="mt-2 block rounded-lg border border-gray-200 bg-gray-50 opacity-60 cursor-default px-4 py-3">
+              <div className="flex items-end justify-between gap-3">
+                <div className="flex gap-2 flex-col min-w-0">
+                  <div className="flex gap-2 items-center">
+                    <ChromeIcon className="h-5 w-5" />
+                    <p className="text-lg text-gray-700">
+                      {t("chromeExtensionTitle")}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">
+                      {t("chromeExtensionDesc")}
+                    </p>
+                  </div>
+                </div>
+                <ExternalLink className="h-5 w-5 text-gray-700 shrink-0" />
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <div className={cardWrapper}>

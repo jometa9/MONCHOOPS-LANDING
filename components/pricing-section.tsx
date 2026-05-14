@@ -862,6 +862,7 @@ export function PricingSection({
             <div className="flex flex-wrap gap-2 mb-6">
               <span className={pillLight}>{t("free.pillAccounts")}</span>
               <span className={pillLight}>{t("free.pillDms")}</span>
+              <span className={pillLight}>{t("free.pillLeads")}</span>
             </div>
 
             <div className="grow mb-6">
@@ -930,6 +931,7 @@ export function PricingSection({
             <div className="flex flex-wrap gap-2 mb-6">
               <span className={pillDark}>{t("pro.pillAccounts")}</span>
               <span className={pillDark}>{t("pro.pillDms")}</span>
+              <span className={pillDark}>{t("pro.pillLeads")}</span>
             </div>
 
             <div className="grow mb-6">
@@ -996,6 +998,7 @@ export function PricingSection({
             <div className="flex flex-wrap gap-2 mb-6">
               <span className={pillDark}>{t("unlimited.pillAccounts")}</span>
               <span className={pillDark}>{t("unlimited.pillDms")}</span>
+              <span className={pillDark}>{t("unlimited.pillLeads")}</span>
             </div>
 
             <div className="grow mb-6">

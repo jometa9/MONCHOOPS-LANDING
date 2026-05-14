@@ -254,3 +254,48 @@ body:not([data-billing-period]) .billing-annual {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+.docs-toc {
+  margin: 0.5rem 0 1rem 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  background-color: hsl(var(--muted) / 0.3);
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+}
+
+.docs-toc h3,
+.docs-toc h4 {
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  margin: 0 0 0.25rem 0 !important;
+}
+
+.docs-toc ol,
+.docs-toc ul {
+  margin: 0 !important;
+  padding-left: 1rem !important;
+  list-style-position: outside !important;
+  list-style-type: decimal;
+}
+
+.docs-toc ol ol {
+  list-style-type: lower-alpha;
+}
+
+.docs-toc li {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.25rem !important;
+}
+
+.docs-toc a {
+  color: hsl(var(--foreground) / 0.7) !important;
+  text-decoration: none !important;
+}
+
+.docs-toc a:hover {
+  color: hsl(var(--foreground)) !important;
+  text-decoration: underline !important;
+}
