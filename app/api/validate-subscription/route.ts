@@ -14,7 +14,7 @@ import {
 import { userProductSubscription } from "@/lib/db/schema";
 import { paymentsEnabled } from "@/lib/payments/feature-flag";
 import { handleSubscriptionChange, stripe } from "@/lib/payments/stripe";
-import { limitsForTier } from "@/lib/subscriptions/plan-limits";
+import { getAllPlanLimits, limitsForTier } from "@/lib/subscriptions/plan-limits";
 import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -23,9 +23,14 @@ export async function GET(request: NextRequest) {
   const apiKey = searchParams.get("apiKey");
 
   if (!apiKey) {
+    const planCatalog = await getAllPlanLimits();
     return NextResponse.json(
-      { error: "API key is required as a URL parameter (apiKey=your_key)" },
-      { status: 401 }
+      { planCatalog },
+      {
+        headers: {
+          "Cache-Control": "public, max-age=60, s-maxage=60, stale-while-revalidate=300",
+        },
+      }
     );
   }
 
@@ -40,8 +45,9 @@ export async function GET(request: NextRequest) {
 
     if (!paymentsEnabled) {
       const appSettings = await getAppSettings();
-      const limits = await limitsForTier("unlimited", true);
-      const [accountUsage, dmUsage, leadUsage] = await Promise.all([
+      const [planCatalog, limits, accountUsage, dmUsage, leadUsage] = await Promise.all([
+        getAllPlanLimits(),
+        limitsForTier("unlimited", true),
         countActiveInstagramAccounts(user.id),
         countDmsThisMonth(user.id),
         countLeadsThisMonth(user.id),
@@ -59,6 +65,7 @@ export async function GET(request: NextRequest) {
         accountUsage,
         dmUsage,
         leadUsage,
+        planCatalog,
       });
     }
 
@@ -227,9 +234,9 @@ export async function GET(request: NextRequest) {
       user.role === "admin"
         ? "unlimited"
         : getSubscriptionTier(entitlements.monchoops);
-    const monchoopsLimits = await limitsForTier(monchoopsTier, user.role === "admin");
-
-    const [accountUsage, dmUsage, leadUsage] = await Promise.all([
+    const [planCatalog, monchoopsLimits, accountUsage, dmUsage, leadUsage] = await Promise.all([
+      getAllPlanLimits(),
+      limitsForTier(monchoopsTier, user.role === "admin"),
       countActiveInstagramAccounts(user.id),
       countDmsThisMonth(user.id),
       countLeadsThisMonth(user.id),
@@ -248,6 +255,7 @@ export async function GET(request: NextRequest) {
       accountUsage,
       dmUsage,
       leadUsage,
+      planCatalog,
     };
 
     return NextResponse.json(response);

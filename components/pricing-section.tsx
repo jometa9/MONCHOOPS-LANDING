@@ -57,6 +57,20 @@ interface PendingChange {
   priceId: string;
 }
 
+interface PlanLimitsRow {
+  accountLimit: number | null;
+  dmMonthlyLimit: number | null;
+  leadsMonthlyLimit: number | null;
+}
+
+type AllPlanLimits = Record<"free" | "pro" | "unlimited", PlanLimitsRow>;
+
+const FALLBACK_PLAN_LIMITS: AllPlanLimits = {
+  free: { accountLimit: 1, dmMonthlyLimit: 100, leadsMonthlyLimit: 100 },
+  pro: { accountLimit: 5, dmMonthlyLimit: 5000, leadsMonthlyLimit: 5000 },
+  unlimited: { accountLimit: null, dmMonthlyLimit: null, leadsMonthlyLimit: null },
+};
+
 export function PricingSection({
   user,
   isCompact = false,
@@ -103,6 +117,41 @@ export function PricingSection({
   const [isUpdatingSubscription, setIsUpdatingSubscription] = useState(false);
   const [showConfirmInCard, setShowConfirmInCard] = useState<boolean>(false);
   const [pendingChange, setPendingChange] = useState<PendingChange | null>(null);
+  const [planLimits, setPlanLimits] = useState<AllPlanLimits>(FALLBACK_PLAN_LIMITS);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/validate-subscription")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data: { planCatalog?: AllPlanLimits } | null) => {
+        const catalog = data?.planCatalog;
+        if (cancelled || !catalog) return;
+        setPlanLimits({
+          free: catalog.free ?? FALLBACK_PLAN_LIMITS.free,
+          pro: catalog.pro ?? FALLBACK_PLAN_LIMITS.pro,
+          unlimited: catalog.unlimited ?? FALLBACK_PLAN_LIMITS.unlimited,
+        });
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const pillAccounts = (tier: "free" | "pro" | "unlimited") => {
+    const v = planLimits[tier].accountLimit;
+    return v === null
+      ? t("pillAccountsUnlimited")
+      : t("pillAccounts", { accounts: v });
+  };
+  const pillDms = (tier: "free" | "pro" | "unlimited") => {
+    const v = planLimits[tier].dmMonthlyLimit;
+    return v === null ? t("pillDmsUnlimited") : t("pillDms", { dms: v });
+  };
+  const pillLeads = (tier: "free" | "pro" | "unlimited") => {
+    const v = planLimits[tier].leadsMonthlyLimit;
+    return v === null ? t("pillLeadsUnlimited") : t("pillLeads", { leads: v });
+  };
 
   const updateURLParams = useCallback(
     (updates: {
@@ -860,9 +909,9 @@ export function PricingSection({
             </div>
 
             <div className="flex flex-wrap gap-2 mb-6">
-              <span className={pillLight}>{t("free.pillAccounts")}</span>
-              <span className={pillLight}>{t("free.pillDms")}</span>
-              <span className={pillLight}>{t("free.pillLeads")}</span>
+              <span className={pillLight}>{pillAccounts("free")}</span>
+              <span className={pillLight}>{pillDms("free")}</span>
+              <span className={pillLight}>{pillLeads("free")}</span>
             </div>
 
             <div className="grow mb-6">
@@ -877,7 +926,7 @@ export function PricingSection({
                 </li>
                 <li className="flex items-start">
                   <Check className={checkLight} strokeWidth={2.5} />
-                  <p className={featureTextLight}>{t("free.f3")}</p>
+                  <p className={featureTextLight}>{t("free.f3", { leads: planLimits.free.leadsMonthlyLimit ?? 0 })}</p>
                 </li>
                 <li className="flex items-start">
                   <Check className={checkLight} strokeWidth={2.5} />
@@ -929,9 +978,9 @@ export function PricingSection({
             </div>
 
             <div className="flex flex-wrap gap-2 mb-6">
-              <span className={pillDark}>{t("pro.pillAccounts")}</span>
-              <span className={pillDark}>{t("pro.pillDms")}</span>
-              <span className={pillDark}>{t("pro.pillLeads")}</span>
+              <span className={pillDark}>{pillAccounts("pro")}</span>
+              <span className={pillDark}>{pillDms("pro")}</span>
+              <span className={pillDark}>{pillLeads("pro")}</span>
             </div>
 
             <div className="grow mb-6">
@@ -950,7 +999,7 @@ export function PricingSection({
                 </li>
                 <li className="flex items-start">
                   <Check className={checkDark} strokeWidth={2.5} />
-                  <p className={featureTextDark}>{t("pro.f4")}</p>
+                  <p className={featureTextDark}>{t("pro.f4", { leads: planLimits.pro.leadsMonthlyLimit ?? 0 })}</p>
                 </li>
                 <li className="flex items-start">
                   <Check className={checkDark} strokeWidth={2.5} />
@@ -996,9 +1045,9 @@ export function PricingSection({
             </div>
 
             <div className="flex flex-wrap gap-2 mb-6">
-              <span className={pillDark}>{t("unlimited.pillAccounts")}</span>
-              <span className={pillDark}>{t("unlimited.pillDms")}</span>
-              <span className={pillDark}>{t("unlimited.pillLeads")}</span>
+              <span className={pillDark}>{pillAccounts("unlimited")}</span>
+              <span className={pillDark}>{pillDms("unlimited")}</span>
+              <span className={pillDark}>{pillLeads("unlimited")}</span>
             </div>
 
             <div className="grow mb-6">
