@@ -1,33 +1,11 @@
-<div class="docs-toc">
-
 ### Table of Contents
 
 1. [Introduction](#introduction)
 2. [What MonchoOps gives you](#what-monchoops-gives-you)
 3. [Desktop app](#desktop-app)
-   1. [System requirements](#system-requirements)
-   2. [Installation](#installation)
-   3. [Adding Instagram accounts](#adding-instagram-accounts)
-   4. [Bulk account import](#bulk-account-import)
-   5. [Proxies](#proxies)
-   6. [Scraping leads](#scraping-leads)
-   7. [Categories](#categories)
-   8. [Data](#data)
-   9. [Message variants](#message-variants)
-   10. [Cold DM campaigns](#cold-dm-campaigns)
-   11. [Queue](#queue)
-   12. [DM history](#dm-history)
-   13. [Settings](#settings)
 4. [Chrome extension](#chrome-extension)
-   1. [What it does](#what-it-does)
-   2. [Installation](#extension-installation)
-   3. [Sending DMs from the extension](#sending-dms-from-the-extension)
-   4. [Desktop bridge](#desktop-bridge)
-   5. [Limits to keep in mind](#limits-to-keep-in-mind)
 5. [Updates](#updates)
 6. [FAQ](#faq)
-
-</div>
 
 ---
 
