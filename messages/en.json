@@ -56,7 +56,8 @@
     "disclaimer": "MonchoOps is an independent desktop tool. We are not affiliated with, endorsed by, or sponsored by Instagram or Meta Platforms, Inc. You are responsible for using MonchoOps in compliance with Instagram's Terms of Use and applicable laws in your jurisdiction."
   },
   "landing": {
-    "heroTitle": "Scrape any lead on Instagram. Cold DM them at scale.",
+    "heroTitle": "Scrape any lead on Instagram.",
+    "heroTitleSecond": "Cold DM them at scale.",
     "heroDescription": "Pull leads from any profile, post, hashtag, or location. Send personalized DMs from every account you own, in parallel.",
     "getStartedFree": "Get started for free",
     "seeHowItWorks": "See how it works",

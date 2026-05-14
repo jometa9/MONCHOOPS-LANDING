@@ -183,6 +183,7 @@ export async function createCheckoutSession({
       cancel_url: cancelUrlToUse,
       customer: customerIdToUse,
       client_reference_id: userId,
+      allow_promotion_codes: true,
       metadata: {
         userId: userId,
         ...metadata,
@@ -377,7 +378,7 @@ export async function createCustomerPortalSession(
                 subscription_update: {
                   enabled: true,
                   default_allowed_updates: ["price"],
-                  proration_behavior: "create_prorations",
+                  proration_behavior: "always_invoice",
                   products: productsConfig,
                 },
               },

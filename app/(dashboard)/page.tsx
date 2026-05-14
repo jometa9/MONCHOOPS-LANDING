@@ -153,6 +153,8 @@ export default function HomePage() {
           <h1 className="md:text-5xl text-3xl font-semibold text-gray-900 tracking-tight max-w-4xl relative">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-black via-gray-700 to-indigo-600">
               {t("heroTitle")}
+              <br />
+              {t("heroTitleSecond")}
             </span>
           </h1>
           <p className="mt-4 text-gray-600 text-xl max-w-2xl">
