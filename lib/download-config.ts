@@ -5,6 +5,9 @@ export const DOWNLOAD_URLS: Record<DownloadOS, string> = {
   mac: "https://github.com/jometa/monchoops/releases/latest/download/MonchoOps-Multi-Setup.dmg",
 };
 
+export const EXTENSION_URL =
+  "https://chromewebstore.google.com/detail/monchoops-%E2%80%94-cold-dm/eehnhcekjmnhppjdkngdokckdpjadbfp";
+
 export const APP_VERSION = "1.0.0";
 
 export const DOWNLOAD_FILENAMES: Record<DownloadOS, string> = {

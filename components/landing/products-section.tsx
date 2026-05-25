@@ -8,7 +8,7 @@ import { Activity, ArrowDownToLine, ArrowLeft, ArrowRight, Check, ExternalLink, 
 import Image from "next/image";
 import { STRINGS } from "@/lib/strings";
 import { useEffect, useRef, useState } from "react";
-import { DownloadOS, triggerDownload } from "@/lib/download-config";
+import { DownloadOS, EXTENSION_URL, triggerDownload } from "@/lib/download-config";
 
 const EXTENSION_BASE_WIDTH = 800;
 const EXTENSION_BASE_HEIGHT = 500;
@@ -251,7 +251,7 @@ export function ProductsSection() {
                 </div>
                 <div className="mt-auto">
                   <a
-                    href="#"
+                    href={EXTENSION_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-left transition-colors hover:bg-gray-50 cursor-pointer"
