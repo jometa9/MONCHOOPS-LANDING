@@ -42,7 +42,6 @@ export const metadata: Metadata = {
   authors: [
     {
       name: "Joaquin Metayer",
-      url: "https://www.linkedin.com/in/joaquinmetayer/",
     },
   ],
   publisher: "MonchoOps",

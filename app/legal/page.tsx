@@ -50,11 +50,6 @@ export default function LegalPage() {
                   3. Disclaimer
                 </a>
               </li>
-              <li>
-                <a href="#contact" className="hover:text-indigo-600">
-                  4. Contact
-                </a>
-              </li>
             </ul>
           </nav>
 
@@ -298,21 +293,6 @@ export default function LegalPage() {
               </p>
             </section>
 
-            {/* CONTACT */}
-            <section id="contact" className="scroll-mt-24">
-              <h2 className="text-3xl font-semibold text-gray-900 mb-4">
-                4. Contact
-              </h2>
-              <p>
-                Questions about this policy?{" "}
-                <a
-                  href="mailto:support@monchoops.com"
-                  className="text-indigo-600 hover:underline"
-                >
-                  support@monchoops.com
-                </a>
-              </p>
-            </section>
           </article>
         </div>
       </main>

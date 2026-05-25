@@ -96,10 +96,6 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           logo: `${baseUrl}${assetUrl("/monchoops-icon.png")}`,
           description,
           foundingDate: "2026",
-          sameAs: [
-            "https://www.instagram.com/monchoops",
-            "https://www.linkedin.com/company/monchoops",
-          ],
         };
 
       case "software":

@@ -13,9 +13,7 @@ export const STRINGS = {
   footer: {
     tagline: "Find leads. Send DMs. Win replies.",
     docs: "Docs",
-    creator: "Creator",
     rights: "All rights reserved.",
-    supportEmail: "Support Email:",
   },
   landing: {
     heroTitle: "Scrape any lead on Instagram.",
