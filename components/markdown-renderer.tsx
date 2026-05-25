@@ -1,46 +1,10 @@
 "use client";
 
-import { detectOS, fetchAppVersion } from "@/lib/download-handler";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
-
-function DownloadLink({
-  href,
-  children,
-  ...props
-}: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string; children?: React.ReactNode }) {
-  const [resolvedHref, setResolvedHref] = useState<string>(href);
-  useEffect(() => {
-    let cancelled = false;
-    const url = new URL(href, window.location.origin);
-    const explicitOs = url.searchParams.get("os");
-    const os = explicitOs === "mac" || explicitOs === "windows"
-      ? explicitOs
-      : detectOS();
-    fetchAppVersion().then((data) => {
-      if (cancelled) return;
-      const target = data?.downloadUrls?.[os];
-      if (target) setResolvedHref(target);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [href]);
-  return (
-    <a
-      href={resolvedHref}
-      {...props}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-gray-400 hover:text-gray-600 underline"
-    >
-      {children}
-    </a>
-  );
-}
 
 function MailtoAnchor({
   href,
@@ -154,8 +118,6 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             const isExternal = href?.startsWith("http");
             const isAnchor = href?.startsWith("#");
             const isMailto = href?.startsWith("mailto:");
-            const isDownloadEndpoint =
-              href?.startsWith("/api/download") ?? false;
             if (isMailto && href) {
               return (
                 <MailtoAnchor
@@ -164,13 +126,6 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
                 >
                   {children}
                 </MailtoAnchor>
-              );
-            }
-            if (isDownloadEndpoint && href) {
-              return (
-                <DownloadLink href={href} {...props}>
-                  {children}
-                </DownloadLink>
               );
             }
             return (

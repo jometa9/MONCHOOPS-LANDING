@@ -16,7 +16,7 @@ export function LandingHeader() {
   const navigationLinks = [
     { href: "/#features", label: t("features") },
     { href: "/#how-it-works", label: t("howItWorks") },
-    { href: "/#prices", label: t("pricing") },
+    { href: "/#download", label: t("download") },
     { href: "/documentation", label: t("docs") },
   ];
 
@@ -120,22 +120,13 @@ export function LandingHeader() {
 
         <div className="flex items-center gap-3">
           <LanguageSwitcher />
-          <div className="rounded-full border border-transparent bg-gray-900 px-2 py-0.5 text-sm text-white shadow-none hover:bg-gray-600 cursor-pointer md:border md:border-gray-300 md:bg-white md:text-gray-900 md:hover:bg-gray-100">
-            <Link href="/sign-in" target="_blank" rel="noopener noreferrer">
-              {t("signIn")}
-            </Link>
-          </div>
-
-          <div className="relative hidden md:block">
-            <a
-              href="/dashboard"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full border border-transparent bg-indigo-600 px-2 py-0.5 text-sm cursor-pointer text-white shadow-none hover:bg-indigo-700 block"
-            >
-              {t("getStarted")}
-            </a>
-          </div>
+          <a
+            href="/#download"
+            onClick={(event) => handleNavClick(event, "/#download")}
+            className="rounded-full border border-transparent bg-indigo-600 px-3 py-1 text-sm cursor-pointer text-white shadow-none hover:bg-indigo-700"
+          >
+            {t("download")}
+          </a>
         </div>
       </div>
     </header>

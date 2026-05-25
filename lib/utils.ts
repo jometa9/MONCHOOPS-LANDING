@@ -1,43 +1,9 @@
-import { User } from "@/lib/db/schema";
 import { type ClassValue, clsx } from "clsx";
-import crypto from "crypto";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
-export function getSubscriptionType(user: User): string {
-  if (user.role === "admin") {
-    return "admin";
-  }
-  return "free";
-}
-
-export function getReadablePlanName(user: User): string {
-  if (user.role === "admin") {
-    return "Admin";
-  }
-  return "Free";
-}
-
-export function generateApiKey(): string {
-  const prefix = "monchoops_lc_";
-  const remainingLength = 50 - prefix.length;
-
-  const chars =
-    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
-  const randomBytes = crypto.randomBytes(remainingLength);
-
-  let randomPart = "";
-  for (let i = 0; i < remainingLength; i++) {
-    randomPart += chars[randomBytes[i] % chars.length];
-  }
-
-  return prefix + randomPart;
-}
-
 
 const backgroundColors = [
   "bg-red-500",
@@ -57,9 +23,7 @@ export function getAvatarBgColor(name: string): string {
   for (let i = 0; i < name.length; i++) {
     hash = name.charCodeAt(i) + ((hash << 5) - hash);
   }
-
   const index = Math.abs(hash) % backgroundColors.length;
-
   return backgroundColors[index];
 }
 

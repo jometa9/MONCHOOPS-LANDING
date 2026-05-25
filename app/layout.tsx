@@ -3,7 +3,6 @@ import { MetaPixel } from "@/components/meta-pixel";
 import { MetaPixelScript } from "@/components/meta-pixel-script";
 import { Providers } from "@/components/providers";
 import { getAppUrl } from "@/lib/app-url";
-import { getUser } from "@/lib/db/queries";
 import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -111,8 +110,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const userPromise = getUser();
-
   const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID || "";
 
   const locale = await getLocale();
@@ -132,7 +129,7 @@ export default async function RootLayout({
             </>
           ) : null}
           <NextIntlClientProvider locale={locale} messages={messages}>
-            <Providers userPromise={userPromise}>
+            <Providers>
               <div className="flex min-h-screen flex-col">
                 <main className="flex-1 w-full bg-white">{children}</main>
               </div>

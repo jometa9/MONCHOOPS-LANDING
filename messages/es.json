@@ -39,11 +39,8 @@
   "header": {
     "features": "Funciones",
     "howItWorks": "Cómo funciona",
-    "pricing": "Precios",
-    "docs": "Docs",
-    "signIn": "Iniciar sesión",
-    "signUp": "Registrarse",
-    "getStarted": "Empezar"
+    "download": "Descargar",
+    "docs": "Docs"
   },
   "footer": {
     "tagline": "Encontrá leads. Mandá DMs. Conseguí respuestas.",
@@ -61,11 +58,17 @@
     "heroDescription": "Sacá leads de cualquier perfil, post, hashtag o ubicación. Enviá DMs personalizados desde todas tus cuentas, en paralelo.",
     "getStartedFree": "Empezá gratis",
     "seeHowItWorks": "Ver cómo funciona",
-    "freePlanNote": "Plan gratis incluido - Windows y macOS - Sin tarjeta",
+    "freePlanNote": "100% gratis - Windows y macOS - Sin cuenta",
     "featuresIntroTitle": "Una sola app para scrapear leads y mandar cold DMs en Instagram",
     "featuresIntroSub": "Dejá de pagar dos SaaS y de copiar CSVs entre ellos. Una app de escritorio hace todo el flujo.",
     "commonQuestions": "Preguntas frecuentes",
-    "faqHeading": "Preguntas Frecuentes"
+    "faqHeading": "Preguntas Frecuentes",
+    "downloadEyebrow": "Conseguí MonchoOps",
+    "downloadHeading": "Descargá gratis, sin crear cuenta",
+    "downloadDescription": "Elegí tu plataforma y empezá a correr outreach de Instagram desde tu máquina en minutos.",
+    "downloadWindows": "Descargar para Windows",
+    "downloadMac": "Descargar para macOS",
+    "freeForever": "Gratis para siempre. Sin login. Sin pagos."
   },
   "features": {
     "eyebrow": "Qué hace MonchoOps",
@@ -140,7 +143,7 @@
     "eyebrow": "Cómo nos comparamos",
     "headingP1": "MonchoOps vs.",
     "headingP2": "otras herramientas de Instagram",
-    "intro": "La mayoría de las herramientas de Instagram te limitan a una cuenta, esconden el historial de DMs, y cobran por contacto o por slot. MonchoOps te da multi-cuenta, log por destinatario, salteo automático de prospectos ya contactados, y tarifa fija.",
+    "intro": "La mayoría de las herramientas de Instagram te limitan a una cuenta, esconden el historial de DMs, y cobran por contacto o por slot. MonchoOps te da multi-cuenta, log por destinatario, salteo automático de prospectos ya contactados — y es gratis, sin cuenta.",
     "feature": "Función",
     "footnote": "La comparación refleja funciones declaradas públicamente al momento de escribir. No estamos afiliados a ninguno de los productos listados.",
     "rows": {
@@ -155,6 +158,7 @@
       "localOnly": "Datos guardados solo localmente",
       "whereItRuns": "Dónde corre",
       "pricingModel": "Modelo de precios",
+      "loginRequired": "Requiere cuenta / login",
       "engineering": "Ingeniería previa requerida"
     },
     "values": {
@@ -164,6 +168,7 @@
       "yourMachine": "Tu máquina",
       "cloud": "Nube",
       "flatRate": "Tarifa fija",
+      "free": "Gratis",
       "perAccount": "Por cuenta",
       "subscription": "Suscripción",
       "perContact": "Por contacto",
@@ -241,7 +246,11 @@
   "faq": {
     "whatIsMonchoops": {
       "q": "¿Qué es MonchoOps?",
-      "a": "MonchoOps es una app de escritorio para outreach en Instagram. Agregás una o más cuentas de Instagram, opcionalmente le asignás un proxy a cada una, y corrés scrapes, warmup de cuenta y campañas de cold DM desde tu propia computadora. Todo — sesiones, leads, historial de mensajes — se guarda localmente en una base encriptada. No hay un bot compartido en la nube."
+      "a": "MonchoOps es una app de escritorio gratis para outreach en Instagram. Agregás una o más cuentas de Instagram, opcionalmente le asignás un proxy a cada una, y corrés scrapes, warmup de cuenta y campañas de cold DM desde tu propia computadora. Todo — sesiones, leads, historial de mensajes — se guarda localmente en una base encriptada. No hay un bot compartido en la nube."
+    },
+    "isItFree": {
+      "q": "¿Es realmente gratis?",
+      "a": "Sí. MonchoOps es 100% gratis sin cuenta, sin login, sin suscripción, sin pagos. Bajás el instalador, abrís la app y arrancás. No hay tier pago y no recolectamos ni guardamos tus datos en nuestros servidores."
     },
     "windowsMac": {
       "q": "¿Funciona en Windows y Mac?",
@@ -253,7 +262,7 @@
     },
     "howManyAccounts": {
       "q": "¿Cuántas cuentas de Instagram puedo correr?",
-      "a": "Depende de tu plan — mirá la sección de Precios abajo para los límites actuales de cuentas, DMs mensuales y leads scrapeados. El plan Free existe para que puedas testear el flujo completo (agregar una cuenta, scrapear leads, mandar un cold DM chico) antes de pagar."
+      "a": "Sin tope artificial de MonchoOps — podés agregar tantas cuentas como tu hardware aguante. En la práctica el cuello de botella es la RAM (cada perfil aislado de Chromium pesa) y la calidad de tus proxies. Arrancá con 2-3 cuentas y escalá desde ahí."
     },
     "doINeedProxies": {
       "q": "¿Necesito proxies?",
@@ -289,15 +298,15 @@
     },
     "dataPrivacy": {
       "q": "¿MonchoOps ve los datos de mi cuenta?",
-      "a": "No. No guardamos tus credenciales de Instagram, cookies, leads ni historial de DMs en nuestros servidores. La app de escritorio habla con monchoops.com solo para validar tu suscripción y chequear actualizaciones. Todo lo demás vive localmente en tu máquina en una base SQLite encriptada."
+      "a": "No. No guardamos tus credenciales de Instagram, cookies, leads ni historial de DMs en nuestros servidores. No hay login, no hay cuenta, no hay telemetría por default. Todo vive localmente en tu máquina en una base SQLite encriptada."
     },
     "systemRequirements": {
       "q": "¿Cuáles son los requisitos del sistema?",
       "a": "Windows 10/11 (x64) o macOS Apple Silicon (arm64). 8 GB de RAM, 2 GB libres en disco. Sin dependencias externas — Chromium viene incluido en el instalador. La app pesa ~250 MB y corre bien en una laptop normal."
     },
-    "refunds": {
-      "q": "¿Puedo pedir reembolso?",
-      "a": "Sí. Ofrecemos una ventana de reembolso de 7 días en planes pagos por primera vez. Mandá un email a support@monchoops.com desde la misma dirección que usaste para suscribirte y lo procesamos. Mirá nuestra Política de Reembolso para los términos completos."
+    "systemRequirementsExtra": {
+      "q": "¿Requiere alguna otra app o servicio externo?",
+      "a": "No. El instalador incluye todo lo necesario, incluido Chromium. No hace falta una cuenta de MonchoOps, base de datos externa, ni servicio en la nube."
     }
   },
   "founder": {

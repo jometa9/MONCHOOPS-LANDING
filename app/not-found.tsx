@@ -1,4 +1,4 @@
-import { AuthHeader } from "@/components/layout/auth-header";
+import { LandingHeader } from "@/components/landing/landing-header";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -14,7 +14,7 @@ export default async function NotFound() {
   const t = await getTranslations("notFound");
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <AuthHeader />
+      <LandingHeader />
       <div className="flex min-h-screen flex-col items-center justify-center px-3 py-12 pt-28">
         <div className="flex w-full max-w-md flex-col items-stretch">
           <div className="space-y-3 pb-20">

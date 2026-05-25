@@ -39,11 +39,8 @@
   "header": {
     "features": "Features",
     "howItWorks": "How it works",
-    "pricing": "Pricing",
-    "docs": "Docs",
-    "signIn": "Sign in",
-    "signUp": "Sign up",
-    "getStarted": "Get started"
+    "download": "Download",
+    "docs": "Docs"
   },
   "footer": {
     "tagline": "Find leads. Send DMs. Win replies.",
@@ -61,11 +58,17 @@
     "heroDescription": "Pull leads from any profile, post, hashtag, or location. Send personalized DMs from every account you own, in parallel.",
     "getStartedFree": "Get started for free",
     "seeHowItWorks": "See how it works",
-    "freePlanNote": "Free plan included - Windows & macOS - No card required",
+    "freePlanNote": "100% free - Windows & macOS - No account required",
     "featuresIntroTitle": "One app to scrape leads and send cold DMs on Instagram",
     "featuresIntroSub": "Stop paying for two SaaS tools and copy-pasting CSVs between them. One desktop app does the whole flow.",
     "commonQuestions": "Common questions",
-    "faqHeading": "Frequently Asked Questions"
+    "faqHeading": "Frequently Asked Questions",
+    "downloadEyebrow": "Get MonchoOps",
+    "downloadHeading": "Download for free, no account needed",
+    "downloadDescription": "Pick your platform and start running Instagram outreach from your machine in minutes.",
+    "downloadWindows": "Download for Windows",
+    "downloadMac": "Download for macOS",
+    "freeForever": "Free forever. No login. No payment."
   },
   "features": {
     "eyebrow": "What MonchoOps does",
@@ -140,7 +143,7 @@
     "eyebrow": "How we compare",
     "headingP1": "MonchoOps vs.",
     "headingP2": "other Instagram tools",
-    "intro": "Most Instagram tools cap you at one account, hide your DM history, and charge per contact or per slot. MonchoOps gives you multi-account, a per-recipient log, auto-skip on already-DM'd prospects, and a flat rate.",
+    "intro": "Most Instagram tools cap you at one account, hide your DM history, and charge per contact or per slot. MonchoOps gives you multi-account, a per-recipient log, auto-skip on already-DM'd prospects — and it's free, no account required.",
     "feature": "Feature",
     "footnote": "Comparison reflects publicly stated features at time of writing. We are not affiliated with any of the products listed.",
     "rows": {
@@ -155,6 +158,7 @@
       "localOnly": "Data stored locally only",
       "whereItRuns": "Where it runs",
       "pricingModel": "Pricing model",
+      "loginRequired": "Account / login required",
       "engineering": "Upfront engineering"
     },
     "values": {
@@ -164,6 +168,7 @@
       "yourMachine": "Your machine",
       "cloud": "Cloud",
       "flatRate": "Flat rate",
+      "free": "Free",
       "perAccount": "Per account",
       "subscription": "Subscription",
       "perContact": "Per contact",
@@ -241,7 +246,11 @@
   "faq": {
     "whatIsMonchoops": {
       "q": "What is MonchoOps?",
-      "a": "MonchoOps is a desktop app for Instagram outreach. You add one or more Instagram accounts, optionally assign a proxy to each, and run scrapes, account warmup and cold DM campaigns from your own computer. Everything — sessions, leads, message history — is stored locally in an encrypted database. There is no shared cloud bot."
+      "a": "MonchoOps is a free desktop app for Instagram outreach. You add one or more Instagram accounts, optionally assign a proxy to each, and run scrapes, account warmup and cold DM campaigns from your own computer. Everything — sessions, leads, message history — is stored locally in an encrypted database. There is no shared cloud bot."
+    },
+    "isItFree": {
+      "q": "Is it really free?",
+      "a": "Yes. MonchoOps is 100% free with no account, no login, no subscription, no payment. Download the installer, run the app, and start. There is no paid tier and we do not collect or store your data on our servers."
     },
     "windowsMac": {
       "q": "Does it run on Windows and Mac?",
@@ -253,7 +262,7 @@
     },
     "howManyAccounts": {
       "q": "How many Instagram accounts can I run?",
-      "a": "It depends on your plan — see the Pricing section below for the current limits on accounts, monthly DMs, and scraped leads. The Free plan exists so you can test the full workflow (add an account, scrape leads, send a small Cold DM run) before paying anything."
+      "a": "No artificial cap from MonchoOps — you can add as many Instagram accounts as your hardware can handle. In practice the bottleneck is RAM (each isolated Chromium profile costs memory) and the quality of your proxies. Start with 2-3 accounts and scale from there."
     },
     "doINeedProxies": {
       "q": "Do I need proxies?",
@@ -289,15 +298,11 @@
     },
     "dataPrivacy": {
       "q": "Does MonchoOps see my account data?",
-      "a": "No. We don't store your Instagram credentials, cookies, leads, or DM history on our servers. The desktop app talks to monchoops.com only to validate your subscription and check for app updates. Everything else lives locally on your machine in an encrypted SQLite database."
+      "a": "No. We don't store your Instagram credentials, cookies, leads, or DM history on our servers. There is no login, no account, no telemetry by default. Everything lives locally on your machine in an encrypted SQLite database."
     },
     "systemRequirements": {
       "q": "What are the system requirements?",
       "a": "Windows 10/11 (x64) or macOS Apple Silicon (arm64). 8 GB RAM, 2 GB free disk. No external dependencies — Chromium is bundled with the installer. The app is around ~250 MB and runs fine on a regular laptop."
-    },
-    "refunds": {
-      "q": "Can I get a refund?",
-      "a": "Yes. We offer a 7-day refund window on first-time paid plans. Just email support@monchoops.com from the same address you used to subscribe and we'll process it. See our Refund Policy for the full terms."
     }
   },
   "founder": {

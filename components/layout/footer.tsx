@@ -43,9 +43,6 @@ export function Footer() {
           LinkedIn
         </Link>
         <MailtoLink label="Mail" className="text-gray-600" />
-        <Link href="/legal" aria-label="Legal" className="text-gray-600">
-          {t("legal")}
-        </Link>
         <Link href="/documentation" aria-label="Docs" className="text-gray-600">
           {t("docs")}
         </Link>
@@ -60,16 +57,7 @@ export function Footer() {
         </Link>
       </div>
       <p className="text-sm text-gray-400 pt-2">
-        &copy; {new Date().getFullYear()} IPTRADE COPIER LLC. {t("rights")} {t("createdBy")}{" "}
-        <Link
-          href="https://api2labs.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline hover:text-gray-600"
-        >
-          API2LABS
-        </Link>
-        .
+        &copy; {new Date().getFullYear()} MonchoOps. {t("rights")}
       </p>
       <p className="text-sm text-gray-400 pt-2">
         {t("supportEmail")}{" "}
@@ -77,9 +65,6 @@ export function Footer() {
           label="support@monchoops.com"
           copiedLabel={tCommon("copied")}
         />
-      </p>
-      <p className="text-sm text-gray-400 pt-2 max-w-2xl">
-        {t("disclaimer")}
       </p>
     </footer>
   );

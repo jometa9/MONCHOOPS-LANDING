@@ -45,9 +45,9 @@ Everything runs locally. Your accounts, sessions and leads stay on your computer
 
 ### Installation
 
-1. Download the installer for your operating system from your dashboard at [monchoops.com/dashboard](https://monchoops.com/dashboard).
+1. Download the installer for your operating system from the [download section](https://monchoops.com/#download) on the homepage.
 2. Run the installer.
-3. Open MonchoOps and sign in with the same email you used to subscribe (email + password or Google OAuth).
+3. Open MonchoOps. No account, no login, no license key — just open the app and start.
 
 The first launch creates a local user-data folder under your OS application data directory. Everything MonchoOps stores lives there.
 
@@ -59,7 +59,7 @@ The first launch creates a local user-data folder under your OS application data
 4. Solve any verification (SMS, email, captcha) Instagram presents.
 5. MonchoOps captures the session, encrypts the cookies and stores them locally.
 
-You can repeat this for as many accounts as your plan allows.
+You can repeat this for as many accounts as your machine can handle.
 
 > **Tip:** Sign in once and let the account sit idle for a day or two before doing anything else. Instagram&apos;s heuristics like to see a session "live" for a bit before you start automating.
 
@@ -92,7 +92,7 @@ The **Scrape** screen has four modes:
 
 Pick one of your Instagram accounts to run the scrape, the target, and a category to drop the results into. The job moves into the queue; results land in **Data** when it finishes.
 
-Every scrape counts toward your plan's monthly leads quota (Free: 100, Pro: 5,000, Unlimited: no cap). The counter resets on the 1st of each month (UTC). If the scrape would exceed your remaining quota for the month, MonchoOps automatically stops it at the cap.
+There is no monthly quota — scrape as many leads as you want. Just keep in mind that aggressive scraping can trigger Instagram rate-limits on the account doing the scrape, so let MonchoOps' built-in jitter and pacing do its job.
 
 ### Categories
 
@@ -138,7 +138,7 @@ The **DM history** screen lists every cold DM campaign and lets you drill into a
 
 The **Settings** screen exposes:
 
-- **Account info** — name, email, current plan, and app version, plus a **Refresh subscription** button if you just changed plans.
+- **App info** — version and update check.
 - **Language** — System, English, or Spanish.
 - **Headless mode** — run automation without showing the Chromium window. When off, you can also toggle **Full window** to show the automated browser at full size.
 - **Dark theme** — toggle light/dark UI.
@@ -153,7 +153,7 @@ The MonchoOps Chrome extension is a lighter way to run cold DMs. It uses the Ins
 
 ### What it does
 
-- License-key login (use your MonchoOps license).
+- Open and use, no login or license key required.
 - Build a campaign with manual usernames, a CSV import, **or leads pulled straight from your desktop app** (categories and past scrape results — see [Desktop bridge](#desktop-bridge)).
 - Reusable message variant groups with the `{{username}}` placeholder.
 - Optional pre-DM interactions: follow, watch stories, like up to a few recent posts.
@@ -165,10 +165,10 @@ The MonchoOps Chrome extension is a lighter way to run cold DMs. It uses the Ins
 
 ### Extension installation
 
-1. Install the extension from the link on your dashboard at [monchoops.com/dashboard](https://monchoops.com/dashboard).
+1. Install the extension from the [download section](https://monchoops.com/#download) on the homepage.
 2. Pin the MonchoOps icon next to your address bar for quick access.
 3. Make sure you are logged into [instagram.com](https://www.instagram.com/) in the same Chrome profile.
-4. Click the icon, enter your license key, then click **Open dashboard** to land in the full UI.
+4. Click the icon and then click **Open dashboard** to land in the full UI.
 
 ### Sending DMs from the extension
 
@@ -211,4 +211,4 @@ MonchoOps checks for new versions automatically. When one is available, you will
 
 ## FAQ
 
-For specific questions about pricing, safety, proxies, scraping limits, and Instagram compliance, see the FAQ section on [monchoops.com](https://monchoops.com/#faq).
+For specific questions about safety, proxies, scraping and Instagram compliance, see the FAQ section on [monchoops.com](https://monchoops.com/#faq).

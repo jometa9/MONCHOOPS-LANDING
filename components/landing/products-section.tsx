@@ -8,18 +8,7 @@ import { Activity, ArrowDownToLine, ArrowLeft, ArrowRight, Check, ExternalLink, 
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
-import { ProductKey } from "@/lib/db/schema";
-import {
-  DownloadOS,
-  fetchAppVersion,
-  handleDownload,
-} from "@/lib/download-handler";
-
-interface AppVersionInfo {
-  version: string;
-  downloadUrls: { mac: string; windows: string };
-  extensionUrl: string;
-}
+import { DownloadOS, triggerDownload } from "@/lib/download-config";
 
 const EXTENSION_BASE_WIDTH = 800;
 const EXTENSION_BASE_HEIGHT = 500;
@@ -27,7 +16,6 @@ const EXTENSION_BASE_HEIGHT = 500;
 export function ProductsSection() {
   const t = useTranslations("products");
   const locale = useLocale();
-  const [downloads, setDownloads] = useState<AppVersionInfo | null>(null);
   const [menuBarClock, setMenuBarClock] = useState("");
   const extensionRef = useRef<HTMLDivElement | null>(null);
   const [extensionScale, setExtensionScale] = useState(1);
@@ -47,14 +35,6 @@ export function ProductsSection() {
   }, []);
 
   useEffect(() => {
-    const loadDownloads = async () => {
-      const data = await fetchAppVersion();
-      setDownloads(data);
-    };
-    loadDownloads();
-  }, []);
-
-  useEffect(() => {
     const update = () => {
       const now = new Date();
       const intlLocale = locale === "es" ? "es-ES" : "en-US";
@@ -71,20 +51,8 @@ export function ProductsSection() {
     return () => clearInterval(id);
   }, [locale]);
 
-  const hasDownloadUrl = (productKey: ProductKey, os: DownloadOS): boolean => {
-    if (!downloads) return true;
-    if (productKey !== "monchoops") return false;
-    return os === "mac"
-      ? !!downloads.downloadUrls?.mac
-      : !!downloads.downloadUrls?.windows;
-  };
-
-  const handleDownloadClick = async (
-    productKey: ProductKey,
-    os: DownloadOS
-  ) => {
-    if (downloads && !hasDownloadUrl(productKey, os)) return;
-    await handleDownload(productKey, os);
+  const handleDownloadClick = (os: DownloadOS) => {
+    triggerDownload(os);
   };
 
   const bullets = [
@@ -146,12 +114,8 @@ export function ProductsSection() {
                 <div className="mt-3 space-y-2">
                   <button
                     type="button"
-                    className={`w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-left transition-colors hover:bg-gray-50 ${
-                      hasDownloadUrl("monchoops", "windows")
-                        ? "cursor-pointer"
-                        : "cursor-default opacity-60"
-                    }`}
-                    onClick={() => handleDownloadClick("monchoops", "windows")}
+                    className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-left transition-colors hover:bg-gray-50 cursor-pointer"
+                    onClick={() => handleDownloadClick("windows")}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -165,12 +129,8 @@ export function ProductsSection() {
                   </button>
                   <button
                     type="button"
-                    className={`w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-left transition-colors hover:bg-gray-50 ${
-                      hasDownloadUrl("monchoops", "mac")
-                        ? "cursor-pointer"
-                        : "cursor-default opacity-60"
-                    }`}
-                    onClick={() => handleDownloadClick("monchoops", "mac")}
+                    className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-left transition-colors hover:bg-gray-50 cursor-pointer"
+                    onClick={() => handleDownloadClick("mac")}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -291,18 +251,10 @@ export function ProductsSection() {
                 </div>
                 <div className="mt-auto">
                   <a
-                    href={downloads?.extensionUrl || "#"}
+                    href="#"
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-disabled={!downloads?.extensionUrl}
-                    onClick={(e) => {
-                      if (!downloads?.extensionUrl) e.preventDefault();
-                    }}
-                    className={`block w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-left transition-colors hover:bg-gray-50 ${
-                      downloads?.extensionUrl
-                        ? "cursor-pointer"
-                        : "cursor-default opacity-60"
-                    }`}
+                    className="block w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-left transition-colors hover:bg-gray-50 cursor-pointer"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">

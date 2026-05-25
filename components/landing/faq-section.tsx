@@ -5,12 +5,12 @@ import { useState } from "react";
 
 const LANDING_FAQ_IDS = [
   "whatIsMonchoops",
+  "isItFree",
   "isItSafe",
   "howManyAccounts",
   "doINeedProxies",
   "noDuplicateDms",
   "cloudVsLocal",
-  "refunds",
 ] as const;
 
 export function FAQSection() {

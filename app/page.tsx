@@ -4,96 +4,70 @@ import { CallToActionSection } from "@/components/landing/call-to-action-section
 import { ComparisonTable } from "@/components/landing/comparison-table";
 import { FAQSection } from "@/components/landing/faq-section";
 import { FeaturesSection } from "@/components/landing/features-section";
-import { FounderCard } from "@/components/landing/founder-card";
 import { LandingHeader } from "@/components/landing/landing-header";
 import { MonchoOpsWindowDemo } from "@/components/landing/monchoops-window-demo";
 import { ProductsSection } from "@/components/landing/products-section";
 import { Footer } from "@/components/layout/footer";
 import { useMetaPixel } from "@/components/meta-pixel";
-import { PricingSection } from "@/components/pricing-section";
 import { StepsSection } from "@/components/steps-section";
 import { StructuredData } from "@/components/structured-data";
 import { Button } from "@/components/ui/button";
-import { detectOS, handleDownload } from "@/lib/download-handler";
+import { MacOSIcon } from "@/components/icons/macos-icon";
+import { WindowsIcon } from "@/components/icons/windows-icon";
 import {
+  DOWNLOAD_URLS,
+  triggerDownload,
+} from "@/lib/download-config";
+import {
+  ArrowDownToLine,
   ArrowRight,
-  AtSign,
-  Bell,
-  Heart,
-  MessageCircle,
-  Send,
   Sparkles,
-  UserPlus,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function HomePage() {
   const t = useTranslations("landing");
-  const tCommon = useTranslations("common");
   const { trackViewContent } = useMetaPixel();
-  const [hasTrackedPricingView, setHasTrackedPricingView] = useState(false);
-  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
-  const [isLoadingDownloadUrl, setIsLoadingDownloadUrl] = useState(true);
+  const [hasTrackedDownloadView, setHasTrackedDownloadView] = useState(false);
 
   useEffect(() => {
-    const fetchDownloadUrl = async () => {
-      try {
-        const response = await fetch("/api/app-version");
-        if (response.ok) {
-          const data = await response.json();
-          const os = detectOS();
-          const url = data?.downloadUrls?.[os] || null;
-          setDownloadUrl(url);
-        }
-      } catch (error) {
-        console.error("Failed to fetch download URL:", error);
-      } finally {
-        setIsLoadingDownloadUrl(false);
-      }
-    };
-
-    fetchDownloadUrl();
-  }, []);
-
-  useEffect(() => {
-    const trackPricingView = () => {
-      const pricingSection = document.getElementById("prices");
-      if (pricingSection && !hasTrackedPricingView) {
+    const trackDownloadView = () => {
+      const section = document.getElementById("download");
+      if (section && !hasTrackedDownloadView) {
         const observer = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
-              if (entry.isIntersecting && !hasTrackedPricingView) {
+              if (entry.isIntersecting && !hasTrackedDownloadView) {
                 const eventId = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
                 trackViewContent(
                   {
-                    content_name: "Pricing Section - Homepage",
-                    content_category: "subscription",
+                    content_name: "Download Section - Homepage",
+                    content_category: "download",
                   },
                   eventId
                 );
-                setHasTrackedPricingView(true);
+                setHasTrackedDownloadView(true);
                 observer.disconnect();
               }
             });
           },
           { threshold: 0.3 }
         );
-        observer.observe(pricingSection);
+        observer.observe(section);
         return () => observer.disconnect();
       }
     };
 
-    const timeout = setTimeout(trackPricingView, 500);
+    const timeout = setTimeout(trackDownloadView, 500);
     return () => clearTimeout(timeout);
-  }, [trackViewContent, hasTrackedPricingView]);
+  }, [trackViewContent, hasTrackedDownloadView]);
 
   useEffect(() => {
     const handleHashScroll = (isInitial = false) => {
       const hash = window.location.hash;
       if (hash) {
         const targetId = hash.substring(1);
-
         const attemptScroll = (attempts = 0) => {
           const element = document.getElementById(targetId);
           if (element) {
@@ -102,7 +76,6 @@ export default function HomePage() {
             setTimeout(() => attemptScroll(attempts + 1), 200);
           }
         };
-
         if (isInitial) {
           window.scrollTo({ top: 0, behavior: "smooth" });
           setTimeout(() => {
@@ -120,23 +93,13 @@ export default function HomePage() {
       handleHashScroll(false);
     };
     window.addEventListener("hashchange", handleHashChange);
-
     return () => {
       window.removeEventListener("hashchange", handleHashChange);
     };
   }, []);
 
-  const handleDownloadClick = async () => {
-    if (isLoadingDownloadUrl) {
-      window.open("/dashboard", "_blank");
-      return;
-    }
-
-    if (downloadUrl) {
-      await handleDownload();
-    } else {
-      window.open("/dashboard", "_blank");
-    }
+  const handleDownloadClick = () => {
+    triggerDownload();
   };
 
   return (
@@ -149,7 +112,6 @@ export default function HomePage() {
       <LandingHeader />
       <main data-page="home" className="pt-30">
         <div className="max-w-7xl mx-auto px-3 pb-0 relative">
-  
           <h1 className="md:text-5xl text-3xl font-semibold text-gray-900 tracking-tight max-w-4xl relative">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-black via-gray-700 to-indigo-600">
               {t("heroTitle")}
@@ -200,30 +162,6 @@ export default function HomePage() {
                   "radial-gradient(ellipse 90% 80% at 50% 50%, black 30%, transparent 100%)",
                 WebkitMaskImage:
                   "radial-gradient(ellipse 90% 80% at 50% 50%, black 30%, transparent 100%)",
-              }}
-            />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  "radial-gradient(ellipse 70% 60% at 75% 50%, rgba(165,180,252,0.55) 0%, rgba(165,180,252,0) 70%)",
-              }}
-            />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  "radial-gradient(ellipse 50% 40% at 80% 100%, rgba(129,140,248,0.6) 0%, rgba(129,140,248,0) 70%)",
-              }}
-            />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  "radial-gradient(ellipse 55% 65% at 15% 40%, rgba(99,102,241,0.35) 0%, rgba(99,102,241,0) 70%)",
               }}
             />
             <div
@@ -289,27 +227,55 @@ export default function HomePage() {
 
         <ComparisonTable />
 
-        <Suspense
-          fallback={
-            <div className="py-24 text-center text-gray-600">
-              {tCommon("loading")}
-            </div>
-          }
-        >
-          <PricingSection variant="landing" />
-        </Suspense>
-
-        <div className="max-w-7xl pt-24 mx-auto px-3 grid grid-cols-1 md:grid-cols-6 md:gap-3">
-          <div className="md:col-span-4 pb-6">
-            <p className="text-xl text-gray-600 mb-1">{t("commonQuestions")}</p>
-            <p className="md:text-3xl text-2xl mb-3 text-gray-900">
-              {t("faqHeading")}
+        <section id="download" className="max-w-7xl mx-auto px-3 pt-24">
+          <div className="bg-gray-100 rounded-lg p-6 md:p-12 text-center">
+            <p className="text-gray-600 text-xl mb-1">{t("downloadEyebrow")}</p>
+            <h2 className="text-3xl md:text-4xl text-gray-900 mb-2">
+              {t("downloadHeading")}
+            </h2>
+            <p className="text-gray-600 max-w-xl mx-auto mb-6">
+              {t("downloadDescription")}
             </p>
-            <FAQSection />
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-stretch max-w-2xl mx-auto">
+              <a
+                href={DOWNLOAD_URLS.windows}
+                className="flex-1 rounded-lg border border-gray-200 bg-white px-4 py-3 transition-colors hover:bg-gray-50 cursor-pointer"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <WindowsIcon className="h-5 w-5 text-gray-700" />
+                    <span className="font-semibold text-gray-700">
+                      {t("downloadWindows")}
+                    </span>
+                  </div>
+                  <ArrowDownToLine className="h-4 w-4 text-gray-700" />
+                </div>
+              </a>
+              <a
+                href={DOWNLOAD_URLS.mac}
+                className="flex-1 rounded-lg border border-gray-200 bg-white px-4 py-3 transition-colors hover:bg-gray-50 cursor-pointer"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <MacOSIcon className="h-5 w-5 text-gray-700" />
+                    <span className="font-semibold text-gray-700">
+                      {t("downloadMac")}
+                    </span>
+                  </div>
+                  <ArrowDownToLine className="h-4 w-4 text-gray-700" />
+                </div>
+              </a>
+            </div>
+            <p className="text-xs text-gray-500 mt-4">{t("freeForever")}</p>
           </div>
-          <div className="md:col-span-2 mb-3">
-            <FounderCard />
-          </div>
+        </section>
+
+        <div className="max-w-7xl pt-24 mx-auto px-3 pb-6">
+          <p className="text-xl text-gray-600 mb-1">{t("commonQuestions")}</p>
+          <p className="md:text-3xl text-2xl mb-3 text-gray-900">
+            {t("faqHeading")}
+          </p>
+          <FAQSection />
         </div>
 
         <CallToActionSection onDownloadClick={handleDownloadClick} />

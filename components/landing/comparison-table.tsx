@@ -106,12 +106,22 @@ export function ComparisonTable() {
     },
     {
       featureKey: "pricingModel",
-      monchoops: t("values.flatRate"),
+      monchoops: t("values.free"),
       competitors: {
         autoreacher: t("values.perAccount"),
         instadm: t("values.subscription"),
         manychat: t("values.perContact"),
         phantombuster: t("values.perSlotHour"),
+      },
+    },
+    {
+      featureKey: "loginRequired",
+      monchoops: "no",
+      competitors: {
+        autoreacher: "yes",
+        instadm: "yes",
+        manychat: "yes",
+        phantombuster: "yes",
       },
     },
     {
