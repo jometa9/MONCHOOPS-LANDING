@@ -2,6 +2,7 @@ import { LandingHeader } from "@/components/landing/landing-header";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { StructuredData } from "@/components/structured-data";
 import { STRINGS } from "@/lib/strings";
+import { assetUrl } from "@/lib/asset-url";
 import type { Metadata } from "next";
 import { readFileSync } from "fs";
 import { join } from "path";
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
     url: "/documentation",
     type: "website",
     images: [
-      { url: "/assets/preview-home.png", width: 1200, height: 630, alt: "MonchoOps Documentation" },
+      { url: assetUrl("/assets/preview-home.png"), width: 1200, height: 630, alt: "MonchoOps Documentation" },
     ],
   },
   twitter: {

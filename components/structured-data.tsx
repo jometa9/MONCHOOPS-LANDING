@@ -1,4 +1,5 @@
 import { getAppUrl } from "@/lib/app-url";
+import { assetUrl } from "@/lib/asset-url";
 import Script from "next/script";
 
 export type StructuredDataType =
@@ -82,7 +83,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           publisher: {
             "@type": "Organization",
             name: "MonchoOps",
-            logo: `${baseUrl}/monchoops-icon.png`,
+            logo: `${baseUrl}${assetUrl("/monchoops-icon.png")}`,
           },
           inLanguage: "en-US",
         };
@@ -92,7 +93,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           "@type": "Organization",
           name: "MonchoOps",
           url: baseUrl,
-          logo: `${baseUrl}/monchoops-icon.png`,
+          logo: `${baseUrl}${assetUrl("/monchoops-icon.png")}`,
           description,
           foundingDate: "2026",
           sameAs: [
@@ -142,7 +143,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
                 "Unlimited Instagram accounts, scrapes, and DMs",
             },
           ],
-          screenshot: `${baseUrl}/assets/preview-home.png`,
+          screenshot: `${baseUrl}${assetUrl("/assets/preview-home.png")}`,
         };
 
       case "product":

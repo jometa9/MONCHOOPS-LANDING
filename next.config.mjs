@@ -7,7 +7,10 @@ const nextConfig = {
   trailingSlash: true,
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
-  images: { unoptimized: true },
+  images: {
+    loader: "custom",
+    loaderFile: "./lib/image-loader.ts",
+  },
 };
 
 export default nextConfig;

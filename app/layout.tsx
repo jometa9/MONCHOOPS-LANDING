@@ -3,17 +3,20 @@ import { MetaPixel } from "@/components/meta-pixel";
 import { MetaPixelScript } from "@/components/meta-pixel-script";
 import { Providers } from "@/components/providers";
 import { getAppUrl } from "@/lib/app-url";
+import { assetUrl } from "@/lib/asset-url";
 import type { Metadata, Viewport } from "next";
 import React from "react";
 
 const metadataBaseUrl = getAppUrl();
+const ICON = assetUrl("/assets/monchoops_square.png");
+const PREVIEW = assetUrl("/assets/preview-home.png");
 
 export const metadata: Metadata = {
   applicationName: "MonchoOps",
   icons: {
-    icon: [{ url: "/assets/monchoops_square.png", type: "image/png" }],
-    shortcut: [{ url: "/assets/monchoops_square.png", type: "image/png" }],
-    apple: [{ url: "/assets/monchoops_square.png", type: "image/png" }],
+    icon: [{ url: ICON, type: "image/png" }],
+    shortcut: [{ url: ICON, type: "image/png" }],
+    apple: [{ url: ICON, type: "image/png" }],
   },
   title: "MonchoOps — Instagram cold DM automation, on your machine",
   description:
@@ -63,7 +66,7 @@ export const metadata: Metadata = {
       "Multi-account Instagram outreach from your own computer. Proxy-per-account, warmup, scraping and cold DM campaigns. No cloud, no shared IPs, no shared sessions.",
     images: [
       {
-        url: "/assets/preview-home.png",
+        url: PREVIEW,
         width: 1200,
         height: 630,
         alt: "MonchoOps — Instagram cold DM automation, on your machine",
@@ -75,7 +78,7 @@ export const metadata: Metadata = {
     title: "MonchoOps — Instagram cold DM automation, on your machine",
     description:
       "Multi-account Instagram outreach from your computer. Proxy-per-account, warmup, scraping, cold DMs. Built for accounts you can't afford to lose.",
-    images: ["/assets/preview-home.png"],
+    images: [PREVIEW],
   },
   robots: {
     index: true,

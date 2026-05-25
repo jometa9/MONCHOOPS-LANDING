@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react';
 import { TitleBar } from './TitleBar';
+import { assetUrl } from '@/lib/asset-url';
 
 export function AuthLayout({ children }: { children: ReactNode }) {
+  const bgMask = `url(${assetUrl('/home-bg.svg')})`;
   return (
     <div className="relative isolate flex h-full flex-col">
       <TitleBar transparent />
@@ -10,8 +12,8 @@ export function AuthLayout({ children }: { children: ReactNode }) {
         className="pointer-events-none fixed bottom-0 left-0 -z-10 h-[50vh] bg-foreground/[0.03]"
         style={{
           aspectRatio: '1280 / 1116',
-          WebkitMaskImage: 'url(/home-bg.svg)',
-          maskImage: 'url(/home-bg.svg)',
+          WebkitMaskImage: bgMask,
+          maskImage: bgMask,
           WebkitMaskRepeat: 'no-repeat',
           maskRepeat: 'no-repeat',
           WebkitMaskPosition: 'bottom left',

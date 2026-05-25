@@ -1,10 +1,14 @@
 "use client";
 
 import { STRINGS } from "@/lib/strings";
+import { assetUrl } from "@/lib/asset-url";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, type MouseEvent } from "react";
+
+const HOME = assetUrl("/");
+const DOWNLOAD_HREF = `${HOME}#download`;
 
 export function LandingHeader() {
   const t = STRINGS.header;
@@ -13,9 +17,9 @@ export function LandingHeader() {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const navigationLinks = [
-    { href: "/#features", label: t.features },
-    { href: "/#how-it-works", label: t.howItWorks },
-    { href: "/#download", label: t.download },
+    { href: `${HOME}#features`, label: t.features },
+    { href: `${HOME}#how-it-works`, label: t.howItWorks },
+    { href: DOWNLOAD_HREF, label: t.download },
     { href: "/documentation", label: t.docs },
   ];
 
@@ -119,8 +123,8 @@ export function LandingHeader() {
 
         <div className="flex items-center gap-3">
           <a
-            href="/#download"
-            onClick={(event) => handleNavClick(event, "/#download")}
+            href={DOWNLOAD_HREF}
+            onClick={(event) => handleNavClick(event, DOWNLOAD_HREF)}
             className="rounded-full border border-transparent bg-indigo-600 px-3 py-1 text-sm cursor-pointer text-white shadow-none hover:bg-indigo-700"
           >
             {t.download}

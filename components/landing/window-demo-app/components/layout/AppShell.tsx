@@ -1,8 +1,10 @@
 import { Outlet } from '@/components/landing/window-demo-app/vendor/react-router-dom';
 import { Sidebar } from './Sidebar';
 import { TitleBar } from './TitleBar';
+import { assetUrl } from '@/lib/asset-url';
 
 export function AppShell() {
+  const bgMask = `url(${assetUrl('/home-bg.svg')})`;
   return (
     <div className="relative flex h-full flex-col" data-demo-modal-root>
       <TitleBar />
@@ -14,8 +16,8 @@ export function AppShell() {
             className="pointer-events-none absolute bottom-0 left-0 -z-10 h-[50cqh] bg-foreground/[0.03]"
             style={{
               aspectRatio: '1280 / 1116',
-              WebkitMaskImage: 'url(/home-bg.svg)',
-              maskImage: 'url(/home-bg.svg)',
+              WebkitMaskImage: bgMask,
+              maskImage: bgMask,
               WebkitMaskRepeat: 'no-repeat',
               maskRepeat: 'no-repeat',
               WebkitMaskPosition: 'bottom left',
