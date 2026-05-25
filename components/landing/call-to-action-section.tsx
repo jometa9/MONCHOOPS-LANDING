@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
+import { STRINGS } from "@/lib/strings";
 
 interface CallToActionSectionProps {
   onDownloadClick: () => void;
@@ -10,7 +10,7 @@ interface CallToActionSectionProps {
 export function CallToActionSection({
   onDownloadClick,
 }: CallToActionSectionProps) {
-  const t = useTranslations("cta");
+  const t = STRINGS.cta;
 
   const calculateYearsSince2018 = () => {
     const startDate = new Date(2018, 0, 1);
@@ -33,14 +33,14 @@ export function CallToActionSection({
     <div className="max-w-5xl mx-auto px-3 flex flex-col items-center justify-center gap-3 text-balance py-34">
       <p className="text-gray-600 text-xl mb-1 text-center max-w-md text-wrap">
         {yearsOfExperience}{" "}
-        {yearsOfExperience === 1 ? t("yearOfExperience") : t("yearsOfExperience")}{" "}
-        <span className="block md:inline">{t("onSoftwareIndustry")}</span>
+        {yearsOfExperience === 1 ? t.yearOfExperience : t.yearsOfExperience}{" "}
+        <span className="block md:inline">{t.onSoftwareIndustry}</span>
       </p>
       <h2 className="md:text-7xl text-4xl text-gray-900 text-center mb-2 ">
-        {t("headline")}
+        {t.headline}
       </h2>
       <p className="text-gray-500 text-base text-center max-w-md">
-        {t("subline")}
+        {t.subline}
       </p>
 
       <Button
@@ -48,7 +48,7 @@ export function CallToActionSection({
         onClick={onDownloadClick}
         className="mt-4 inline-flex items-center gap-3 rounded-full bg-indigo-600 p-3  text-white transition-all duration-200 hover:bg-indigo-700 text-lg"
       >
-        {t("button")}
+        {t.button}
       </Button>
     </div>
   );

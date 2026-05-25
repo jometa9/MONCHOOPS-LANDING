@@ -1,23 +1,22 @@
 "use client";
 
-import { LanguageSwitcher } from "@/components/language-switcher";
+import { STRINGS } from "@/lib/strings";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useState, type MouseEvent } from "react";
 
 export function LandingHeader() {
-  const t = useTranslations("header");
+  const t = STRINGS.header;
   const router = useRouter();
   const pathname = usePathname();
   const [showDropdown, setShowDropdown] = useState(false);
 
   const navigationLinks = [
-    { href: "/#features", label: t("features") },
-    { href: "/#how-it-works", label: t("howItWorks") },
-    { href: "/#download", label: t("download") },
-    { href: "/documentation", label: t("docs") },
+    { href: "/#features", label: t.features },
+    { href: "/#how-it-works", label: t.howItWorks },
+    { href: "/#download", label: t.download },
+    { href: "/documentation", label: t.docs },
   ];
 
   const handleNavClick = useCallback(
@@ -119,13 +118,12 @@ export function LandingHeader() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <LanguageSwitcher />
           <a
             href="/#download"
             onClick={(event) => handleNavClick(event, "/#download")}
             className="rounded-full border border-transparent bg-indigo-600 px-3 py-1 text-sm cursor-pointer text-white shadow-none hover:bg-indigo-700"
           >
-            {t("download")}
+            {t.download}
           </a>
         </div>
       </div>

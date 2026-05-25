@@ -1,10 +1,8 @@
 "use client";
 
-import { useLocale } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import App from "@/components/landing/window-demo-app/App";
 import type { Step } from "@/components/landing/window-demo-app/components/DemoAutoplay";
-import type { DemoLocale } from "@/components/landing/window-demo-app/lib/i18n";
 
 const BASE_WIDTH = 980;
 const BASE_HEIGHT = 600;
@@ -18,8 +16,7 @@ interface MonchoOpsWindowDemoProps {
 export function MonchoOpsWindowDemo({ script, startDelay, initialPath }: MonchoOpsWindowDemoProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [scale, setScale] = useState(1);
-  const nextIntlLocale = useLocale();
-  const demoLocale: DemoLocale = nextIntlLocale === "es" ? "es" : "en";
+  const demoLocale = "en" as const;
 
   useEffect(() => {
     const el = containerRef.current;

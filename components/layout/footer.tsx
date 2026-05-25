@@ -1,11 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
 import { MailtoLink } from "@/components/mailto-link";
+import { STRINGS } from "@/lib/strings";
 
 export function Footer() {
-  const t = useTranslations("footer");
-  const tCommon = useTranslations("common");
+  const t = STRINGS.footer;
 
   return (
     <footer className="w-full p-3 max-w-7xl mx-auto py-16" role="contentinfo">
@@ -19,9 +18,7 @@ export function Footer() {
         />
         <span className="text-xl font-bold text-black">MonchoOps</span>
       </Link>
-      <p className="text-sm text-gray-400 pt-1">
-        {t("tagline")}
-      </p>
+      <p className="text-sm text-gray-400 pt-1">{t.tagline}</p>
 
       <div className="flex flex-wrap gap-x-2 gap-y-1 text-sm pt-2">
         <Link
@@ -44,7 +41,7 @@ export function Footer() {
         </Link>
         <MailtoLink label="Mail" className="text-gray-600" />
         <Link href="/documentation" aria-label="Docs" className="text-gray-600">
-          {t("docs")}
+          {t.docs}
         </Link>
         <Link
           href="https://www.linkedin.com/in/joaquinmetayer"
@@ -53,18 +50,15 @@ export function Footer() {
           aria-label="Creator"
           className="text-gray-600"
         >
-          {t("creator")}
+          {t.creator}
         </Link>
       </div>
       <p className="text-sm text-gray-400 pt-2">
-        &copy; {new Date().getFullYear()} MonchoOps. {t("rights")}
+        &copy; {new Date().getFullYear()} MonchoOps. {t.rights}
       </p>
       <p className="text-sm text-gray-400 pt-2">
-        {t("supportEmail")}{" "}
-        <MailtoLink
-          label="support@monchoops.com"
-          copiedLabel={tCommon("copied")}
-        />
+        {t.supportEmail}{" "}
+        <MailtoLink label="support@monchoops.com" />
       </p>
     </footer>
   );

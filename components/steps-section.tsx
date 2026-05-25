@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { STRINGS } from "@/lib/strings";
 import { MonchoOpsWindowDemo } from "@/components/landing/monchoops-window-demo";
 import {
   CONNECT_SCRIPT,
@@ -34,7 +34,7 @@ function LazyDemoFrame({
   startDelay?: number;
   initialPath?: string;
 }) {
-  const t = useTranslations("steps");
+  const t = STRINGS.steps;
   const ref = useRef<HTMLDivElement | null>(null);
   const [shouldMount, setShouldMount] = useState(false);
 
@@ -71,7 +71,7 @@ function LazyDemoFrame({
         />
       ) : (
         <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
-          {t("loading")}
+          {t.loading}
         </div>
       )}
     </div>
@@ -145,32 +145,32 @@ function StepBlock({ step }: { step: StepCard }) {
 }
 
 export function StepsSection() {
-  const t = useTranslations("steps");
+  const t = STRINGS.steps;
 
   const STEPS: StepCard[] = [
     {
       index: 1,
-      eyebrow: `${t("step")} 1`,
-      title: t("step1Title"),
-      description: t("step1Description"),
+      eyebrow: `${t.step} 1`,
+      title: t.step1Title,
+      description: t.step1Description,
       script: CONNECT_SCRIPT,
       theme: "light",
       glow: "top-left",
     },
     {
       index: 2,
-      eyebrow: `${t("step")} 2`,
-      title: t("step2Title"),
-      description: t("step2Description"),
+      eyebrow: `${t.step} 2`,
+      title: t.step2Title,
+      description: t.step2Description,
       script: SCRAPE_SCRIPT,
       reverse: true,
       theme: "dark",
     },
     {
       index: 3,
-      eyebrow: `${t("step")} 3`,
-      title: t("step3Title"),
-      description: t("step3Description"),
+      eyebrow: `${t.step} 3`,
+      title: t.step3Title,
+      description: t.step3Description,
       script: COLD_DM_SCRIPT,
       theme: "light",
       glow: "top-right",
@@ -180,9 +180,9 @@ export function StepsSection() {
   return (
     <section id="how-it-works" className="overflow-x-hidden scroll-mt-24">
       <div className="px-3 max-w-7xl mx-auto">
-        <p className="text-gray-600 text-xl mb-1">{t("eyebrow")}</p>
+        <p className="text-gray-600 text-xl mb-1">{t.eyebrow}</p>
         <h2 className="text-4xl md:text-6xl text-gray-900 mb-6">
-          {t("heading")}
+          {t.heading}
         </h2>
 
         {STEPS.map((step) => (

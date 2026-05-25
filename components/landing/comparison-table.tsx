@@ -2,7 +2,7 @@
 
 import { Fragment, useState } from "react";
 import { Check, X } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { STRINGS } from "@/lib/strings";
 
 type CellValue = "yes" | "no" | "varies" | string;
 
@@ -38,9 +38,8 @@ function rowLeaveHandler(
 }
 
 export function ComparisonTable() {
-  const t = useTranslations("comparison");
-  const tCommon = useTranslations("common");
-  const variesText = tCommon("varies");
+  const t = STRINGS.comparison;
+  const variesText = STRINGS.common.varies;
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
 
   const comparisonData: ComparisonRow[] = [
@@ -89,29 +88,29 @@ export function ComparisonTable() {
       monchoops: "yes",
       competitors: {
         autoreacher: "yes",
-        instadm: t("values.templates"),
-        manychat: t("values.templates"),
-        phantombuster: t("values.templates"),
+        instadm: t.values.templates,
+        manychat: t.values.templates,
+        phantombuster: t.values.templates,
       },
     },
     {
       featureKey: "whereItRuns",
-      monchoops: t("values.yourMachine"),
+      monchoops: t.values.yourMachine,
       competitors: {
-        autoreacher: t("values.cloud"),
-        instadm: t("values.cloud"),
-        manychat: t("values.cloud"),
-        phantombuster: t("values.cloud"),
+        autoreacher: t.values.cloud,
+        instadm: t.values.cloud,
+        manychat: t.values.cloud,
+        phantombuster: t.values.cloud,
       },
     },
     {
       featureKey: "pricingModel",
-      monchoops: t("values.free"),
+      monchoops: t.values.free,
       competitors: {
-        autoreacher: t("values.perAccount"),
-        instadm: t("values.subscription"),
-        manychat: t("values.perContact"),
-        phantombuster: t("values.perSlotHour"),
+        autoreacher: t.values.perAccount,
+        instadm: t.values.subscription,
+        manychat: t.values.perContact,
+        phantombuster: t.values.perSlotHour,
       },
     },
     {
@@ -129,8 +128,8 @@ export function ComparisonTable() {
       monchoops: "yes",
       competitors: {
         autoreacher: "yes",
-        instadm: t("values.limited"),
-        manychat: t("values.limited"),
+        instadm: t.values.limited,
+        manychat: t.values.limited,
         phantombuster: "no",
       },
     },
@@ -160,18 +159,18 @@ export function ComparisonTable() {
       competitors: {
         autoreacher: "yes",
         instadm: "yes",
-        manychat: t("values.perWorkspace"),
+        manychat: t.values.perWorkspace,
         phantombuster: "yes",
       },
     },
     {
       featureKey: "engineering",
-      monchoops: t("values.noneVal"),
+      monchoops: t.values.noneVal,
       competitors: {
-        autoreacher: t("values.noneVal"),
-        instadm: t("values.noneVal"),
-        manychat: t("values.noneVal"),
-        phantombuster: t("values.someVal"),
+        autoreacher: t.values.noneVal,
+        instadm: t.values.noneVal,
+        manychat: t.values.noneVal,
+        phantombuster: t.values.someVal,
       },
     },
   ];
@@ -209,20 +208,20 @@ export function ComparisonTable() {
   return (
     <section className="pt-24 max-w-7xl mx-auto px-3">
       <div className="mb-10 text-left">
-        <p className="text-xl text-gray-600 mb-1">{t("eyebrow")}</p>
+        <p className="text-xl text-gray-600 mb-1">{t.eyebrow}</p>
         <h2 className="flex flex-col items-start gap-1 text-3xl text-gray-900 md:flex-row md:flex-wrap md:gap-x-2 md:gap-y-0 md:text-5xl">
-          <span>{t("headingP1")}</span>
-          <span>{t("headingP2")}</span>
+          <span>{t.headingP1}</span>
+          <span>{t.headingP2}</span>
         </h2>
         <p className="mt-3 text-sm text-gray-500 max-w-2xl">
-          {t("intro")}
+          {t.intro}
         </p>
       </div>
 
       <div className="w-full overflow-x-auto rounded-lg border border-gray-200 bg-white">
         <div className={`grid w-full gap-0 ${GRID_COLS}`}>
           <div className="min-w-0 px-3 py-4 text-sm font-medium text-gray-500 border-b border-gray-200 bg-gray-50 flex items-center justify-center text-center">
-            {t("feature")}
+            {t.feature}
           </div>
           <div className="px-3 py-4 flex items-center justify-center text-center bg-indigo-950 border-x border-indigo-950 border-b border-white/20">
             <span className="text-sm font-medium text-white mx-1">MonchoOps</span>
@@ -265,7 +264,7 @@ export function ComparisonTable() {
                   {...rowProps}
                   className={`min-w-0 px-4 py-3.5 text-sm font-medium text-gray-700 transition-colors duration-150 ${bottomRule} ${featureBg} flex items-center justify-center text-center`}
                 >
-                  {t(`rows.${row.featureKey}`)}
+                  {t.rows[row.featureKey as keyof typeof t.rows]}
                 </div>
                 <div
                   {...rowProps}
@@ -292,7 +291,7 @@ export function ComparisonTable() {
         </div>
       </div>
       <p className="mt-3 text-xs text-gray-400">
-        {t("footnote")}
+        {t.footnote}
       </p>
     </section>
   );

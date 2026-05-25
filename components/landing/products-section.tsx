@@ -6,7 +6,7 @@ import { WindowsIcon } from "@/components/icons/windows-icon";
 import { MonchoOpsWindowDemo } from "@/components/landing/monchoops-window-demo";
 import { Activity, ArrowDownToLine, ArrowLeft, ArrowRight, Check, ExternalLink, Instagram, Lock, LogOut, MoreVertical, Pause, Play, Puzzle, RotateCw } from "lucide-react";
 import Image from "next/image";
-import { useLocale, useTranslations } from "next-intl";
+import { STRINGS } from "@/lib/strings";
 import { useEffect, useRef, useState } from "react";
 import { DownloadOS, triggerDownload } from "@/lib/download-config";
 
@@ -14,8 +14,8 @@ const EXTENSION_BASE_WIDTH = 800;
 const EXTENSION_BASE_HEIGHT = 500;
 
 export function ProductsSection() {
-  const t = useTranslations("products");
-  const locale = useLocale();
+  const t = STRINGS.products;
+  const locale = "en";
   const [menuBarClock, setMenuBarClock] = useState("");
   const extensionRef = useRef<HTMLDivElement | null>(null);
   const [extensionScale, setExtensionScale] = useState(1);
@@ -56,27 +56,27 @@ export function ProductsSection() {
   };
 
   const bullets = [
-    t("bullet1"),
-    t("bullet2"),
-    t("bullet3"),
-    t("bullet4"),
-    t("bullet5"),
-    t("bullet6"),
+    t.bullets[0],
+    t.bullets[1],
+    t.bullets[2],
+    t.bullets[3],
+    t.bullets[4],
+    t.bullets[5],
   ];
 
   const extensionBullets = [
-    t("extension.bullet1"),
-    t("extension.bullet2"),
-    t("extension.bullet3"),
-    t("extension.bullet4"),
+    t.extension.bullets[0],
+    t.extension.bullets[1],
+    t.extension.bullets[2],
+    t.extension.bullets[3],
   ];
 
   return (
     <section className="pt-24" id="products">
       <div className="px-3 max-w-7xl mx-auto">
-        <p className="text-gray-600 text-xl mb-1">{t("eyebrow")}</p>
+        <p className="text-gray-600 text-xl mb-1">{t.eyebrow}</p>
         <h2 className="text-3xl text-gray-900 mb-6">
-          {t("headingP1")}<br className="sm:hidden" /> {t("headingP2")}<br className="sm:hidden" /> {t("headingP3")}
+          {t.headingP1}<br className="sm:hidden" /> {t.headingP2}<br className="sm:hidden" /> {t.headingP3}
         </h2>
 
         <div className="bg-gray-100 rounded-lg p-5 md:p-6">
@@ -94,12 +94,12 @@ export function ProductsSection() {
 
                   <div>
                     <h3 className="text-2xl font-semibold">MonchoOps</h3>
-                    <p className="text text-gray-500">{t("platforms")}</p>
+                    <p className="text text-gray-500">{t.platforms}</p>
                   </div>
                 </div>
 
                 <p className="text-sm text-gray-600 mb-4 max-w-2xl">
-                  {t("description")}
+                  {t.description}
                 </p>
                 <ul className="space-y-1.5 text-xs text-gray-600 mb-4">
                   {bullets.map((text) => (
@@ -121,7 +121,7 @@ export function ProductsSection() {
                       <div className="flex items-center gap-3">
                         <WindowsIcon className="h-4 w-4 text-gray-700" />
                         <p className="font-semibold text-gray-700">
-                          {t("downloadWindows")}<span className="hidden sm:inline">{t("downloadWindowsArch")}</span>
+                          {t.downloadWindows}<span className="hidden sm:inline">{t.downloadWindowsArch}</span>
                         </p>
                       </div>
                       <ArrowDownToLine className="h-4 w-4 text-gray-700" />
@@ -136,7 +136,7 @@ export function ProductsSection() {
                       <div className="flex items-center gap-3">
                         <MacOSIcon className="h-4 w-4 text-gray-700" />
                         <p className="font-semibold text-gray-700">
-                          {t("downloadMac")}<span className="hidden sm:inline">{t("downloadMacArch")}</span>
+                          {t.downloadMac}<span className="hidden sm:inline">{t.downloadMacArch}</span>
                         </p>
                       </div>
                       <ArrowDownToLine className="h-4 w-4 text-gray-700" />
@@ -215,9 +215,9 @@ export function ProductsSection() {
         </div>
 
         <div className="mt-6">
-          <p className="text-gray-600 text-xl mb-1">{t("extension.eyebrow")}</p>
+          <p className="text-gray-600 text-xl mb-1">{t.extension.eyebrow}</p>
           <h2 className="text-3xl text-gray-900 mb-6">
-            {t("extension.headingP1")}<br className="sm:hidden" /> {t("extension.headingP2")}<br className="sm:hidden" /> {t("extension.headingP3")}
+            {t.extension.headingP1}<br className="sm:hidden" /> {t.extension.headingP2}<br className="sm:hidden" /> {t.extension.headingP3}
           </h2>
 
           <div className="bg-gray-100 rounded-lg p-5 md:p-6">
@@ -230,15 +230,15 @@ export function ProductsSection() {
                       <div className="flex items-center gap-2">
                         <h3 className="text-2xl font-semibold">MonchoOps</h3>
                         <span className="rounded-full border border-gray-300 bg-white px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-gray-600">
-                          {t("extension.badge")}
+                          {t.extension.badge}
                         </span>
                       </div>
-                      <p className="text text-gray-500">{t("extension.platforms")}</p>
+                      <p className="text text-gray-500">{t.extension.platforms}</p>
                     </div>
                   </div>
 
                   <p className="text-sm text-gray-600 mb-4 max-w-2xl">
-                    {t("extension.description")}
+                    {t.extension.description}
                   </p>
                   <ul className="space-y-1.5 text-xs text-gray-600 mb-4">
                     {extensionBullets.map((text) => (
@@ -260,7 +260,7 @@ export function ProductsSection() {
                       <div className="flex items-center gap-3">
                         <ChromeIcon className="h-4 w-4" />
                         <p className="font-semibold text-gray-700">
-                          {t("extension.addToChrome")}
+                          {t.extension.addToChrome}
                         </p>
                       </div>
                       <ExternalLink className="h-4 w-4 text-gray-700" />
@@ -379,14 +379,14 @@ export function ProductsSection() {
                           <div className="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-2 py-1">
                             <span className="flex items-center gap-1 text-[7px] font-medium uppercase tracking-wide text-gray-500">
                               <Instagram className="h-2 w-2" />
-                              {t("extension.popup.instagramSession")}
+                              {t.extension.popup.instagramSession}
                             </span>
                             <span className="text-[7px] font-medium text-emerald-600">
-                              {t("extension.popup.active")}
+                              {t.extension.popup.active}
                             </span>
                           </div>
                           <div className="px-2 py-1.5 text-[7px] leading-snug text-gray-500">
-                            {t("extension.popup.operatesOnAccount")}
+                            {t.extension.popup.operatesOnAccount}
                           </div>
                         </div>
 
@@ -394,7 +394,7 @@ export function ProductsSection() {
                           <div className="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-2 py-1">
                             <span className="flex items-center gap-1 text-[7px] font-medium uppercase tracking-wide text-gray-500">
                               <Activity className="h-2 w-2" />
-                              {t("extension.popup.activeProcesses")}
+                              {t.extension.popup.activeProcesses}
                             </span>
                             <span className="text-[7px] tabular-nums text-gray-500">2</span>
                           </div>
@@ -404,18 +404,18 @@ export function ProductsSection() {
                                 <span className="flex min-w-0 items-center gap-1">
                                   <Play className="h-2 w-2 shrink-0 text-emerald-600" />
                                   <span className="truncate text-[8px] font-medium">
-                                    {t("extension.popup.campaign1")}
+                                    {t.extension.popup.campaign1}
                                   </span>
                                 </span>
                                 <span className="shrink-0 text-[7px] font-medium uppercase tracking-wide text-emerald-600">
-                                  {t("extension.popup.running")}
+                                  {t.extension.popup.running}
                                 </span>
                               </div>
                               <div className="mt-1 h-[3px] w-full overflow-hidden bg-gray-100">
                                 <div className="h-full w-[62%] bg-emerald-500" />
                               </div>
                               <p className="mt-0.5 text-[7px] tabular-nums text-gray-500">
-                                {t("extension.popup.processed1")}
+                                {t.extension.popup.processed1}
                               </p>
                             </li>
                             <li className="px-2 py-1.5">
@@ -423,18 +423,18 @@ export function ProductsSection() {
                                 <span className="flex min-w-0 items-center gap-1">
                                   <Pause className="h-2 w-2 shrink-0 text-amber-600" />
                                   <span className="truncate text-[8px] font-medium">
-                                    {t("extension.popup.campaign2")}
+                                    {t.extension.popup.campaign2}
                                   </span>
                                 </span>
                                 <span className="shrink-0 text-[7px] font-medium uppercase tracking-wide text-amber-600">
-                                  {t("extension.popup.paused")}
+                                  {t.extension.popup.paused}
                                 </span>
                               </div>
                               <div className="mt-1 h-[3px] w-full overflow-hidden bg-gray-100">
                                 <div className="h-full w-[36%] bg-amber-500" />
                               </div>
                               <p className="mt-0.5 text-[7px] tabular-nums text-gray-500">
-                                {t("extension.popup.processed2")}
+                                {t.extension.popup.processed2}
                               </p>
                             </li>
                           </ul>
@@ -443,7 +443,7 @@ export function ProductsSection() {
 
                       <div className="border-t border-gray-200 bg-gray-50 p-1.5">
                         <div className="flex h-5 items-center justify-center bg-gray-900 px-2 text-[8px] font-medium text-white">
-                          {t("extension.popup.openDashboard")}
+                          {t.extension.popup.openDashboard}
                         </div>
                       </div>
                     </div>

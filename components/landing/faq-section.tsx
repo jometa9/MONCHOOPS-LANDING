@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { STRINGS } from "@/lib/strings";
 import { useState } from "react";
 
 const LANDING_FAQ_IDS = [
@@ -14,7 +14,6 @@ const LANDING_FAQ_IDS = [
 ] as const;
 
 export function FAQSection() {
-  const t = useTranslations("faq");
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
 
   const toggleItem = (id: string) => {
@@ -26,21 +25,24 @@ export function FAQSection() {
 
   return (
     <div className="max-w-3xl">
-      {LANDING_FAQ_IDS.map((id) => (
-        <div key={id} className="rounded-lg overflow-hidden py-2">
-          <button
-            onClick={() => toggleItem(id)}
-            className="w-full flex justify-between items-center text-gray-600 text-left hover:text-gray-400 cursor-pointer"
-          >
-            <h3 className="pr-3 ">{t(`${id}.q`)}</h3>
-          </button>
-          {openItems[id] && (
-            <div className="py-3 text-sm text-gray-400 max-w-xl">
-              {t(`${id}.a`)}
-            </div>
-          )}
-        </div>
-      ))}
+      {LANDING_FAQ_IDS.map((id) => {
+        const item = STRINGS.faq[id];
+        return (
+          <div key={id} className="rounded-lg overflow-hidden py-2">
+            <button
+              onClick={() => toggleItem(id)}
+              className="w-full flex justify-between items-center text-gray-600 text-left hover:text-gray-400 cursor-pointer"
+            >
+              <h3 className="pr-3 ">{item.q}</h3>
+            </button>
+            {openItems[id] && (
+              <div className="py-3 text-sm text-gray-400 max-w-xl">
+                {item.a}
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

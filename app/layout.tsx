@@ -4,8 +4,6 @@ import { MetaPixelScript } from "@/components/meta-pixel-script";
 import { Providers } from "@/components/providers";
 import { getAppUrl } from "@/lib/app-url";
 import type { Metadata, Viewport } from "next";
-import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages } from "next-intl/server";
 import React from "react";
 
 const metadataBaseUrl = getAppUrl();
@@ -13,9 +11,7 @@ const metadataBaseUrl = getAppUrl();
 export const metadata: Metadata = {
   applicationName: "MonchoOps",
   icons: {
-    icon: [
-      { url: "/assets/monchoops_square.png", type: "image/png" },
-    ],
+    icon: [{ url: "/assets/monchoops_square.png", type: "image/png" }],
     shortcut: [{ url: "/assets/monchoops_square.png", type: "image/png" }],
     apple: [{ url: "/assets/monchoops_square.png", type: "image/png" }],
   },
@@ -46,7 +42,6 @@ export const metadata: Metadata = {
       url: "https://www.linkedin.com/in/joaquinmetayer/",
     },
   ],
-  creator: "IPTRADE COPIER LLC",
   publisher: "MonchoOps",
   formatDetection: {
     email: false,
@@ -105,37 +100,30 @@ export const viewport: Viewport = {
   interactiveWidget: "resizes-content",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID || "";
 
-  const locale = await getLocale();
-  const messages = await getMessages();
-
   return (
-    <html lang={locale} className="text-neutral-900">
+    <html lang="en" className="text-neutral-900">
       <body
         className="min-h-screen font-sans text-neutral-900 antialiased"
         suppressHydrationWarning={true}
       >
-        <>
-          {pixelId ? (
-            <>
-              <MetaPixelScript pixelId={pixelId} />
-              <MetaPixel pixelId={pixelId} />
-            </>
-          ) : null}
-          <NextIntlClientProvider locale={locale} messages={messages}>
-            <Providers>
-              <div className="flex min-h-screen flex-col">
-                <main className="flex-1 w-full bg-white">{children}</main>
-              </div>
-            </Providers>
-          </NextIntlClientProvider>
-        </>
+        {pixelId ? (
+          <>
+            <MetaPixelScript pixelId={pixelId} />
+            <MetaPixel pixelId={pixelId} />
+          </>
+        ) : null}
+        <Providers>
+          <div className="flex min-h-screen flex-col">
+            <main className="flex-1 w-full bg-white">{children}</main>
+          </div>
+        </Providers>
       </body>
     </html>
   );

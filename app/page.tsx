@@ -23,11 +23,11 @@ import {
   ArrowRight,
   Sparkles,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { STRINGS } from "@/lib/strings";
 import { useEffect, useState } from "react";
 
 export default function HomePage() {
-  const t = useTranslations("landing");
+  const t = STRINGS.landing;
   const { trackViewContent } = useMetaPixel();
   const [hasTrackedDownloadView, setHasTrackedDownloadView] = useState(false);
 
@@ -114,13 +114,13 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-3 pb-0 relative">
           <h1 className="md:text-5xl text-3xl font-semibold text-gray-900 tracking-tight max-w-4xl relative">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-black via-gray-700 to-indigo-600">
-              {t("heroTitle")}
+              {t.heroTitle}
               <br />
-              {t("heroTitleSecond")}
+              {t.heroTitleSecond}
             </span>
           </h1>
           <p className="mt-4 text-gray-600 text-xl max-w-2xl">
-            {t("heroDescription")}
+            {t.heroDescription}
           </p>
         </div>
         <div className="max-w-7xl mx-auto px-3 pb-0 flex items-center gap-3 flex-wrap">
@@ -129,18 +129,18 @@ export default function HomePage() {
             onClick={handleDownloadClick}
             className="mt-4 inline-flex items-center gap-3 rounded-full bg-indigo-600 px-3 py-4 text-md text-white transition-all duration-200 hover:bg-indigo-700"
           >
-            <span>{t("getStartedFree")}</span>
+            <span>{t.getStartedFree}</span>
             <ArrowRight className="h-4 w-4" />
           </Button>
           <a
             href="#how-it-works"
             className="mt-4 hidden md:inline-flex items-center gap-3 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-md text-gray-900 transition-all duration-200 hover:bg-gray-100"
           >
-            {t("seeHowItWorks")}
+            {t.seeHowItWorks}
           </a>
         </div>
         <div className="max-w-7xl mx-auto px-3 pt-3 text-xs text-gray-500">
-          {t("freePlanNote")}
+          {t.freePlanNote}
         </div>
 
         <section className="max-w-7xl mx-auto px-3 pt-8 user-select-none">
@@ -210,10 +210,10 @@ export default function HomePage() {
 
         <div className="py-24 px-6" id="features">
           <h2 className="text-3xl text-center text-gray-900 mb-1">
-            {t("featuresIntroTitle")}
+            {t.featuresIntroTitle}
           </h2>
           <p className="text-md text-center text-gray-600 max-w-2xl mx-auto px-6">
-            {t("featuresIntroSub")}
+            {t.featuresIntroSub}
           </p>
         </div>
 
@@ -229,12 +229,12 @@ export default function HomePage() {
 
         <section id="download" className="max-w-7xl mx-auto px-3 pt-24">
           <div className="bg-gray-100 rounded-lg p-6 md:p-12 text-center">
-            <p className="text-gray-600 text-xl mb-1">{t("downloadEyebrow")}</p>
+            <p className="text-gray-600 text-xl mb-1">{t.downloadEyebrow}</p>
             <h2 className="text-3xl md:text-4xl text-gray-900 mb-2">
-              {t("downloadHeading")}
+              {t.downloadHeading}
             </h2>
             <p className="text-gray-600 max-w-xl mx-auto mb-6">
-              {t("downloadDescription")}
+              {t.downloadDescription}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center items-stretch max-w-2xl mx-auto">
               <a
@@ -245,7 +245,7 @@ export default function HomePage() {
                   <div className="flex items-center gap-3">
                     <WindowsIcon className="h-5 w-5 text-gray-700" />
                     <span className="font-semibold text-gray-700">
-                      {t("downloadWindows")}
+                      {t.downloadWindows}
                     </span>
                   </div>
                   <ArrowDownToLine className="h-4 w-4 text-gray-700" />
@@ -259,21 +259,21 @@ export default function HomePage() {
                   <div className="flex items-center gap-3">
                     <MacOSIcon className="h-5 w-5 text-gray-700" />
                     <span className="font-semibold text-gray-700">
-                      {t("downloadMac")}
+                      {t.downloadMac}
                     </span>
                   </div>
                   <ArrowDownToLine className="h-4 w-4 text-gray-700" />
                 </div>
               </a>
             </div>
-            <p className="text-xs text-gray-500 mt-4">{t("freeForever")}</p>
+            <p className="text-xs text-gray-500 mt-4">{t.freeForever}</p>
           </div>
         </section>
 
         <div className="max-w-7xl pt-24 mx-auto px-3 pb-6">
-          <p className="text-xl text-gray-600 mb-1">{t("commonQuestions")}</p>
+          <p className="text-xl text-gray-600 mb-1">{t.commonQuestions}</p>
           <p className="md:text-3xl text-2xl mb-3 text-gray-900">
-            {t("faqHeading")}
+            {t.faqHeading}
           </p>
           <FAQSection />
         </div>

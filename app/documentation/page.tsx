@@ -1,9 +1,9 @@
 import { LandingHeader } from "@/components/landing/landing-header";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { StructuredData } from "@/components/structured-data";
+import { STRINGS } from "@/lib/strings";
 import type { Metadata } from "next";
 import { readFileSync } from "fs";
-import { getLocale, getTranslations } from "next-intl/server";
 import { join } from "path";
 
 export const metadata: Metadata = {
@@ -11,7 +11,6 @@ export const metadata: Metadata = {
     "Complete documentation and setup guides for MonchoOps Instagram outreach desktop app. setup, account warmup, scraping, cold DM campaigns and troubleshooting.",
   keywords: [
     "MonchoOps documentation",
-    "MonchoOps setup",
     "MonchoOps setup",
     "MonchoOps guide",
     "cold DM setup",
@@ -34,12 +33,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function DocumentationPage() {
-  const t = await getTranslations("documentation");
-  const locale = await getLocale();
+export default function DocumentationPage() {
+  const t = STRINGS.documentation;
 
   let markdownContent = "";
-
   try {
     const filePath = join(process.cwd(), "public", "docs.md");
     markdownContent = readFileSync(filePath, "utf-8");
@@ -48,8 +45,7 @@ export default async function DocumentationPage() {
       "# Documentation\n\nThe `docs.md` file was not found.";
   }
 
-  const intlLocale = locale === "es" ? "es-ES" : "en-US";
-  const lastUpdated = new Date().toLocaleDateString(intlLocale, {
+  const lastUpdated = new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -85,13 +81,13 @@ export default async function DocumentationPage() {
           <div className="w-full space-y-4 pb-8">
             <div className="max-w-7xl mx-auto pb-0">
               <h1 className="text-4xl font-semibold text-gray-900 tracking-tight">
-                {t("title")}
+                {t.title}
               </h1>
               <p className="mt-3 text-gray-600 text-2xl max-w-2xl">
-                {t("subtitle")}
+                {t.subtitle}
               </p>
               <p className="mt-2 text-gray-600 text-sm">
-                {t("updated", { date: lastUpdated })}
+                {t.updated(lastUpdated)}
               </p>
             </div>
             <hr className="border-gray-200 my-8 max-w-4xl" />
