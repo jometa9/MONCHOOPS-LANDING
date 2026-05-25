@@ -43,6 +43,9 @@ export function Footer() {
         <Link href="/documentation" aria-label="Docs" className="text-gray-600">
           {t.docs}
         </Link>
+        <Link href="/legal" aria-label="Legal" className="text-gray-600">
+          Legal
+        </Link>
         <Link
           href="https://www.linkedin.com/in/joaquinmetayer"
           target="_blank"
