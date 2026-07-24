@@ -1,8 +1,8 @@
 export type DownloadOS = "windows" | "mac";
 
 export const DOWNLOAD_URLS: Record<DownloadOS, string> = {
-  windows: "https://github.com/jometa/monchoops/releases/latest/download/MonchoOps-Multi-Setup.exe",
-  mac: "https://github.com/jometa/monchoops/releases/latest/download/MonchoOps-Multi-Setup.dmg",
+  windows: "https://github.com/jometa9/MONCHOOPS-APP/releases/latest/download/MonchoOps-Setup.exe",
+  mac: "https://github.com/jometa9/MONCHOOPS-APP/releases/latest/download/MonchoOps-Setup.dmg",
 };
 
 export const EXTENSION_URL =
@@ -11,8 +11,8 @@ export const EXTENSION_URL =
 export const APP_VERSION = "1.0.0";
 
 export const DOWNLOAD_FILENAMES: Record<DownloadOS, string> = {
-  windows: "MonchoOps-Multi-Setup.exe",
-  mac: "MonchoOps-Multi-Setup.dmg",
+  windows: "MonchoOps-Setup.exe",
+  mac: "MonchoOps-Setup.dmg",
 };
 
 export function detectOS(): DownloadOS {
